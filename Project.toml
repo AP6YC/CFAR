@@ -2,3 +2,6 @@ name = "CFAR"
 uuid = "559e7787-0cef-4422-a425-6eaa4ea9c458"
 authors = ["Sasha Petrenko <sap625@umsystem.edu>"]
 version = "0.1.0"
+
+[deps]
+DocumenterTools = "35a29f4d-8980-5a13-9543-d66fff28ecb8"
