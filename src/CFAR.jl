@@ -27,15 +27,45 @@ module CFAR
 # DEPENDENCIES
 # -----------------------------------------------------------------------------
 
+# Full usings (which supports comma-separated import notation)
 using
+    AdaptiveResonance,
     DocStringExtensions,
     DrWatson,
     Pkg
 
+# Precompile concrete type methods
+using PrecompileSignatures: @precompile_signatures
+
+# -----------------------------------------------------------------------------
+# VARIABLES
+# -----------------------------------------------------------------------------
+
+# Necessary to download data without prompts to custom folders
+ENV["DATADEPS_ALWAYS_ACCEPT"] = true
+# Suppress display on headless systems
+ENV["GKSwstype"] = 100
+
+# -----------------------------------------------------------------------------
+# INCLUDES
+# -----------------------------------------------------------------------------
+
 # Library code
 include("lib/lib.jl")
 
+# -----------------------------------------------------------------------------
+# EXPORTS
+# -----------------------------------------------------------------------------
+
+# Export all public names
 export
     CFAR_VERSION
+
+# -----------------------------------------------------------------------------
+# PRECOMPILE
+# -----------------------------------------------------------------------------
+
+# Precompile any concrete-type function signatures
+@precompile_signatures(CFAR)
 
 end
