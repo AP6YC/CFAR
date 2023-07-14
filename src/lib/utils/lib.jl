@@ -1,3 +1,17 @@
+"""
+    lib.jl
+
+# Description
+Aggregates the utility files.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
+"""
+
+# -----------------------------------------------------------------------------
+# INCLUDES
+# -----------------------------------------------------------------------------
+
 # Docstring templates and common variables
 include("docstrings.jl")
 

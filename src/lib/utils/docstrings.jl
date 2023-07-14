@@ -5,7 +5,7 @@
 A collection of common docstrings and docstring templates for the project.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------
