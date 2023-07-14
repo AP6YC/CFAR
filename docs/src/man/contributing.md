@@ -87,18 +87,18 @@ The `SFAR` project has the following file structure:
 ```console
 SFAR
 ├── .github/workflows       // GitHub: workflows for testing and documentation.
-├── cluster                 // CI: cluster submission files and scripts.
-├── data                    // Data: original datsets.
-│   ├───packed              //      Compressed tarballs of datasets.
-│   └───unpacked            //      Decompressed datasets.
-├── dockerfiles             // CI: Docker image definitions.
+├── cluster                 // HPC: scripts and submission files for clusters.
+├── dockerfiles             // Docker: dockerfiles for experiment reproducibility.
 ├── docs                    // Docs: documentation for the module.
 │   └───src                 //      Documentation source files.
-├── src                     // Source: majority of source code.
+├── notebooks               // Source: experiment notebooks.
+├── scripts                 // Source: experiment scripts.
+├── src                     // Source: library source code.
+│   └───lib                 //      Library for the SFAR module.
+│       └───utils           //      Project utilities
 ├── test                    // Test: Unit, integration, and environment tests.
-├── work                    // Data: options and generated results.
-│   ├───configs             //      Experiment configuration files.
-│   ├───models              //      Saved model weights.
+├── work                    // Data: datasets, results, plots, etc.
+│   ├───data                //      Source datasets for experiments.
 │   └───results             //      Destination for generated figures, etc.
 ├── .gitattributes          // Git: LFS settings, languages, etc.
 ├── .gitignore              // Git: .gitignore for the whole project.
