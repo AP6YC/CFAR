@@ -1,5 +1,9 @@
 module CFAR
 
-greet() = print("Hello World!")
+# Library code
+include("lib/lib.jl")
 
-end # module CFAR
+export
+    CFAR_VERSION
+
+end

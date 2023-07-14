@@ -1,4 +1,5 @@
 [deps]
+CFAR = "559e7787-0cef-4422-a425-6eaa4ea9c458"
 DemoCards = "311a05b2-6137-4a5a-b473-18580a3d38b5"
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
