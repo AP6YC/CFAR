@@ -13,6 +13,7 @@ PrecompileSignatures = "91cefc8d-f054-46dc-8f8c-26e11d7c5411"
 
 [compat]
 DrWatson = "2"
+PrecompileSignatures = "3"
 
 [extras]
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
