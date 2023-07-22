@@ -21,6 +21,10 @@ using
 # SETUP
 # -----------------------------------------------------------------------------
 
+# Common variables of the script
+PROJECT_NAME = "CFAR"
+DOCS_NAME = "docs"
+
 # Fix GR headless errors
 ENV["GKSwstype"] = "100"
 
@@ -30,10 +34,10 @@ current_dir = basename(pwd())
 
 # If using the CI method `julia --project=docs/ docs/make.jl`
 #   or `julia --startup-file=no --project=docs/ docs/make.jl`
-if occursin("CFAR", current_dir)
+if occursin(PROJECT_NAME, current_dir)
     push!(LOAD_PATH, "../src/")
 # Otherwise, we are already in the docs project and need to dev the above package
-elseif occursin("docs", current_dir)
+elseif occursin(DOCS_NAME, current_dir)
     Pkg.develop(path="..")
 # Otherwise, building docs from the wrong path
 else
@@ -116,11 +120,11 @@ makedocs(
             # "Examples" => "man/examples.md",
             # "Modules" => "man/modules.md",
         ],
-        # "Internals" => [
-        #     "Index" => "man/full-index.md",
-        #     "Dev Index" => "man/dev-index.md",
-        #     "Contributing" => "man/contributing.md",
-        # ],
+        "Internals" => [
+            "Index" => "man/full-index.md",
+            "Dev Index" => "man/dev-index.md",
+            "Contributing" => "man/contributing.md",
+        ],
     ],
     repo="https://github.com/AP6YC/CFAR/blob/{commit}{path}#L{line}",
     sitename="CFAR",
@@ -151,15 +155,6 @@ deploydocs(
     devbranch="main",
     # push_preview = should_push_preview(),
 )
-
-# using Documenter
-# using CFAR
-
-# makedocs(
-#     sitename = "CFAR",
-#     format = Documenter.HTML(),
-#     modules = [CFAR]
-# )
 
 # Documenter can also automatically deploy documentation to gh-pages.
 # See "Hosting Documentation" and deploydocs() in the Documenter manual

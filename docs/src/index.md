@@ -28,6 +28,8 @@ This documentation is split into the following sections:
 Pages = [
     "man/guide.md",
     "../examples/index.md",
+    "man/full-index.md",
+    "man/dev-index.md"
 ]
 Depth = 1
 ```
