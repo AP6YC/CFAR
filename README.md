@@ -1,22 +1,40 @@
-# CFAR
-
-[![cfar-header](docs/src/assets/logo.png)][docs-url]
+[![cfar-header](https://github.com/AP6YC/FileStorage/blob/main/CFAR/header.png?raw=true)][docs-url]
 
 This repository is a workplace for the upcoming "Analysis of Catastrophic Forgetting and Adaptive Resonance Theory Algorithms" paper.
 Please see the [documentation][docs-url].
+
+| **Documentation** | **Docs Build Status** |  **DOI** |
+|:-----------------:|:---------------------:|:--------:|
+| [![Docs][docs-img]][docs-url] | [![Docs Status][doc-status-img]][doc-status-url] | [![DOI][zenodo-img]][zenodo-url] |
+| **Testing Status** | **Coveralls** | **Codecov** |
+| [![CI Status][ci-img]][ci-url] | [![Coveralls][coveralls-img]][coveralls-url] | [![Codecov][codecov-img]][codecov-url] |
+
+[doc-status-img]: https://github.com/AP6YC/CFAR/actions/workflows/Documentation.yml/badge.svg
+[doc-status-url]: https://github.com/AP6YC/CFAR/actions/workflows/Documentation.yml
+
+[ci-img]: https://github.com/AP6YC/CFAR/workflows/CI/badge.svg
+[ci-url]: https://github.com/AP6YC/CFAR/actions?query=workflow%3ACI
+
+[codecov-img]: https://codecov.io/gh/AP6YC/CFAR/branch/main/graph/badge.svg
+[codecov-url]: https://codecov.io/gh/AP6YC/CFAR
+
+[coveralls-img]: https://coveralls.io/repos/github/AP6YC/CFAR/badge.svg?branch=main
+[coveralls-url]: https://coveralls.io/github/AP6YC/CFAR?branch=main
+
+[zenodo-img]: https://zenodo.org/badge/601743357.svg
+[zenodo-url]: https://zenodo.org/badge/latestdoi/601743357
 
 [docs-img]: https://img.shields.io/badge/docs-blue.svg
 [docs-url]: https://AP6YC.github.io/CFAR/dev/
 
 ## Table of Contents
 
-- [CFAR](#cfar)
-  - [Table of Contents](#table-of-contents)
-  - [Overview](#overview)
-  - [Usage](#usage)
-  - [Attribution](#attribution)
-    - [Authors](#authors)
-    - [Images](#images)
+- [Table of Contents](#table-of-contents)
+- [Overview](#overview)
+- [Usage](#usage)
+- [Attribution](#attribution)
+  - [Authors](#authors)
+  - [Images](#images)
 
 ## Overview
 
