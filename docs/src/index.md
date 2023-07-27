@@ -4,11 +4,7 @@ DocTestSetup = quote
 end
 ```
 
-```@raw html
-<img src="assets/logo.png" width="300">
-```
-
-# CFAR
+![header](assets/downloads/header.png)
 
 ---
 
