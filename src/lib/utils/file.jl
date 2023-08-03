@@ -69,9 +69,10 @@ Gets the distribution generators based upon the config parameters.
 # Arguments
 $ARG_CONFIG_DICT
 """
-function get_dists(config::AbstractDict, s::Float=0.0)
+function get_dists(config::AbstractDict)
     # Init the vector of distribution generators
     dist_gens = Vector{MvNormal}()
+    dist_gen_dict = Dict{Int, MvNormal}()
 
     # Construct and append each generator
     for (ix, dist) in config["dists"]
@@ -79,21 +80,23 @@ function get_dists(config::AbstractDict, s::Float=0.0)
         mu = dist["mu"]
         var = dist["var"] * dist["scale"]
 
-        # Special operation for the first element
-        if ix == 1
-            shift = [
-                cosd(config["angle"])
-                sind(config["angle"])
-            ] * s
-            mu += shift
-        end
         # Create the generator from the config parameters
         local_dist = MvNormal(
             mu,
             var,
         )
+
         # Push the generator to the list of generators
-        push!(dist_gens, local_dist)
+        # push!(dist_gens, local_dist)
+        dist_gen_dict[ix] = local_dist
+    end
+    @info dist_gen_dict
+
+    # Put the distributions in order in the output vector
+    # for (ix, _) in dist_gen_dict
+    n_dist = length(dist_gen_dict)
+    for ix = 1:n_dist
+        push!(dist_gens, dist_gen_dict[ix])
     end
 
     # Return the vector of generators
@@ -104,9 +107,9 @@ end
 # Arguments
 $ARG_CONFIG_DICT
 """
-function gen_gaussians(config::AbstractDict, s::Float=0.0)
+function gen_gaussians(config::AbstractDict)
     # Get the random generators from the config file
-    dist_gens = get_dists(config, s)
+    dist_gens = get_dists(config)
 
     # Init the destination data
     X = Matrix{Float}(undef, config["dim"], 0)
@@ -116,36 +119,38 @@ function gen_gaussians(config::AbstractDict, s::Float=0.0)
     rng = MersenneTwister(config["rng_seed"])
 
     # Iterate over all generators
-    # n_dist = length(dist_gens)
-    # for ix = 1:n_dist
-    for ix in eachindex(dist_gens)
+    n_dist = length(dist_gens)
+    mx = []
+    my = []
+    for ix = 1:n_dist
+    # for ix in eachindex(dist_gens)
         # Create a new set of data from the generator
         data_x = rand(
             rng,
             dist_gens[ix],
             config["n_points_per"],
         )
-        # # Special operation for the last distribution
-        # if ix == n_dist
-        #     data_x = config["slope"] .* data_x .+ config["intercept"]
-        # end
 
         # Create a set of labels for this dataset
         data_y = ones(Int, config["n_points_per"]) * ix
 
-        # Concatenate to the output data
-        X = hcat(
-            X,
-            data_x,
-        )
-        y = vcat(
-            y,
-            data_y,
-        )
-
+        if ix == config["mover"]
+            mx = data_x
+            my = data_y
+        else
+            # Concatenate to the output data
+            X = hcat(
+                X,
+                data_x,
+            )
+            y = vcat(
+                y,
+                data_y,
+            )
+        end
     end
 
-    return X, y
+    return X, y, mx, my
 end
 
 """
@@ -159,4 +164,17 @@ function gen_gaussians(config_file::AbstractString)
     config = get_gaussian_config(config_file)
     # Return the generated gaussians
     return gen_gaussians(config)
+end
+
+function shift_samples(data::RealMatrix, config::AbstractDict, s::Float)
+    # Special operation for the first distribution
+    shift = [
+        cosd(config["angle"])
+        sind(config["angle"])
+    ] * s
+
+    # Shift all samples by the same amount
+    new_data = data .+ shift
+
+    return new_data
 end

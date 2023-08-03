@@ -33,17 +33,22 @@ rng = MersenneTwister(1234)
 
 config = CFAR.get_gaussian_config("gaussians.yml")
 # X, y = CFAR.gen_gaussians("gaussians.yml")
-X, y = CFAR.gen_gaussians(config, 1.0)
+X, y, mx, my = CFAR.gen_gaussians(config)
 
-p1 = scatter(
+# Init a plot object
+p = plot()
+
+scatter!(
+    p,
     X[1, :],
     X[2, :],
+    group=y,
 )
 
-# p1 = scatter(
-#     X
-# )
-
-plot(
-    p1
+scatter!(
+    p,
+    mx[1, :],
+    mx[2, :],
+    group=my,
 )
+
