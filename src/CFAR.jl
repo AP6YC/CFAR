@@ -32,7 +32,10 @@ using
     AdaptiveResonance,
     DocStringExtensions,
     DrWatson,
+    NumericalTypeAliases,
     Pkg
+
+import YAML
 
 # Precompile concrete type methods
 using PrecompileSignatures: @precompile_signatures

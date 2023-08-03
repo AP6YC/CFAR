@@ -20,3 +20,6 @@ include("drwatson.jl")
 
 # Version of the project
 include("version.jl")
+
+# File operations
+include("file.jl")
