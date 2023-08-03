@@ -22,6 +22,13 @@ using CFAR
 using Distributions, Random
 using MLDataUtils
 using Plots
+using DelimitedFiles
+
+# -----------------------------------------------------------------------------
+# VARIABLES
+# -----------------------------------------------------------------------------
+
+N_MOVES = 10
 
 # -----------------------------------------------------------------------------
 # EXPERIMENT
@@ -63,3 +70,11 @@ plot!(
     ml[2, :],
     linewidth = 3,
 )
+
+# for
+data = vcat(
+    X',
+    mx',
+)
+
+writedlm("asdf.csv", data)

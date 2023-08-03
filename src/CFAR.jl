@@ -30,6 +30,8 @@ module CFAR
 # Full usings (which supports comma-separated import notation)
 using
     AdaptiveResonance,
+    CSV,
+    DataFrames,
     DocStringExtensions,
     DrWatson,
     Distributions,          # MvNormal
