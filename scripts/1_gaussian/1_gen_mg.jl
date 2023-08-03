@@ -27,18 +27,20 @@ using Plots
 # EXPERIMENT
 # -----------------------------------------------------------------------------
 
-N_POINTS = 1000
-
-rng = MersenneTwister(1234)
-
+# Load the config dict
 config = CFAR.get_gaussian_config("gaussians.yml")
-# X, y = CFAR.gen_gaussians("gaussians.yml")
+
+# Generate the Gaussian samples
 X, y, mx, my = CFAR.gen_gaussians(config)
+# X, y = CFAR.gen_gaussians("gaussians.yml")
+
+# Get the mover line for visualization
 ml = CFAR.get_mover_line(config)
 
 # Init a plot object
 p = plot()
 
+# Plot the original Gaussians samples
 scatter!(
     p,
     X[1, :],
@@ -46,6 +48,7 @@ scatter!(
     group=y,
 )
 
+# Plot the samples from the mover
 scatter!(
     p,
     mx[1, :],
@@ -53,6 +56,7 @@ scatter!(
     group=my,
 )
 
+# Plot the mover's line
 plot!(
     p,
     ml[1, :],

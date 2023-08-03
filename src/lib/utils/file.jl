@@ -163,11 +163,20 @@ function gen_gaussians(config_file::AbstractString)
     return gen_gaussians(config)
 end
 
+"""
+Generates a vector representing the direction of the mover's line.
+
+# Arguments
+$ARG_CONFIG_DICT
+"""
 function get_mover_direction(config::AbstractDict)
+    # Get the direction as a function of the config file angle
     direction = [
         cosd(config["angle"])
         sind(config["angle"])
     ]
+
+    # Return that direction vector
     return direction
 end
 
@@ -190,18 +199,29 @@ function shift_samples(data::RealMatrix, config::AbstractDict, s::Float)
     return new_data
 end
 
+"""
+Generates a dataset of points representing the mover's direction of traversal.
 
-function get_mover_line(config::AbstractDict)
+# Arguments
+$ARG_CONFIG_DICT
+- `n_points::Integer=2`: kwarg, number of points along the line to return.
+- `length::Float=10.0`: kwarg, length of the line.
+"""
+function get_mover_line(
+    config::AbstractDict;
+    n_points::Integer=2,
+    length::Float=10.0
+)
+    # Identify which mean belongs to the mover
     mover_index = config["mover"]
+    # Get the mean of the mover
     mu = config["dists"][mover_index]["mu"]
-    sl = collect(range(0, 10, length=100))
+    # Create the interpolation points
+    sl = collect(range(0.0, length, length=n_points))
     # Get the direction vector
     direction = get_mover_direction(config)
-    @info direction
-    @info sl
-    @info mu
     # Traverse the vector starting at the mean
     ml = mu .+ direction * sl'
-    # ml = mu .+ direction
+    # Return the mover line
     return ml
 end
