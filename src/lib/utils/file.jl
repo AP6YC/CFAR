@@ -69,16 +69,28 @@ Gets the distribution generators based upon the config parameters.
 # Arguments
 $ARG_CONFIG_DICT
 """
-function get_dists(config::AbstractDict)
+function get_dists(config::AbstractDict, s::Float=0.0)
     # Init the vector of distribution generators
     dist_gens = Vector{MvNormal}()
 
     # Construct and append each generator
-    for (_, dist) in config["dists"]
+    for (ix, dist) in config["dists"]
+        # Get the mean and variance from the config
+        mu = dist["mu"]
+        var = dist["var"] * dist["scale"]
+
+        # Special operation for the first element
+        if ix == 1
+            shift = [
+                cosd(config["angle"])
+                sind(config["angle"])
+            ] * s
+            mu += shift
+        end
         # Create the generator from the config parameters
         local_dist = MvNormal(
-            dist["mu"],
-            dist["var"],
+            mu,
+            var,
         )
         # Push the generator to the list of generators
         push!(dist_gens, local_dist)
@@ -86,6 +98,54 @@ function get_dists(config::AbstractDict)
 
     # Return the vector of generators
     return dist_gens
+end
+
+"""
+# Arguments
+$ARG_CONFIG_DICT
+"""
+function gen_gaussians(config::AbstractDict, s::Float=0.0)
+    # Get the random generators from the config file
+    dist_gens = get_dists(config, s)
+
+    # Init the destination data
+    X = Matrix{Float}(undef, config["dim"], 0)
+    y = Vector{Int}()
+
+    # Init the random number generator
+    rng = MersenneTwister(config["rng_seed"])
+
+    # Iterate over all generators
+    # n_dist = length(dist_gens)
+    # for ix = 1:n_dist
+    for ix in eachindex(dist_gens)
+        # Create a new set of data from the generator
+        data_x = rand(
+            rng,
+            dist_gens[ix],
+            config["n_points_per"],
+        )
+        # # Special operation for the last distribution
+        # if ix == n_dist
+        #     data_x = config["slope"] .* data_x .+ config["intercept"]
+        # end
+
+        # Create a set of labels for this dataset
+        data_y = ones(Int, config["n_points_per"]) * ix
+
+        # Concatenate to the output data
+        X = hcat(
+            X,
+            data_x,
+        )
+        y = vcat(
+            y,
+            data_y,
+        )
+
+    end
+
+    return X, y
 end
 
 """
@@ -97,23 +157,6 @@ $ARG_CONFIG_FILE
 function gen_gaussians(config_file::AbstractString)
     # Load and sanitize the Gaussian config
     config = get_gaussian_config(config_file)
-
-    # Get the random generators from the config file
-    dist_gens = get_dists(config)
-
-    X = Matrix{Float}(undef, config["dim"], 0)
-    rng = MersenneTwister(1234)
-    for dist_gen in dist_gens
-        data = rand(
-            rng,
-            dist_gen,
-            config["n_points_per"],
-        )
-        # @info size(data)
-        X = hcat(
-            X,
-            data,
-        )
-    end
-    return X
+    # Return the generated gaussians
+    return gen_gaussians(config)
 end
