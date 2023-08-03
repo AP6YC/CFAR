@@ -131,11 +131,12 @@ function gen_gaussians(config::AbstractDict)
         # Create a set of labels for this dataset
         data_y = ones(Int, config["n_points_per"]) * ix
 
+        # If we are at the mover index, output separately
         if ix == config["mover"]
             mx = data_x
             my = data_y
+        # Otherwise, concatenate to the output data
         else
-            # Concatenate to the output data
             X = hcat(
                 X,
                 data_x,
