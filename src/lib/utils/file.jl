@@ -86,14 +86,11 @@ function get_dists(config::AbstractDict)
             var,
         )
 
-        # Push the generator to the list of generators
-        # push!(dist_gens, local_dist)
+        # Push the generator to its own dict
         dist_gen_dict[ix] = local_dist
     end
-    @info dist_gen_dict
 
     # Put the distributions in order in the output vector
-    # for (ix, _) in dist_gen_dict
     n_dist = length(dist_gen_dict)
     for ix = 1:n_dist
         push!(dist_gens, dist_gen_dict[ix])
@@ -166,15 +163,45 @@ function gen_gaussians(config_file::AbstractString)
     return gen_gaussians(config)
 end
 
-function shift_samples(data::RealMatrix, config::AbstractDict, s::Float)
-    # Special operation for the first distribution
-    shift = [
+function get_mover_direction(config::AbstractDict)
+    direction = [
         cosd(config["angle"])
         sind(config["angle"])
-    ] * s
+    ]
+    return direction
+end
+
+"""
+Shifts the provided data samples matrix along the config direction by `s` amount.
+
+# Arguments
+- `data::RealMatrix`: the dataset of shape `(n_samples, dim)`.
+$ARG_CONFIG_DICT
+- `s::Float`: the distance to travel along the line
+"""
+function shift_samples(data::RealMatrix, config::AbstractDict, s::Float)
+    # Get the direction
+    direction = get_mover_direction(config)
+    shift = direction .* s
 
     # Shift all samples by the same amount
     new_data = data .+ shift
 
     return new_data
+end
+
+
+function get_mover_line(config::AbstractDict)
+    mover_index = config["mover"]
+    mu = config["dists"][mover_index]["mu"]
+    sl = collect(range(0, 10, length=100))
+    # Get the direction vector
+    direction = get_mover_direction(config)
+    @info direction
+    @info sl
+    @info mu
+    # Traverse the vector starting at the mean
+    ml = mu .+ direction * sl'
+    # ml = mu .+ direction
+    return ml
 end

@@ -34,6 +34,7 @@ rng = MersenneTwister(1234)
 config = CFAR.get_gaussian_config("gaussians.yml")
 # X, y = CFAR.gen_gaussians("gaussians.yml")
 X, y, mx, my = CFAR.gen_gaussians(config)
+ml = CFAR.get_mover_line(config)
 
 # Init a plot object
 p = plot()
@@ -52,3 +53,9 @@ scatter!(
     group=my,
 )
 
+plot!(
+    p,
+    ml[1, :],
+    ml[2, :],
+    linewidth = 3,
+)
