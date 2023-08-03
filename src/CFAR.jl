@@ -32,8 +32,10 @@ using
     AdaptiveResonance,
     DocStringExtensions,
     DrWatson,
+    Distributions,          # MvNormal
     NumericalTypeAliases,
-    Pkg
+    Pkg,
+    Random
 
 import YAML
 

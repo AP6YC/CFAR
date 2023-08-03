@@ -6,4 +6,5 @@ This experiment implements the initial visualization for the paper using data sa
 
 The following files implement the experiment:
 
-- `mg.jl`
+- `mg.jl`: demonstration script for training a supervised ART module on Gaussian data
+- `1_gen_mg.jl`: generates a dataset of gaussians for standard training of ART and deep learning models.

@@ -1,3 +1,6 @@
+n_points_per: 100
+dim: 2
+
 dists:
   1:
     mu: [

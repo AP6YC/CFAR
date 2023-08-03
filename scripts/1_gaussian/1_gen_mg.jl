@@ -31,7 +31,8 @@ N_POINTS = 1000
 
 rng = MersenneTwister(1234)
 
-data = CFAR.get_dists("gaussians.yml")
+config = CFAR.get_gaussian_config("gaussians.yml")
+data = CFAR.gen_gaussians("gaussians.yml")
 
 dist1 = MvNormal(
     [0.0, 6.0],
