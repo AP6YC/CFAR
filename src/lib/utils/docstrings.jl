@@ -71,7 +71,7 @@ const ARG_CONFIG_FILE = """
 Common docstring: config dictionary argument.
 """
 const ARG_CONFIG_DICT = """
-- `config::AbstractDict`: the config parameters as a dictionary.
+- `config::ConfigDict`: the config parameters as a dictionary.
 """
 
 """

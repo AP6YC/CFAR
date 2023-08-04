@@ -36,10 +36,12 @@ using
     DrWatson,
     Distributions,          # MvNormal
     ElasticArrays,
+    HDF5,
     NumericalTypeAliases,
     Pkg,
     Plots,
-    Random
+    Random,
+    StatsPlots
 
 import YAML
 

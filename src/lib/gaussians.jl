@@ -51,7 +51,7 @@ Gets the distribution generators based upon the config parameters.
 # Arguments
 $ARG_CONFIG_DICT
 """
-function get_dists(config::AbstractDict)
+function get_dists(config::ConfigDict)
     # Init the vector of distribution generators
     dist_gens = Vector{MvNormal}()
     dist_gen_dict = Dict{Int, MvNormal}()
@@ -88,7 +88,7 @@ Generates Gaussian distributed samples from the provided configuration dictionar
 # Arguments
 $ARG_CONFIG_DICT
 """
-function gen_gaussians(config::AbstractDict)
+function gen_gaussians(config::ConfigDict)
     # Get the random generators from the config file
     dist_gens = get_dists(config)
 
@@ -162,7 +162,7 @@ Generates a vector representing the direction of the mover's line.
 # Arguments
 $ARG_CONFIG_DICT
 """
-function get_mover_direction(config::AbstractDict)
+function get_mover_direction(config::ConfigDict)
     # Get the direction as a function of the config file angle
     direction = [
         cosd(config["angle"])
@@ -181,7 +181,7 @@ Shifts the provided data samples matrix along the config direction by `s` amount
 $ARG_CONFIG_DICT
 - `s::Float`: the distance to travel along the line
 """
-function shift_samples(data::RealMatrix, config::AbstractDict, s::Float)
+function shift_samples(data::RealMatrix, config::ConfigDict, s::Float)
     # Get the direction
     direction = get_mover_direction(config)
     shift = direction .* s
@@ -201,7 +201,7 @@ $ARG_CONFIG_DICT
 - `length::Float=10.0`: kwarg, length of the line.
 """
 function get_mover_line(
-    config::AbstractDict;
+    config::ConfigDict;
     n_points::Integer=2,
     length::Float=10.0
 )
@@ -226,6 +226,12 @@ end
 # function extend_concat_gaussians()
 # end
 
-# function save_gaussians(data::RealMatrix)
+function save_gaussians(ms::MoverSplit, filename::AbstractString)
+    # Open the h5 file
+    h5open(filename, "w") do fid
+        g = create_group
+    end
 
-# end
+    # Empty return
+    return
+end

@@ -3,6 +3,7 @@ n_points_per: 100
 dim: 2
 rng_seed: 1234
 angle: 135
+# angle: 90
 mover: 3
 
 # Distribution parameters
@@ -11,6 +12,7 @@ dists:
     mu: [
       6.0,
       8.0
+      # 12.0
     ]
     var: [
       [1.0, -0.5],
@@ -21,6 +23,7 @@ dists:
     mu: [
       0.0,
       6.0
+      # 10.0
     ]
     var: [
       [1.0, 0.0],

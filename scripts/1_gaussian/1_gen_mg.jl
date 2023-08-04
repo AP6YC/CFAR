@@ -21,7 +21,7 @@ using CFAR
 
 using Distributions, Random
 # using MLDataUtils
-using Plots
+# using Plots
 using DelimitedFiles
 
 # -----------------------------------------------------------------------------
@@ -49,29 +49,9 @@ config = CFAR.get_gaussian_config("gaussians.yml")
 # Generate the Gaussian samples
 # X, y, mx, my = CFAR.gen_gaussians(config)
 ms = CFAR.gen_gaussians(config)
-# X, y = CFAR.gen_gaussians("gaussians.yml")
 
-# Get the mover line for visualization
-ml = CFAR.get_mover_line(config)
-
-# Init a plot object
-p = plot()
-
-# Plot the original Gaussians samples
-CFAR.scatter_gaussian!(p, ms.static)
-
-# Plot the samples from the mover
-CFAR.scatter_gaussian!(p, ms.mover)
-
-# Plot the mover's line
-plot!(
-    p,
-    ml[1, :],
-    ml[2, :],
-    linewidth = 3,
-)
-
-display(p)
+# Visualize the data
+CFAR.plot_mover(ms, config)
 
 # data = vcat(
 #     X',
