@@ -8,7 +8,19 @@ Define the color schemes used in the paper results
 - Sasha Petrenko <petrenkos@mst.edu>
 """
 
-using ColorSchemes
+# -----------------------------------------------------------------------------
+# CONSTANTS
+# -----------------------------------------------------------------------------
+
+"""
+Plotting colorscheme.
+"""
+const COLORSCHEME = :okabe_ito
+
+"""
+Plotting fontfamily for all text.
+"""
+const FONTFAMILY = "Computer Modern"
 
 """
 Yellow-green-9 raw RGB values, range `[0, 1]`.
@@ -40,10 +52,12 @@ const PUBU_9_RAW = [
     2	56	88
 ]/255.0
 
-# Infer the number of colors
-# n_colors = size(YLGN_9_RAW)[1]
+# -----------------------------------------------------------------------------
+# DERIVED CONSTANTS
+# -----------------------------------------------------------------------------
 
 # Define the colorschemes from the RGB values
+
 """
 Yellow-green-9 color scheme.
 """
@@ -58,13 +72,3 @@ const PUBU_9 = ColorScheme([RGB{Float64}(PUBU_9_RAW[i, :]...) for i = 1:size(PUB
 Gradient scheme from a given color scheme
 """
 const GRADIENTSCHEME = PUBU_9[5:end]
-
-"""
-Plotting colorscheme.
-"""
-const COLORSCHEME = :okabe_ito
-
-"""
-Plotting fontfamily for all text.
-"""
-const FONTFAMILY = "Computer Modern"

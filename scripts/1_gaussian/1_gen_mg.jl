@@ -51,6 +51,8 @@ ms = CFAR.gen_gaussians(config)
 # Visualize the data
 CFAR.plot_mover(ms, config)
 
+# CFAR.shift_mover!(ms, config, 0.1)
+# CFAR.plot_mover(ms, config)
 # data = vcat(
 #     X',
 #     mx',

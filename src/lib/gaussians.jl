@@ -196,7 +196,23 @@ function shift_samples(data::RealMatrix, config::ConfigDict, s::Float)
     # Shift all samples by the same amount
     new_data = data .+ shift
 
+    # Return the shifted data
     return new_data
+end
+
+# function shift_dataset!(data::LabeledDataset, config::ConfigDict, s::Float)
+#     data.train = shift_samples(data.train, config, s)
+#     data.test = shift_samples(data.test, config, s)
+#     return
+# end
+
+function shift_mover!(ms::MoverSplit, config::ConfigDict, s::Float)
+    # shift_dataset!(ms.mover, config, s)
+    ms.mover.train.x = shift_samples(ms.mover.train.x, config, s)
+    ms.mover.test.x = shift_samples(ms.mover.test.x, config, s)
+    # data.train = shift_samples(data.train, config, s)
+    # data.test = shift_samples(data.test, config, s)
+    return
 end
 
 """

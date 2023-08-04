@@ -37,6 +37,7 @@ function plot_covellipses(
 )
     # Iterate over every distribution
     for (ix, dist) in config["dists"]
+        # Create the covariance ellipse (from StatsPlots.jl)
         covellipse!(
             p,
             dist["mu"],
