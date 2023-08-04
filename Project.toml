@@ -27,9 +27,17 @@ YAML = "ddb6d928-2868-570f-bddf-ab3f9cf99eb6"
 
 [compat]
 AdaptiveResonance = "0.8"
+DataFrames = "1"
+Distributions = "0.25"
+CSV = "0.10"
 DocStringExtensions = "0.9"
 DrWatson = "2"
+NumericalTypeAliases = "0.2"
+Plots = "1"
+HDF5 = "0.16"
 PrecompileSignatures = "3"
+Revise = "3"
+YAML = "0.4"
 
 [extras]
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
