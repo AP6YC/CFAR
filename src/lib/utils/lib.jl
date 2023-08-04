@@ -23,3 +23,6 @@ include("version.jl")
 
 # File operations
 include("file.jl")
+
+# Color definitions
+include("colors.jl")

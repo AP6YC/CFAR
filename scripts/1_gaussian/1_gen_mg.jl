@@ -20,8 +20,6 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using Distributions, Random
-# using MLDataUtils
-# using Plots
 using DelimitedFiles
 
 # -----------------------------------------------------------------------------

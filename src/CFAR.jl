@@ -27,6 +27,9 @@ module CFAR
 # DEPENDENCIES
 # -----------------------------------------------------------------------------
 
+# Imports
+import YAML
+
 # Full usings (which supports comma-separated import notation)
 using
     AdaptiveResonance,
@@ -43,9 +46,10 @@ using
     Random,
     StatsPlots
 
-import YAML
-
+# Individual usings
 using MLUtils: splitobs
+using DataStructures: OrderedDict
+using ColorSchemes: ColorScheme
 
 # Precompile concrete type methods
 using PrecompileSignatures: @precompile_signatures

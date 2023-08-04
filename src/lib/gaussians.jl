@@ -41,6 +41,13 @@ function get_gaussian_config(config_file::AbstractString)
         # Replace the variance
         dist["var"] = local_mat
     end
+    # Order the distributions for convenience
+    dist_dict = OrderedDict{Int, Any}()
+    for ix = 1:length(data["dists"])
+        dist_dict[ix] = data["dists"][ix]
+    end
+    # Replace with the ordered dictionary
+    data["dists"] = dist_dict
     # Return the config data
     return data
 end
