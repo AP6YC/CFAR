@@ -35,11 +35,17 @@ using
     DocStringExtensions,
     DrWatson,
     Distributions,          # MvNormal
+    ElasticArrays,
+    HDF5,
     NumericalTypeAliases,
     Pkg,
-    Random
+    Plots,
+    Random,
+    StatsPlots
 
 import YAML
+
+using MLUtils: splitobs
 
 # Precompile concrete type methods
 using PrecompileSignatures: @precompile_signatures

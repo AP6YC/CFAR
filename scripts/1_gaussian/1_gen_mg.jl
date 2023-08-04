@@ -20,8 +20,8 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using Distributions, Random
-using MLDataUtils
-using Plots
+# using MLDataUtils
+# using Plots
 using DelimitedFiles
 
 # -----------------------------------------------------------------------------
@@ -29,6 +29,15 @@ using DelimitedFiles
 # -----------------------------------------------------------------------------
 
 N_MOVES = 10
+OUT_FILENAME = "gaussians.csv"
+
+# -----------------------------------------------------------------------------
+# DEPENDENT SETUP
+# -----------------------------------------------------------------------------
+
+out_dir(args...) = CFAR.results_dir("1_gaussian", args...)
+mkpath(out_dir())
+out_file = out_dir(OUT_FILENAME)
 
 # -----------------------------------------------------------------------------
 # EXPERIMENT
@@ -38,43 +47,15 @@ N_MOVES = 10
 config = CFAR.get_gaussian_config("gaussians.yml")
 
 # Generate the Gaussian samples
-X, y, mx, my = CFAR.gen_gaussians(config)
-# X, y = CFAR.gen_gaussians("gaussians.yml")
+# X, y, mx, my = CFAR.gen_gaussians(config)
+ms = CFAR.gen_gaussians(config)
 
-# Get the mover line for visualization
-ml = CFAR.get_mover_line(config)
+# Visualize the data
+CFAR.plot_mover(ms, config)
 
-# Init a plot object
-p = plot()
+# data = vcat(
+#     X',
+#     mx',
+# )
 
-# Plot the original Gaussians samples
-scatter!(
-    p,
-    X[1, :],
-    X[2, :],
-    group=y,
-)
-
-# Plot the samples from the mover
-scatter!(
-    p,
-    mx[1, :],
-    mx[2, :],
-    group=my,
-)
-
-# Plot the mover's line
-plot!(
-    p,
-    ml[1, :],
-    ml[2, :],
-    linewidth = 3,
-)
-
-# for
-data = vcat(
-    X',
-    mx',
-)
-
-writedlm("asdf.csv", data)
+# writedlm(out_file, data)

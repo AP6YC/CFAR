@@ -21,7 +21,8 @@ using CFAR
 
 using AdaptiveResonance
 using Distributions, Random
-using MLDataUtils
+# using MLDataUtils
+using MLUtils
 using Plots
 
 # -----------------------------------------------------------------------------
@@ -45,7 +46,8 @@ y = vcat(ones(Int64, N_POINTS), zeros(Int64, N_POINTS))
 
 p1 = scatter(X[1,:], X[2,:], group=y, title="Original Data")
 
-(X_train, y_train), (X_test, y_test) = stratifiedobs((X, y))
+# (X_train, y_train), (X_test, y_test) = stratifiedobs((X, y))
+(X_train, y_train), (X_test, y_test) = splitobs((X, y), at=0.8)
 
 # Standardize data types
 X_train = convert(Matrix{Float64}, X_train)
