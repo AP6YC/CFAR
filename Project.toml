@@ -26,6 +26,7 @@ AdaptiveResonance = "0.8"
 DocStringExtensions = "0.9"
 DrWatson = "2"
 PrecompileSignatures = "3"
+Revise = "3"
 
 [extras]
 SafeTestsets = "1bc83da4-3b8d-516f-aca4-4fe02f6d838f"
