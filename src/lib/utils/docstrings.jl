@@ -80,3 +80,10 @@ Common docstring: argument for a split ratio `p`.
 const ARG_P = """
 - `p::Float=0.8`: kwarg, the split ratio ∈ `(0, 1)`.
 """
+
+"""
+Common docstring: argument for an existing `Plots.Plot` object to plot atop.
+"""
+const ARG_PLOT = """
+- `p::Plots.Plot`: an existing `Plots.Plot` object.
+"""

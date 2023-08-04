@@ -33,6 +33,7 @@ import YAML
 # Full usings (which supports comma-separated import notation)
 using
     AdaptiveResonance,
+    ColorSchemes,
     CSV,
     DataFrames,
     DocStringExtensions,
@@ -49,7 +50,6 @@ using
 # Individual usings
 using MLUtils: splitobs
 using DataStructures: OrderedDict
-using ColorSchemes: ColorScheme
 
 # Precompile concrete type methods
 using PrecompileSignatures: @precompile_signatures
