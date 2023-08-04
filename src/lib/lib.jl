@@ -12,8 +12,14 @@ Aggregates all types and functions that are used throughout the `CFAR` project.
 # INCLUDES
 # -----------------------------------------------------------------------------
 
+# Common experiment and file utilities
+include("utils/lib.jl")
+
 # Train/test data container definitions
 include("data.jl")
 
-# Common experiment and file utilities
-include("utils/lib.jl")
+# Gaussian data definitions
+include("gaussians.jl")
+
+# Plotting utilities
+include("plot.jl")

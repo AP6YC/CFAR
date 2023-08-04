@@ -38,9 +38,12 @@ using
     ElasticArrays,
     NumericalTypeAliases,
     Pkg,
+    Plots,
     Random
 
 import YAML
+
+using MLUtils: splitobs
 
 # Precompile concrete type methods
 using PrecompileSignatures: @precompile_signatures
