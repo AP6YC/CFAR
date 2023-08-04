@@ -71,7 +71,6 @@ plot!(
     linewidth = 3,
 )
 
-# for
 data = vcat(
     X',
     mx',

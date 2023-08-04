@@ -101,6 +101,8 @@ function get_dists(config::AbstractDict)
 end
 
 """
+Generates Gaussian distributed samples from the provided configuration dictionary.
+
 # Arguments
 $ARG_CONFIG_DICT
 """
@@ -147,6 +149,8 @@ function gen_gaussians(config::AbstractDict)
             )
         end
     end
+
+    # DataSplitCombined()
 
     return X, y, mx, my
 end
@@ -227,6 +231,13 @@ function get_mover_line(
     return ml
 end
 
-function save_gaussians(data::RealMatrix)
+# struct
 
-end
+# end
+
+# function extend_concat_gaussians()
+# end
+
+# function save_gaussians(data::RealMatrix)
+
+# end

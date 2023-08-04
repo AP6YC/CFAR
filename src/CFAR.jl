@@ -35,6 +35,7 @@ using
     DocStringExtensions,
     DrWatson,
     Distributions,          # MvNormal
+    ElasticArrays,
     NumericalTypeAliases,
     Pkg,
     Random
