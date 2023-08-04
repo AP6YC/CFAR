@@ -30,6 +30,7 @@ CSV = "0.10"
 DocStringExtensions = "0.9"
 DrWatson = "2"
 PrecompileSignatures = "3"
+Revise = "3"
 YAML = "0.4"
 
 [extras]
