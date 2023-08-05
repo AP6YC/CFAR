@@ -5,6 +5,7 @@ rng_seed: 1234
 angle: 135
 # angle: 90
 mover: 3
+split: 0.8
 
 # Distribution parameters
 dists:
@@ -40,4 +41,3 @@ dists:
       [0.0, 1.0]
     ]
     scale: 1.0
-

@@ -26,7 +26,7 @@ using DelimitedFiles
 # VARIABLES
 # -----------------------------------------------------------------------------
 
-N_MOVES = 10
+# N_MOVES = 10
 OUT_FILENAME = "gaussians.csv"
 
 # -----------------------------------------------------------------------------
@@ -51,8 +51,8 @@ ms = CFAR.gen_gaussians(config)
 # Visualize the data
 CFAR.plot_mover(ms, config)
 
-# CFAR.shift_mover!(ms, config, 0.1)
-# CFAR.plot_mover(ms, config)
+CFAR.shift_mover!(ms, config, 1.0)
+CFAR.plot_mover(ms, config)
 # data = vcat(
 #     X',
 #     mx',

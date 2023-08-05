@@ -194,17 +194,51 @@ Returns a [`DataSplitCombined`](@ref) from a [`LabeledDataset`](@ref) with a pro
 $ARG_P
 """
 function DataSplitCombined(data::LabeledDataset; p::Float=0.8)
+    # Split the data
     train, test = split_data(data, p=p)
+    # Construct and return the dataset
     return DataSplitCombined(
         train,
         test
     )
 end
 
+# """
+# Definition of extra details and statistics about a [`MoverSplit`](@ref).
+# """
+# struct MoverStats
+#     """
+#     The config used to generate the mover.
+#     """
+#     config::ConfigDict
+
+#     """
+#     The distance that the points have traversed alone the mover direction.
+#     """
+#     moved::Float
+
+#     """
+#     The current mean of the mover.
+#     """
+#     mover_mu::Vector{Float}
+# end
+
+# """
+# Constructor for the [`MoverStats`](@ref) taking only the config used to generate the data.
+# """
+# function MoverStats(config::ConfigDict)
+#     mover_ind = config["mover"]
+#     return MoverStats(
+#         config,
+#         0.0,
+#         config["dists"][mover_ind]["mu"],
+#     )
+# end
+
 """
 Definition of a split of data with one part remaining static and the other moving.
 """
-struct MoverSplit <: MatrixData
+struct MoverSplit
     """
     The static [`DataSplitCombined`](@ref).
     """
@@ -214,17 +248,36 @@ struct MoverSplit <: MatrixData
     The moving [`DataSplitCombined`](@ref).
     """
     mover::DataSplitCombined
+
+    """
+    The config used to generate the mover.
+    """
+    config::ConfigDict
+
+    # """
+    # Added information and statistics about the mover.
+    # """
+    # stats::MoverStats
 end
 
 """
 Constructor for a [`MoverSplit`](@ref) taking a preconstructed static and mover [`LabeledDataset`](@ref)s along with a split parameter `p`.
+
+# Arguments
+- `static::LabeledDataset`: the static part of the dataset.
+- `mover::LabeledDataset`: the moving part of the datset.
 """
-function MoverSplit(static::LabeledDataset, mover::LabeledDataset; p::Float=0.8)
-    new_static = DataSplitCombined(static, p=p)
-    new_mover = DataSplitCombined(mover, p=p)
+function MoverSplit(
+    static::LabeledDataset,
+    mover::LabeledDataset,
+    config::ConfigDict
+)
+    new_static = DataSplitCombined(static, p=config["split"])
+    new_mover = DataSplitCombined(mover, p=config["split"])
     return MoverSplit(
         new_static,
         new_mover,
+        config,
     )
 end
 

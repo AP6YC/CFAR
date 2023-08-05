@@ -143,7 +143,7 @@ function gen_gaussians(config::ConfigDict)
     mover = LabeledDataset(mx, my, ["mover"])
     # @info static
     # @info mover
-    ms = MoverSplit(static, mover)
+    ms = MoverSplit(static, mover, config)
     # DataSplitCombined()
 
     # return X, y, mx, my
@@ -159,6 +159,7 @@ $ARG_CONFIG_FILE
 function gen_gaussians(config_file::AbstractString)
     # Load and sanitize the Gaussian config
     config = get_gaussian_config(config_file)
+
     # Return the generated gaussians
     return gen_gaussians(config)
 end
@@ -181,38 +182,80 @@ function get_mover_direction(config::ConfigDict)
 end
 
 """
-Shifts the provided data samples matrix along the config direction by `s` amount.
-
+Gets the shift vector from the configuration and distance to traverse.
 # Arguments
-- `data::RealMatrix`: the dataset of shape `(n_samples, dim)`.
 $ARG_CONFIG_DICT
 - `s::Float`: the distance to travel along the line
 """
-function shift_samples(data::RealMatrix, config::ConfigDict, s::Float)
+function get_shift(config::ConfigDict, s::Float)
     # Get the direction
     direction = get_mover_direction(config)
     shift = direction .* s
-
-    # Shift all samples by the same amount
-    new_data = data .+ shift
-
-    # Return the shifted data
-    return new_data
+    return shift
 end
 
-# function shift_dataset!(data::LabeledDataset, config::ConfigDict, s::Float)
-#     data.train = shift_samples(data.train, config, s)
-#     data.test = shift_samples(data.test, config, s)
-#     return
+# """
+# Shifts the provided data samples matrix along the config direction by `s` amount.
+
+# # Arguments
+# - `data::RealMatrix`: the dataset of shape `(n_samples, dim)`.
+# $ARG_CONFIG_DICT
+# - `s::Float`: the distance to travel along the line
+# """
+# function shift_samples(data::RealMatrix, config::ConfigDict, s::Float)
+#     shift = get_shift(config, s)
+
+#     # Shift all samples by the same amount
+#     new_data = data .+ shift
+
+#     # Return the shifted data
+#     return new_data
 # end
 
-function shift_mover!(ms::MoverSplit, config::ConfigDict, s::Float)
-    # shift_dataset!(ms.mover, config, s)
-    ms.mover.train.x = shift_samples(ms.mover.train.x, config, s)
-    ms.mover.test.x = shift_samples(ms.mover.test.x, config, s)
-    # data.train = shift_samples(data.train, config, s)
-    # data.test = shift_samples(data.test, config, s)
-    return
+"""
+Moves the mover component of a [`MoverSplit`](@ref) a distance of `s`.
+
+# Arguments
+- `ms::MoverSplit`: the datset containing a mover to shift.
+$ARG_CONFIG_DICT
+- `s::Float`: the distance to travel along the line
+"""
+function shift_mover(ms::MoverSplit, config::ConfigDict, s::Float)
+    # Get the amount to shift by from the configuration and provided s
+    shift = get_shift(config, s)
+
+    # Shift the training and testing datasets
+    new_train_x = ms.mover.train.x .+ shift
+    new_test_x = ms.mover.test.x .+ shift
+
+    # Copy and shift the config
+    new_config = copy(config)
+    mover_ind = new_config["mover"]
+    new_config["dists"][mover_ind]["mu"] += shift
+
+    # Create a new mover dataset from the shifted samples
+    new_mover = DataSplitCombined(
+        LabeledDataset(
+            new_train_x,
+            ms.mover.train.y,
+            ms.mover.train.labels,
+        ),
+        LabeledDataset(
+            new_test_x,
+            ms.mover.test.y,
+            ms.mover.test.labels,
+        )
+    )
+
+    # Create a new MoverSplit
+    new_ms = MoverSplit(
+        ms.static,
+        new_mover,
+        new_config,
+    )
+
+    # Return the newly constructed dataset
+    return new_ms
 end
 
 """
@@ -230,14 +273,19 @@ function get_mover_line(
 )
     # Identify which mean belongs to the mover
     mover_index = config["mover"]
+
     # Get the mean of the mover
     mu = config["dists"][mover_index]["mu"]
+
     # Create the interpolation points
     sl = collect(range(0.0, length, length=n_points))
+
     # Get the direction vector
     direction = get_mover_direction(config)
+
     # Traverse the vector starting at the mean
     ml = mu .+ direction * sl'
+
     # Return the mover line
     return ml
 end
