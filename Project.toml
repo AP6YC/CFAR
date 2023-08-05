@@ -39,6 +39,7 @@ NumericalTypeAliases = "0.2"
 Plots = "1"
 PrecompileSignatures = "3"
 Revise = "3"
+StatsPlots = "0.15"
 YAML = "0.4"
 
 [extras]
