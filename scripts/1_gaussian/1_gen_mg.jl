@@ -27,7 +27,7 @@ using DelimitedFiles
 # -----------------------------------------------------------------------------
 
 # N_MOVES = 10
-OUT_FILENAME = "gaussians.csv"
+OUT_FILENAME = "gaussians.h5"
 
 # -----------------------------------------------------------------------------
 # DEPENDENT SETUP
@@ -49,13 +49,15 @@ config = CFAR.get_gaussian_config("gaussians.yml")
 ms = CFAR.gen_gaussians(config)
 
 # Visualize the data
-CFAR.plot_mover(ms, config)
+# CFAR.plot_mover(ms, config)
+CFAR.plot_mover(ms)
 
-CFAR.shift_mover!(ms, config, 1.0)
-CFAR.plot_mover(ms, config)
-# data = vcat(
-#     X',
-#     mx',
-# )
+ms_new = deepcopy(ms)
+for ix = 1:5
+    global ms_new = CFAR.shift_mover(ms_new, 1.0)
+    # CFAR.plot_mover(ms_new, config)
+    CFAR.plot_mover(ms_new)
+end
+
 
 # writedlm(out_file, data)

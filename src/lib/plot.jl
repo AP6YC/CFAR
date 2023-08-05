@@ -51,6 +51,39 @@ function plot_covellipses(
 end
 
 """
+Generates a dataset of points representing the mover's direction of traversal.
+
+# Arguments
+$ARG_CONFIG_DICT
+- `n_points::Integer=2`: kwarg, number of points along the line to return.
+- `length::Float=10.0`: kwarg, length of the line.
+"""
+function get_mover_line(
+    config::ConfigDict;
+    n_points::Integer=2,
+    length::Float=10.0
+)
+    # Identify which mean belongs to the mover
+    mover_index = config["mover"]
+
+    # Get the mean of the mover
+    # mu = config["dists"][mover_index]["mu"]
+    mu = config["mover_dist"]["mu"]
+
+    # Create the interpolation points
+    sl = collect(range(0.0, length, length=n_points))
+
+    # Get the direction vector
+    direction = get_mover_direction(config)
+
+    # Traverse the vector starting at the mean
+    ml = mu .+ direction * sl'
+
+    # Return the mover line
+    return ml
+end
+
+"""
 Plots the mover line plot with scattered data points, covariance lines, and mover line.
 
 # Arguments
@@ -59,8 +92,9 @@ $ARG_CONFIG_DICT
 """
 function plot_mover(
     ms::MoverSplit,
-    config::ConfigDict
+    # config::ConfigDict
 )
+    config = ms.config
     # Get the mover line for visualization
     ml = CFAR.get_mover_line(config)
 

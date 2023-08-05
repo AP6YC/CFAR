@@ -34,6 +34,7 @@ $ARG_CONFIG_FILE
 function get_gaussian_config(config_file::AbstractString)
     # Load the config file
     data = load_config(config_file)
+
     # Replace the distribution variances with matrices
     for (_, dist) in data["dists"]
         # Convert the local variance from a vector of vectors to a matrix
@@ -41,13 +42,24 @@ function get_gaussian_config(config_file::AbstractString)
         # Replace the variance
         dist["var"] = local_mat
     end
+
     # Order the distributions for convenience
     dist_dict = OrderedDict{Int, Any}()
     for ix = 1:length(data["dists"])
         dist_dict[ix] = data["dists"][ix]
     end
+
     # Replace with the ordered dictionary
     data["dists"] = dist_dict
+
+    # Create a new distribution for tracking the mover
+    # data["mover_dist"] = Dict{String, Any}()
+    dist_ind = data["mover"]
+    data["mover_dist"] = deepcopy(data["dists"][dist_ind])
+    # for dist_info in ["mu", "var", "scale"]
+    #     data["mover_dist"][dist_info] = data["dists"][dist_ind][dist_info]
+    # end
+
     # Return the config data
     return data
 end
@@ -220,18 +232,23 @@ Moves the mover component of a [`MoverSplit`](@ref) a distance of `s`.
 $ARG_CONFIG_DICT
 - `s::Float`: the distance to travel along the line
 """
-function shift_mover(ms::MoverSplit, config::ConfigDict, s::Float)
+function shift_mover(
+    ms::MoverSplit,
+    # config::ConfigDict,
+    s::Float
+)
     # Get the amount to shift by from the configuration and provided s
-    shift = get_shift(config, s)
+    shift = get_shift(ms.config, s)
 
     # Shift the training and testing datasets
     new_train_x = ms.mover.train.x .+ shift
     new_test_x = ms.mover.test.x .+ shift
 
     # Copy and shift the config
-    new_config = copy(config)
+    new_config = deepcopy(ms.config)
     mover_ind = new_config["mover"]
     new_config["dists"][mover_ind]["mu"] += shift
+    # new_config["mover_dist"]["mu"] += shift
 
     # Create a new mover dataset from the shifted samples
     new_mover = DataSplitCombined(
@@ -256,38 +273,6 @@ function shift_mover(ms::MoverSplit, config::ConfigDict, s::Float)
 
     # Return the newly constructed dataset
     return new_ms
-end
-
-"""
-Generates a dataset of points representing the mover's direction of traversal.
-
-# Arguments
-$ARG_CONFIG_DICT
-- `n_points::Integer=2`: kwarg, number of points along the line to return.
-- `length::Float=10.0`: kwarg, length of the line.
-"""
-function get_mover_line(
-    config::ConfigDict;
-    n_points::Integer=2,
-    length::Float=10.0
-)
-    # Identify which mean belongs to the mover
-    mover_index = config["mover"]
-
-    # Get the mean of the mover
-    mu = config["dists"][mover_index]["mu"]
-
-    # Create the interpolation points
-    sl = collect(range(0.0, length, length=n_points))
-
-    # Get the direction vector
-    direction = get_mover_direction(config)
-
-    # Traverse the vector starting at the mean
-    ml = mu .+ direction * sl'
-
-    # Return the mover line
-    return ml
 end
 
 # struct
