@@ -156,7 +156,9 @@ Teturns a manual train/test x/y split from a data matrix and labels using MLData
 $ARG_P
 """
 function get_manual_split(data::RealMatrix, targets::IntegerVector; p::Float=0.8)
-    (X_train, y_train), (X_test, y_test) = splitobs((data, targets), at=p)
+    data_s, targets_s = shuffleobs((data, targets))
+    # (X_train, y_train), (X_test, y_test) = splitobs((data, targets), at=p)
+    (X_train, y_train), (X_test, y_test) = splitobs((data_s, targets_s), at=p)
     return (X_train, y_train), (X_test, y_test)
 end
 
@@ -203,38 +205,6 @@ function DataSplitCombined(data::LabeledDataset; p::Float=0.8)
     )
 end
 
-# """
-# Definition of extra details and statistics about a [`MoverSplit`](@ref).
-# """
-# struct MoverStats
-#     """
-#     The config used to generate the mover.
-#     """
-#     config::ConfigDict
-
-#     """
-#     The distance that the points have traversed alone the mover direction.
-#     """
-#     moved::Float
-
-#     """
-#     The current mean of the mover.
-#     """
-#     mover_mu::Vector{Float}
-# end
-
-# """
-# Constructor for the [`MoverStats`](@ref) taking only the config used to generate the data.
-# """
-# function MoverStats(config::ConfigDict)
-#     mover_ind = config["mover"]
-#     return MoverStats(
-#         config,
-#         0.0,
-#         config["dists"][mover_ind]["mu"],
-#     )
-# end
-
 """
 Definition of a split of data with one part remaining static and the other moving.
 """
@@ -253,11 +223,6 @@ struct MoverSplit
     The config used to generate the mover.
     """
     config::ConfigDict
-
-    # """
-    # Added information and statistics about the mover.
-    # """
-    # stats::MoverStats
 end
 
 """
@@ -306,38 +271,3 @@ function get_y(data::DataSplitCombined)
         data.test.y,
     )
 end
-
-# -----------------------------------------------------------------------------
-# FUNCTIONS
-# -----------------------------------------------------------------------------
-
-# """
-# A constructor for a [`LabeledDataset`](@ref) that merges two other [`LabeledDataset`](@ref)s.
-
-# # Arguments
-# - `d1::LabeledDataset`: the first [`LabeledDataset`](@ref) to consolidate.
-# - `d2::LabeledDataset`: the second [`LabeledDataset`](@ref) to consolidate.
-# """
-# function LabeledDataset(d1::LabeledDataset, d2::LabeledDataset)
-#     # Consolidate everything and construct in one step
-#     return LabeledDataset(
-#         hcat(d1.x, d2.x),
-#         vcat(d1.y, d2.y),
-#         vcat(d1.labels, d2.labels),
-#     )
-# end
-
-# """
-# Constructs a DataSplitCombined from an existing DataSplit by consolidating the training and validation data.
-
-# # Arguments
-# - `data::DataSplit`: the [`DataSplit`](@ref) struct for consolidating validation [`Features`](@ref) and [`Labels`](@ref) into the training data.
-# """
-# function DataSplitCombined(data::DataSplit)
-#     # Consolidate training and validation, and return the struct in one step
-#     return DataSplitCombined(
-#         LabeledDataset(data.train, data.val),
-#         data.test,
-#     )
-# end
-

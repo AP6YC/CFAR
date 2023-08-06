@@ -50,7 +50,7 @@ using
     StatsPlots
 
 # Individual usings
-using MLUtils: splitobs
+using MLUtils: splitobs, shuffleobs
 using DataStructures: OrderedDict
 
 # Precompile concrete type methods

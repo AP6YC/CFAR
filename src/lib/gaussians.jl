@@ -275,13 +275,6 @@ function shift_mover(
     return new_ms
 end
 
-# struct
-
-# end
-
-# function extend_concat_gaussians()
-# end
-
 """
 Constant name for the JLD2/H5 group that data is saved to and loaded from.
 
@@ -291,7 +284,7 @@ $ARG_FILENAME
 """
 const MS_GROUP = "ms"
 
-function save_gaussians(ms::MoverSplit, filename::AbstractString)
+function save_moversplit(ms::MoverSplit, filename::AbstractString)
     # Save directly with JLD2
     JLD2.save(filename, MS_GROUP, ms)
 
@@ -305,21 +298,22 @@ Loads and returns the gaussian data from the provided filename.
 # Arguments
 $ARG_FILENAME
 """
-function load_gaussians(filename::AbstractString)
+function load_moversplit(filename::AbstractString)
     # Load and return the datset
     return JLD2.load(filename, MS_GROUP)
 end
 
+"""
+Serializer for [`Features`](@ref) for saving with Arrow.
+"""
 struct SerializedFeatures
     dim1::Vector{Float}
     dim2::Vector{Float}
 end
 
-# ArrowTypes.arrowname(::Type{Matrix{Float}}) = :Matrix{Float}
-# ArrowTypes.JuliaType(::Matrix{Float}) = Matrix{Float}
-ArrowTypes.arrowname(::Type{SerializedFeatures}) = :SerializedFeatures
-ArrowTypes.JuliaType(::Val{:SerializedFeatures}) = SerializedFeatures
-
+"""
+Constructs a [`SerializedFeatures`](@ref) from a set of [`Features`](@ref).
+"""
 function SerializedFeatures(data::Features)
     return SerializedFeatures(
         vec(data[1, :]),
@@ -327,6 +321,17 @@ function SerializedFeatures(data::Features)
     )
 end
 
+# Tell Arrow about the SerializedFeatures type
+ArrowTypes.arrowname(::Type{SerializedFeatures}) = :SerializedFeatures
+ArrowTypes.JuliaType(::Val{:SerializedFeatures}) = SerializedFeatures
+
+"""
+Constructs a DataFrame table row for saving to an Arrow table.
+
+# Arguments
+- `data::DataSplitCombined`: the data split.
+- `label::AbstractString`: the string label for the data split.
+"""
 function get_table_row(data::DataSplitCombined, label::AbstractString)
     element = Vector{Any}([
         label,
@@ -338,6 +343,8 @@ function get_table_row(data::DataSplitCombined, label::AbstractString)
     return element
 end
 
+"""
+"""
 function save_all(ms::MoverSplit, filename::AbstractString)
     features = SerializedFeatures
     targets = Vector{Int}
@@ -353,13 +360,19 @@ function save_all(ms::MoverSplit, filename::AbstractString)
     push!(df, get_table_row(ms.mover, "mover1"))
 
     if isfile(filename)
-        rm(filename)
+        rm(filename, force=true)
     end
-    Arrow.write(filename, df)
+
+    # Arrow.write(filename, df)
+    open(filename, "w") do file
+        Arrow.write(file, df)
+    end
 
     return df
 end
 
+"""
+"""
 function deserialize_features(el::SerializedFeatures)
     return Features(
         permutedims(
@@ -371,16 +384,32 @@ function deserialize_features(el::SerializedFeatures)
     )
 end
 
+"""
+"""
 function load_all(filename::AbstractString)
-    ar = Arrow.Table(filename)
-    df = DataFrame(
-        ar
-    )
+    # # Load the Arrow table
+    # ar = open(filename, "r") do file
+    #     Arrow.Table(file)
+    # end
+
+    # # Turn the arrow table into a dataframe
+    # df = DataFrame(ar)
+
+    # Load the Arrow table
+    df = open(filename, "r") do file
+        DataFrame(Arrow.Table(file))
+        # df = DataFrame(ar)
+    end
+
+    # Turn the arrow table into a dataframe
+
+    # Deserialize the tensor fields
     df.train_x = deserialize_features.(df.train_x)
     df.test_x = deserialize_features.(df.test_x)
+
     # new_df = DataFrame(
     #     deserialize_features
     # )
     # df = DataFrame(Arrow.Table(filename))
-    return df, ar
+    return df
 end

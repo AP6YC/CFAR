@@ -60,12 +60,16 @@ for ix = 1:5
 end
 
 # Save the mover split
-CFAR.save_gaussians(ms, out_file)
+CFAR.save_moversplit(ms, out_file)
 
 # Test loading the dataset
-ms_loaded = CFAR.load_gaussians(out_file)
+ms_loaded = CFAR.load_moversplit(out_file)
 
 # Arrow dev
 arrow_file = out_dir("df.arrow")
 df = CFAR.save_all(ms, arrow_file)
-df2, ar = CFAR.load_all(arrow_file)
+df2 = CFAR.load_all(arrow_file)
+
+@info df2
+
+# @info ar
