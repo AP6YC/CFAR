@@ -64,22 +64,8 @@ CFAR.save_gaussians(ms, out_file)
 
 # Test loading the dataset
 ms_loaded = CFAR.load_gaussians(out_file)
-# writedlm(out_file, data)
 
-# using JLD2
-# JLD2.save(out_dir("dict.jld2"), "config", config)
-# using Arrow
-# using DataFrames
-# # df = DataFrame()
-
-# # Save the statements and their corresponding clusters to a CSV
-# df = DataFrame(
-#     train_x = Matrix{Float}[],
-#     train_y = String[],
-#     test_x = String[],
-#     test_y =
-#     # cluster = Int[],
-# )
+# Arrow dev
 arrow_file = out_dir("df.arrow")
 df = CFAR.save_all(ms, arrow_file)
 df2, ar = CFAR.load_all(arrow_file)

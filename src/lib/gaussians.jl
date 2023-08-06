@@ -310,35 +310,77 @@ function load_gaussians(filename::AbstractString)
     return JLD2.load(filename, MS_GROUP)
 end
 
-function save_all(ms::MoverSplit, filename::AbstractString)
-    # Save the statements and their corresponding clusters to a CSV
-    features = Matrix{Float}
-    targets = Vector{Int}
+struct SerializedFeatures
+    dim1::Vector{Float}
+    dim2::Vector{Float}
+end
 
+# ArrowTypes.arrowname(::Type{Matrix{Float}}) = :Matrix{Float}
+# ArrowTypes.JuliaType(::Matrix{Float}) = Matrix{Float}
+ArrowTypes.arrowname(::Type{SerializedFeatures}) = :SerializedFeatures
+ArrowTypes.JuliaType(::Val{:SerializedFeatures}) = SerializedFeatures
+
+function SerializedFeatures(data::Features)
+    return SerializedFeatures(
+        vec(data[1, :]),
+        vec(data[2, :]),
+    )
+end
+
+function get_table_row(data::DataSplitCombined, label::AbstractString)
+    element = Vector{Any}([
+        label,
+        SerializedFeatures(data.train.x),
+        data.train.y,
+        SerializedFeatures(data.test.x),
+        data.test.y,
+    ])
+    return element
+end
+
+function save_all(ms::MoverSplit, filename::AbstractString)
+    features = SerializedFeatures
+    targets = Vector{Int}
     df = DataFrame(
+        label = String[],
         train_x = features[],
         train_y = targets[],
         test_x = features[],
         test_y = targets[],
     )
 
-    element = Vector{Any}([
-        ms.mover.train.x,
-        ms.mover.train.y,
-        ms.mover.test.x,
-        ms.mover.test.y,
-    ])
+    push!(df, get_table_row(ms.static, "static"))
+    push!(df, get_table_row(ms.mover, "mover1"))
 
-    push!(df, element)
-
+    if isfile(filename)
+        rm(filename)
+    end
     Arrow.write(filename, df)
 
-    return  df
+    return df
+end
+
+function deserialize_features(el::SerializedFeatures)
+    return Features(
+        permutedims(
+            hcat(
+                el.dim1,
+                el.dim2,
+            )
+        )
+    )
 end
 
 function load_all(filename::AbstractString)
     ar = Arrow.Table(filename)
-    df = DataFrame(ar)
+    df = DataFrame(
+        ar
+    )
+    df.train_x = deserialize_features.(df.train_x)
+    df.test_x = deserialize_features.(df.test_x)
+    # new_df = DataFrame(
+    #     deserialize_features
+    # )
     # df = DataFrame(Arrow.Table(filename))
     return df, ar
 end
