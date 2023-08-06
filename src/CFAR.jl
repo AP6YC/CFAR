@@ -33,12 +33,14 @@ import YAML
 # Full usings (which supports comma-separated import notation)
 using
     AdaptiveResonance,
+    ArgParse,
     Arrow,
     ColorSchemes,
     CSV,
     DataFrames,
     DocStringExtensions,
     DrWatson,
+    Distributed,
     Distributions,          # MvNormal
     ElasticArrays,
     # HDF5,

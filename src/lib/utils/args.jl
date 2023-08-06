@@ -32,7 +32,7 @@ Parses the command line for common options in serial (non-distributed) experimen
 
 $ARG_ARG_DESCRIPTION
 """
-function exp_parse(description::AbstractString="A DCCR experiment script.")
+function exp_parse(description::AbstractString="A CFAR experiment script.")
     # Set up the parse settings
     s = get_argparsesettings(description)
 
@@ -58,7 +58,7 @@ Parses the command line for common options in distributed experiments.
 
 $ARG_ARG_DESCRIPTION
 """
-function dist_exp_parse(description::AbstractString="A distributed DCCR experiment script.")
+function dist_exp_parse(description::AbstractString="A distributed CFAR experiment script.")
     # Set up the parse settings
     s = get_argparsesettings(description)
 

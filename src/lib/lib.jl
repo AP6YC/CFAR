@@ -23,3 +23,6 @@ include("gaussians.jl")
 
 # Plotting utilities
 include("plot.jl")
+
+# Experiment functions
+include("experiments.jl")
