@@ -27,7 +27,7 @@ using DelimitedFiles
 # -----------------------------------------------------------------------------
 
 # N_MOVES = 10
-OUT_FILENAME = "gaussians.h5"
+OUT_FILENAME = "gaussians.jld2"
 
 # -----------------------------------------------------------------------------
 # DEPENDENT SETUP
@@ -59,5 +59,9 @@ for ix = 1:5
     CFAR.plot_mover(ms_new)
 end
 
+# Save the mover split
+CFAR.save_gaussians(ms, out_file)
 
+# Test loading the dataset
+ms_loaded = CFAR.load_gaussians(out_file)
 # writedlm(out_file, data)

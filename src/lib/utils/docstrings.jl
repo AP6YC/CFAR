@@ -87,3 +87,10 @@ Common docstring: argument for an existing `Plots.Plot` object to plot atop.
 const ARG_PLOT = """
 - `p::Plots.Plot`: an existing `Plots.Plot` object.
 """
+
+"""
+Common docstring: argument for a file name.
+"""
+const ARG_FILENAME = """
+- `filename::AbstractString`: the full file path as a string.
+"""

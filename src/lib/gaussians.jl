@@ -282,12 +282,30 @@ end
 # function extend_concat_gaussians()
 # end
 
+"""
+Constant name for the JLD2/H5 group that data is saved to and loaded from.
+
+# Arguments
+- `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset to save.
+$ARG_FILENAME
+"""
+const MS_GROUP = "ms"
+
 function save_gaussians(ms::MoverSplit, filename::AbstractString)
-    # Open the h5 file
-    h5open(filename, "w") do fid
-        g = create_group
-    end
+    # Save directly with JLD2
+    JLD2.save(filename, MS_GROUP, ms)
 
     # Empty return
     return
+end
+
+"""
+Loads and returns the gaussian data from the provided filename.
+
+# Arguments
+$ARG_FILENAME
+"""
+function load_gaussians(filename::AbstractString)
+    # Load and return the datset
+    return JLD2.load(filename, MS_GROUP)
 end
