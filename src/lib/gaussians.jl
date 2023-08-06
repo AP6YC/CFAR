@@ -309,3 +309,36 @@ function load_gaussians(filename::AbstractString)
     # Load and return the datset
     return JLD2.load(filename, MS_GROUP)
 end
+
+function save_all(ms::MoverSplit, filename::AbstractString)
+    # Save the statements and their corresponding clusters to a CSV
+    features = Matrix{Float}
+    targets = Vector{Int}
+
+    df = DataFrame(
+        train_x = features[],
+        train_y = targets[],
+        test_x = features[],
+        test_y = targets[],
+    )
+
+    element = Vector{Any}([
+        ms.mover.train.x,
+        ms.mover.train.y,
+        ms.mover.test.x,
+        ms.mover.test.y,
+    ])
+
+    push!(df, element)
+
+    Arrow.write(filename, df)
+
+    return  df
+end
+
+function load_all(filename::AbstractString)
+    ar = Arrow.Table(filename)
+    df = DataFrame(ar)
+    # df = DataFrame(Arrow.Table(filename))
+    return df, ar
+end

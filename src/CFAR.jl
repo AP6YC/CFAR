@@ -33,6 +33,7 @@ import YAML
 # Full usings (which supports comma-separated import notation)
 using
     AdaptiveResonance,
+    Arrow,
     ColorSchemes,
     CSV,
     DataFrames,
