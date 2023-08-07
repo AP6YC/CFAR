@@ -20,14 +20,7 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using PythonCall
-using CondaPkg
+# using CondaPkg
 
-# mlp = pyimport(".", "mlp")
-
-# CondaPkg.withenv() do
-#     python = CondaPkg.which("python")
-#     run(`$(python) --version`)
-# end
-
-pydeps = joinpath("scripts", "1_gaussian", "mlp.py")
-pyexec(read(pydeps))
+# run(`python $pydeps`)
+mlp = pyimport("mlp")
