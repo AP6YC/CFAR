@@ -8,6 +8,11 @@ Experiment functions for the project.
 - Sasha Petrenko <petrenkos@mst.edu>
 """
 
+function load_sim_opts(file::AbstractString="art.yml")
+    dict = load_config(file)
+    return dict
+end
+
 """
 Train and test SFAM in parallel.
 """
@@ -56,6 +61,7 @@ function train_test_mc(d::AbstractDict, ms::CFAR.MoverSplit, dir_func::Function)
         local_ms.mover.test.y,
     )
 
+    # Classify combined data
     yh12 = classify(
         art,
         hcat(
@@ -64,6 +70,7 @@ function train_test_mc(d::AbstractDict, ms::CFAR.MoverSplit, dir_func::Function)
         )
     )
 
+    # Performance on both data
     p12 = performance(
         yh12,
         vcat(

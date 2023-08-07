@@ -24,6 +24,13 @@ using DrWatson
 # using ProgressMeter
 
 # -----------------------------------------------------------------------------
+# OPTIONS
+# -----------------------------------------------------------------------------
+
+# Simulation options
+# opts_file = "art.yml"
+
+# -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
@@ -75,7 +82,11 @@ sim_params = Dict{String, Any}(
     ms = CFAR.gen_gaussians(config)
 
     # local_sim(dict) = train_test_mc;
-    local_sim(dict) = CFAR.train_test_mc(dict, ms, sweep_results_dir)
+    local_sim(dict) = CFAR.train_test_mc(
+        dict,
+        ms,
+        sweep_results_dir
+    )
 end
 
 # -----------------------------------------------------------------------------

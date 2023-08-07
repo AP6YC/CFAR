@@ -310,12 +310,22 @@ end
 Serializer for [`Features`](@ref) for saving with Arrow.
 """
 struct SerializedFeatures
+    """
+    The first dimension of the [`Features`](@ref).
+    """
     dim1::Vector{Float}
+
+    """
+    The second dimension of the [`Features`](@ref).
+    """
     dim2::Vector{Float}
 end
 
 """
 Constructs a [`SerializedFeatures`](@ref) from a set of [`Features`](@ref).
+
+# Arguments
+- `data::Features`: the [`Features`](@ref) to serialize.
 """
 function SerializedFeatures(data::Features)
     return SerializedFeatures(
@@ -433,13 +443,16 @@ Loads the Arrow file as a DataFrame.
 """
 function load_all(filename::AbstractString)
     # Load the Arrow table
-    df = open(filename, "r") do file
-        DataFrame(Arrow.Table(file))
-    end
+    # df = open(filename, "r") do file
+    #     DataFrame(Arrow.Table(file))
+    # end
+    ar = Arrow.Table(filename)
+    df = DataFrame(ar)
 
     # Deserialize the tensor fields
     deserialize_df!(df)
 
     # Return the loaded and deserialized dataframe
-    return df
+    # return df
+    return df, ar
 end

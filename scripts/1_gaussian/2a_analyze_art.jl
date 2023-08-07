@@ -20,14 +20,17 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using DrWatson      # collect_results!
+using DataFrames
 using Plots
 
 # -----------------------------------------------------------------------------
 # OPTIONS
 # -----------------------------------------------------------------------------
 
+# This experiment name
 experiment = "2a_analyze_art"
 
+# Point to the sweep results
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
     "2_art",
@@ -53,26 +56,4 @@ df = collect_results!(sweep_dir)
 
 sort!(df, [:travel])
 
-p = plot()
-
-# scatter!(
-plot!(
-    p,
-    df.travel,
-    df.p12,
-    label = "p12",
-)
-# scatter!(
-plot!(
-    p,
-    df.travel,
-    df.p1,
-    label = "p1",
-)
-# scatter!(
-plot!(
-    p,
-    df.travel,
-    df.p2,
-    label = "p2",
-)
+CFAR.plot_2d_perfs(df)

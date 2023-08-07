@@ -67,8 +67,9 @@ ms_loaded = CFAR.load_moversplit(out_file)
 
 # Arrow dev
 arrow_file = out_dir("df.arrow")
+
 df = CFAR.save_all(ms, arrow_file)
-df2 = CFAR.load_all(arrow_file)
+df2, ar = CFAR.load_all(arrow_file)
 
 @info df2
 
