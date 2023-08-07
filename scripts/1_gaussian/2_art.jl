@@ -49,7 +49,7 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "sfam",
-    "travel" => collect(range(0, 10, 10))
+    "travel" => collect(range(0, 10, 100))
 )
 
 # -----------------------------------------------------------------------------
