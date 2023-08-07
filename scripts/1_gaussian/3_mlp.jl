@@ -24,3 +24,9 @@ using PythonCall
 
 # run(`python $pydeps`)
 mlp = pyimport("mlp")
+
+# Load the config dict
+config = CFAR.get_gaussian_config("gaussians.yml")
+ms = CFAR.gen_gaussians(config)
+
+mlp.examine_data(ms)
