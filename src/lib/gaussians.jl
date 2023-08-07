@@ -195,6 +195,7 @@ end
 
 """
 Gets the shift vector from the configuration and distance to traverse.
+
 # Arguments
 $ARG_CONFIG_DICT
 - `s::Float`: the distance to travel along the line
@@ -202,7 +203,9 @@ $ARG_CONFIG_DICT
 function get_shift(config::ConfigDict, s::Float)
     # Get the direction
     direction = get_mover_direction(config)
+    # The amount to travel is the unit length direction times the distance
     shift = direction .* s
+    # Return the full shift vector
     return shift
 end
 
@@ -344,36 +347,52 @@ function get_table_row(data::DataSplitCombined, label::AbstractString)
 end
 
 """
+Saves the [`MoverSplit`](@ref) as an Arrow file for transferability.
+
+# Arguments
+- `ms::MoverSplit`:
 """
 function save_all(ms::MoverSplit, filename::AbstractString)
+    # Local aliases for column types
     features = SerializedFeatures
     targets = Vector{Int}
+    labels = String
+
+    # Initialize the structure of the dataframe
     df = DataFrame(
-        label = String[],
+        label   = labels[],
         train_x = features[],
         train_y = targets[],
-        test_x = features[],
-        test_y = targets[],
+        test_x  = features[],
+        test_y  = targets[],
     )
 
+    # Construct and add rows for each dataset
     push!(df, get_table_row(ms.static, "static"))
     push!(df, get_table_row(ms.mover, "mover1"))
 
+    # Overwrite the file
     if isfile(filename)
         rm(filename, force=true)
     end
 
-    # Arrow.write(filename, df)
+    # Open and write the file
     open(filename, "w") do file
         Arrow.write(file, df)
     end
 
+    # Return the df that was used for saving
     return df
 end
 
 """
+Deserializes a set of [`SerializedFeatures`](@ref) and constructs a set of [`Features`](@ref).
+
+# Arguments
+- `el::SerializedFeatures`: the [`SerializedFeatures`](@ref) to deserialize.
 """
 function deserialize_features(el::SerializedFeatures)
+    # Construct and return the deserialized features
     return Features(
         permutedims(
             hcat(
@@ -385,31 +404,42 @@ function deserialize_features(el::SerializedFeatures)
 end
 
 """
+Constant declaring which fields/columns are serialized.
+"""
+const SERIALIZED_FIELDS = [
+    :train_x,
+    :test_x,
+]
+
+"""
+Deserializes the serialized fields of a DataFrame according to [`SERIALIZED_FIELDS`](@ref).
+
+# Arguments
+- `df::DataFrames.DataFrame`: the dataframe containing serialized fields.
+"""
+function deserialize_df!(df::DataFrames.DataFrame)
+    # Deserialize each field iteratively
+    for field in SERIALIZED_FIELDS
+        # Replace the field with its deserialized version
+        df[!, field] = deserialize_features.(df[!, field])
+    end
+end
+
+"""
+Loads the Arrow file as a DataFrame.
+
+# Arguments
+- `filename::AbstractString`: location of the Arrow file.
 """
 function load_all(filename::AbstractString)
-    # # Load the Arrow table
-    # ar = open(filename, "r") do file
-    #     Arrow.Table(file)
-    # end
-
-    # # Turn the arrow table into a dataframe
-    # df = DataFrame(ar)
-
     # Load the Arrow table
     df = open(filename, "r") do file
         DataFrame(Arrow.Table(file))
-        # df = DataFrame(ar)
     end
 
-    # Turn the arrow table into a dataframe
-
     # Deserialize the tensor fields
-    df.train_x = deserialize_features.(df.train_x)
-    df.test_x = deserialize_features.(df.test_x)
+    deserialize_df!(df)
 
-    # new_df = DataFrame(
-    #     deserialize_features
-    # )
-    # df = DataFrame(Arrow.Table(filename))
+    # Return the loaded and deserialized dataframe
     return df
 end

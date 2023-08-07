@@ -20,16 +20,17 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using DrWatson      # collect_results!
+using Plots
 
 # -----------------------------------------------------------------------------
 # OPTIONS
 # -----------------------------------------------------------------------------
 
-experiment = "2a_analyze_sfam"
+experiment = "2a_analyze_art"
 
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
-    "2_sfam",
+    "2_art",
     "linear_sweep"
 )
 
@@ -48,3 +49,30 @@ pargs = CFAR.exp_parse(
 
 # Collect the results into a single dataframe
 df = collect_results!(sweep_dir)
+# df = collect_results(sweep_dir)
+
+sort!(df, [:travel])
+
+p = plot()
+
+# scatter!(
+plot!(
+    p,
+    df.travel,
+    df.p12,
+    label = "p12",
+)
+# scatter!(
+plot!(
+    p,
+    df.travel,
+    df.p1,
+    label = "p1",
+)
+# scatter!(
+plot!(
+    p,
+    df.travel,
+    df.p2,
+    label = "p2",
+)

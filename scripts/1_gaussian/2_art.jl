@@ -1,5 +1,5 @@
 """
-    2_sfam.jl
+    2_art.jl
 
 # Description
 Trains and tests Simplified FuzzyARTMAP on the Gaussian dataset.
@@ -21,7 +21,7 @@ using CFAR
 
 using Distributed
 using DrWatson
-using ProgressMeter
+# using ProgressMeter
 
 # -----------------------------------------------------------------------------
 # PARSE ARGS
@@ -29,7 +29,7 @@ using ProgressMeter
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
-    "1_gaussian/2_sfam: Simplfied FuzzyARTMAP on the gaussian dataset."
+    "1_gaussian/2_art: Simplfied FuzzyARTMAP on the gaussian dataset."
 )
 
 pargs["procs"] = 4
@@ -42,7 +42,7 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "sfam",
-    "travel" => collect(range(0, 10, 100))
+    "travel" => collect(range(0, 10, 10))
 )
 
 # -----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ sim_params = Dict{String, Any}(
     # Point to the sweep results
     sweep_results_dir(args...) = CFAR.results_dir(
         "1_gaussian",
-        "2_sfam",
+        "2_art",
         "linear_sweep",
         args...
     )

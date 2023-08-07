@@ -53,7 +53,7 @@ ms = CFAR.gen_gaussians(config)
 CFAR.plot_mover(ms)
 
 ms_new = deepcopy(ms)
-for ix = 1:5
+for ix = 1:10
     global ms_new = CFAR.shift_mover(ms_new, 1.0)
     # CFAR.plot_mover(ms_new, config)
     CFAR.plot_mover(ms_new)

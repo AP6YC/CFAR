@@ -63,11 +63,7 @@ function get_mover_line(
     n_points::Integer=2,
     length::Float=10.0
 )
-    # Identify which mean belongs to the mover
-    mover_index = config["mover"]
-
     # Get the mean of the mover
-    # mu = config["dists"][mover_index]["mu"]
     mu = config["mover_dist"]["mu"]
 
     # Create the interpolation points
