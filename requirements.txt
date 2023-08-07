@@ -2,3 +2,6 @@ jupyterlab
 numpy
 pandas
 pyarrow==11
+tensorflow
+l2logger
+l2metrics

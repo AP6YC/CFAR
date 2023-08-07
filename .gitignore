@@ -2,6 +2,12 @@
 # PROJECT IGNORES
 # -----------------------------------------------------------------------------
 
+# Development/scratch folder
+_dev/
+
+# Conda package
+.CondaPkg
+
 # Ignore work files/folders
 work/**
 # Except for subfolders
@@ -12,10 +18,6 @@ work/**
 !work/data/**
 # Except for the configs folder
 !work/configs/**
-# Development/scratch folder
-_dev/
-
-.CondaPkg
 
 # -----------------------------------------------------------------------------
 # JULIA IGNORES
