@@ -36,6 +36,7 @@ using
     ArgParse,
     Arrow,
     ColorSchemes,
+    CondaPkg,
     CSV,
     DataFrames,
     DocStringExtensions,
@@ -48,6 +49,7 @@ using
     NumericalTypeAliases,
     Pkg,
     Plots,
+    PythonCall,
     Random,
     StatsPlots
 
@@ -73,6 +75,18 @@ ENV["GKSwstype"] = 100
 
 # Library code
 include("lib/lib.jl")
+
+# -----------------------------------------------------------------------------
+# INIT
+# -----------------------------------------------------------------------------
+
+"""
+Initialization function for the `CFAR` project.
+"""
+function __init__()
+    # Run the conda setup
+    conda_setup()
+end
 
 # -----------------------------------------------------------------------------
 # EXPORTS

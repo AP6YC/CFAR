@@ -72,12 +72,18 @@ sim_params = Dict{String, Any}(
     mkpath(sweep_results_dir())
 
     # Define the single-parameter function used for pmap
-    local_sim(dict) = CFAR.train_test_mc(
+    local_sim(dict) = CFAR.train_test_mlp_mc(
         dict,
         ms,
-        sweep_results_dir
+        sweep_results_dir,
+        opts,
     )
 
+    using PythonCall
+
+    mlp = pyimport("mlp")
+    # il = pyimport("importlib")
+    # il.reload(mlp)
 end
 
 # -----------------------------------------------------------------------------
@@ -102,7 +108,6 @@ pmap(local_sim, dicts)
 if pargs["procs"] > 0
     rmprocs(workers())
 end
-
 
 # -----------------------------------------------------------------------------
 # ADDITIONAL DEPENDENCIES

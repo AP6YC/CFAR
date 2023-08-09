@@ -191,15 +191,14 @@ function train_test_mlp_mc(
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, d["travel"])
 
-
-
     # Copy the input sim dictionary
     fulld = deepcopy(d)
 
     # Add entries for the results
-    fulld["p1"] = p1
-    fulld["p2"] = p2
-    fulld["p12"] = p12
+    fulld["done"] = true
+    # fulld["p1"] = p1
+    # fulld["p2"] = p2
+    # fulld["p12"] = p12
 
     # Save the results
     save_sim(dir_func, d, fulld)

@@ -19,11 +19,13 @@ using CFAR
 # ADDITIONAL DEPENDENCIES
 # -----------------------------------------------------------------------------
 
-using PythonCall
+# using PythonCall
 
-mlp = pyimport("mlp")
-il = pyimport("importlib")
-il.reload(mlp)
+# mlp = pyimport("mlp")
+# il = pyimport("importlib")
+# il.reload(mlp)
+
+mlp = CFAR.get_mlp()
 
 # tf = pyimport("tensorflow")
 # tf.config.list_physical_devices("CPU")

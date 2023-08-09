@@ -18,4 +18,3 @@ CondaPkg.withenv() do
     run(`$(python) --version`)
     run(`$python -m pip install -e ./src/mlp`)
 end
-
