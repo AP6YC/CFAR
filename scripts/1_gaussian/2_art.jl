@@ -24,19 +24,12 @@ using DrWatson
 # using ProgressMeter
 
 # -----------------------------------------------------------------------------
-# OPTIONS
-# -----------------------------------------------------------------------------
-
-# Simulation options
-# opts_file = "art.yml"
-
-# -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
-    "1_gaussian/2_art: Simplfied FuzzyARTMAP on the gaussian dataset."
+    "1_gaussian/2_art: Simplfied FuzzyARTMAP on the Gaussian dataset."
 )
 
 pargs["procs"] = 4
@@ -64,7 +57,6 @@ sim_params = Dict{String, Any}(
     # Modules
     using Revise
     using CFAR
-    # using ProgressMeter
 
     # Point to the sweep results
     sweep_results_dir(args...) = CFAR.results_dir(
@@ -81,11 +73,15 @@ sim_params = Dict{String, Any}(
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
 
-    # local_sim(dict) = train_test_mc;
-    local_sim(dict) = CFAR.train_test_mc(
+    # Load the simulation options
+    opts = CFAR.load_art_sim_opts()
+
+    # Define the single-parameter function used for pmap
+    local_sim(dict) = CFAR.train_test_sfam_mc(
         dict,
         ms,
-        sweep_results_dir
+        sweep_results_dir,
+        opts,
     )
 end
 

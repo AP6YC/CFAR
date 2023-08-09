@@ -12,6 +12,9 @@ Aggregates all types and functions that are used throughout the `CFAR` project.
 # INCLUDES
 # -----------------------------------------------------------------------------
 
+# Top-level constants for various options and fields used in the project
+include("constants.jl")
+
 # Common experiment and file utilities
 include("utils/lib.jl")
 
@@ -26,3 +29,4 @@ include("plot.jl")
 
 # Experiment functions
 include("experiments.jl")
+

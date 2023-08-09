@@ -52,8 +52,10 @@ $(METHODLIST)
 # This is useful when many functions utilize the same arguments, etc.
 # -----------------------------------------------------------------------------
 
+const COMMON_DOC = "Common docstring:"
+
 """
-Common docstring, the arguments to `DrWatson`-style directory functions.
+$COMMON_DOC the arguments to `DrWatson`-style directory functions.
 """
 const DRWATSON_ARGS_DOC = """
 # Arguments
@@ -61,36 +63,64 @@ const DRWATSON_ARGS_DOC = """
 """
 
 """
-Common docstring: config filename argument.
+$COMMON_DOC config filename argument.
 """
 const ARG_CONFIG_FILE = """
 - `config_file::AbstractString`: the config file name as a string.
 """
 
 """
-Common docstring: config dictionary argument.
+$COMMON_DOC config dictionary argument.
 """
 const ARG_CONFIG_DICT = """
 - `config::ConfigDict`: the config parameters as a dictionary.
 """
 
 """
-Common docstring: argument for a split ratio `p`.
+$COMMON_DOC argument for a split ratio `p`.
 """
 const ARG_P = """
 - `p::Float=0.8`: kwarg, the split ratio ∈ `(0, 1)`.
 """
 
 """
-Common docstring: argument for an existing `Plots.Plot` object to plot atop.
+$COMMON_DOC argument for an existing `Plots.Plot` object to plot atop.
 """
 const ARG_PLOT = """
 - `p::Plots.Plot`: an existing `Plots.Plot` object.
 """
 
 """
-Common docstring: argument for a file name.
+$COMMON_DOC argument for a file name.
 """
 const ARG_FILENAME = """
 - `filename::AbstractString`: the full file path as a string.
+"""
+
+"""
+$COMMON_DOC argument for a directory function
+"""
+const ARG_SIM_DIR_FUNC = """
+- `dir_func::Function`: the function that provides the correct file path with provided strings.
+"""
+
+"""
+$COMMON_DOC argument for the simulation options dictionary.
+"""
+const ARG_SIM_D = """
+- `d::AbstractDict`: the simulation options dictionary.
+"""
+
+"""
+$COMMON_DOC argument for the simulation [`MoverSplit`](@ref) dataset.
+"""
+const ARG_SIM_MS = """
+- `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset to train and test on.
+"""
+
+"""
+$COMMON_DOC argument for additional simulation options.
+"""
+const ARG_SIM_OPTS = """
+- `opts::AbstractDict`: additional options for the simulation.
 """

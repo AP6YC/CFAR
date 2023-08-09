@@ -1,0 +1,3 @@
+DEFAULT_ART_OPTS_FILE = "art.yml"
+DEFAULT_MLP_OPTS_FILE = "mlp.yml"
+

@@ -8,20 +8,94 @@ Experiment functions for the project.
 - Sasha Petrenko <petrenkos@mst.edu>
 """
 
-function load_sim_opts(file::AbstractString="art.yml")
-    dict = load_config(file)
-    return dict
+"""
+Loads the ART simulation options in the provided file with a default.
+
+# Arguments
+- `file::AbstractString`: the YAML file to load, default `$DEFAULT_ART_OPTS_FILE`.
+"""
+function load_art_sim_opts(file::AbstractString=DEFAULT_ART_OPTS_FILE)
+    # Load the config as a dictionary
+    opts_dict = load_config(file)
+
+    # Parse the SFAM options
+    dd = opts_dict["opts_SFAM"]
+
+    # Instantiate the options
+    opts = opts_SFAM(
+        rho = dd["rho"],
+    )
+
+    # Overwrite the dictionary entry with the actual options
+    opts_dict["opts_SFAM"] = opts
+
+    # Return the config
+    return opts_dict
 end
 
 """
-Train and test SFAM in parallel.
+Loads the MLP simulation options in the provided file with a default.
+
+# Arguments
+- `file::AbstractString`: the YAML file to load, default `$DEFAULT_MLP_OPTS_FILE`.
 """
-function train_test_mc(d::AbstractDict, ms::CFAR.MoverSplit, dir_func::Function)
+function load_mlp_sim_opts(file::AbstractString=DEFAULT_MLP_OPTS_FILE)
+    # Load the config as a dictionary
+    opts_dict = load_config(file)
+
+    # Return the loaded options
+    return opts_dict
+end
+
+"""
+Common save function for simulations.
+
+# Arguments
+$ARG_SIM_DIR_FUNC
+$ARG_SIM_D
+- `fulld::AbstractDict`: the dictionary containing the sim results.
+"""
+function save_sim(
+    dir_func::Function,
+    d::AbstractDict,
+    fulld::AbstractDict,
+)
+    # Point to the correct save file for the results dictionary
+    sim_save_name = dir_func(savename(d, "jld2"; digits=4))
+
+    # Log completion of the simulation
+    @info "Worker $(myid()): saving to $(sim_save_name)"
+
+    # DrWatson function to save the results with an additional tag entry
+    tagsave(sim_save_name, fulld)
+
+    # Empty return
+    return
+end
+
+"""
+Train and test `SFAM` on the [`MoverSplit`](@ref) dataset in parallel.
+
+# Arguments
+$ARG_SIM_D
+$ARG_SIM_MS
+$ARG_SIM_DIR_FUNC
+$ARG_SIM_OPTS
+"""
+function train_test_sfam_mc(
+    d::AbstractDict,
+    ms::MoverSplit,
+    dir_func::Function,
+    opts::AbstractDict,
+)
+    # Initialize the random seed at the beginning of the experiment
+    Random.seed!(opts["rng_seed"])
+
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, d["travel"])
 
     # Init the SFAM module
-    art = SFAM()
+    art = SFAM(opts["opts_SFAM"])
 
     # Task 1: static gaussians
     train!(
@@ -79,14 +153,57 @@ function train_test_mc(d::AbstractDict, ms::CFAR.MoverSplit, dir_func::Function)
         )
     )
 
+    # Copy the input sim dictionary
     fulld = deepcopy(d)
-    # fulld["travel_copy"] = d["travel"]
+
+    # Add entries for the results
+    fulld["p1"] = p1
+    fulld["p2"] = p2
+    fulld["p12"] = p12
+    # fulld["rho"] = opts["rho"]
+
+    # Save the results
+    save_sim(dir_func, d, fulld)
+
+    # Empty return
+    return
+end
+
+
+"""
+Train and test SFAM in parallel.
+
+# Arguments
+$ARG_SIM_D
+$ARG_SIM_MS
+$ARG_SIM_DIR_FUNC
+$ARG_SIM_OPTS
+"""
+function train_test_mlp_mc(
+    d::AbstractDict,
+    ms::MoverSplit,
+    dir_func::Function,
+    opts::AbstractDict,
+)
+    # Initialize the random seed at the beginning of the experiment
+    Random.seed!(opts["rng_seed"])
+
+    # Shift the local dataset by the prescribed amount
+    local_ms = CFAR.shift_mover(ms, d["travel"])
+
+
+
+    # Copy the input sim dictionary
+    fulld = deepcopy(d)
+
+    # Add entries for the results
     fulld["p1"] = p1
     fulld["p2"] = p2
     fulld["p12"] = p12
 
-    sim_save_name = dir_func(savename(d, "jld2"))
+    # Save the results
+    save_sim(dir_func, d, fulld)
 
-    @info "Worker $(myid()): saving to $(sim_save_name)"
-    tagsave(sim_save_name, fulld)
+    # Empty return
+    return
 end
