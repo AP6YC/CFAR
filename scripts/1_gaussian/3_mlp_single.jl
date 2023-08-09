@@ -38,9 +38,8 @@ mlp = CFAR.get_mlp()
 # Load the config dict
 config = CFAR.get_gaussian_config("gaussians.yml")
 ms = CFAR.gen_gaussians(config)
-
 # mlp.show_data_shape(ms)
-# loss, acc = mlp.examine_data(ms)
+
+# Run the experiment
 metrics = mlp.tt_ms_mlp(ms)
 loss, acc, sc_acc = metrics
-

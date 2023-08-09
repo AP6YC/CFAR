@@ -27,5 +27,8 @@ const LOCAL_PYTHON_LIBS = [
     MLP,
 ]
 
-# const LOCAL_PYTHON_LIB_LOCATION = "./src/"
+"""
+Location of the local Python libraries that are included in the project.
+"""
 const LOCAL_PYTHON_LIB_LOCATION = joinpath(".", "src")
+# const LOCAL_PYTHON_LIB_LOCATION = "./src/"

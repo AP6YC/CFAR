@@ -6,18 +6,29 @@ A set of utilities for interacting with the Python component of the project via 
 """
 
 """
-Loads and returns a handle to the local `mlp` Python library.
+Loads and returns a handle to the provided local Python library.
+
+# Arguments
+- `lib::AbstractString`: the string name of the local Python library to load.
 """
-function get_mlp()
+function get_pylib(lib::AbstractString)
     # Load the library
-    mlp = pyimport("mlp")
+    pylib = pyimport(lib)
 
     # Reload definitions for development
     il = pyimport("importlib")
-    il.reload(mlp)
+    il.reload(pylib)
 
     # Return the library
-    return mlp
+    return pylib
+end
+
+"""
+Loads and returns a handle to the local `mlp` Python library.
+"""
+function get_mlp()
+    # Load and return the mlp library
+    return getpylib(MLP)
 end
 
 """
@@ -27,6 +38,7 @@ Runs a provided command with the correct CondaPkg.jl Python environment.
 - `cmd_string::AbstractString`: the Python command to run as a string, excluding the initial 'python' part.
 """
 function conda_run(cmd_string::AbstractString)
+    # Make sure to only use the CondaPkg Python environment
     CondaPkg.withenv() do
         # Point to the correct python executable for this environment
         python = CondaPkg.which("python")

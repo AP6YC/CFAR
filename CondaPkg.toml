@@ -2,4 +2,3 @@
 l2metrics = ""
 l2logger = ""
 tensorflow = ""
-# mlp = "@ -e ./src/mlp"

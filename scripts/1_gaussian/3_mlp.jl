@@ -71,6 +71,12 @@ sim_params = Dict{String, Any}(
     # Make the path
     mkpath(sweep_results_dir())
 
+    # # Load the local mlp Python library
+    # mlp = get_mlp()
+
+    # # Put the library into the options for
+    # opts["mlp"] = mlp
+
     # Define the single-parameter function used for pmap
     local_sim(dict) = CFAR.train_test_mlp_mc(
         dict,
@@ -79,11 +85,6 @@ sim_params = Dict{String, Any}(
         opts,
     )
 
-    using PythonCall
-
-    mlp = pyimport("mlp")
-    # il = pyimport("importlib")
-    # il.reload(mlp)
 end
 
 # -----------------------------------------------------------------------------

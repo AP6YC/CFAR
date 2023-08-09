@@ -43,6 +43,12 @@ function load_mlp_sim_opts(file::AbstractString=DEFAULT_MLP_OPTS_FILE)
     # Load the config as a dictionary
     opts_dict = load_config(file)
 
+    # Load the local mlp Python library
+    mlp = get_mlp()
+
+    # Put the library into the options dictionary for use in the experiment
+    opts_dict["mlp"] = mlp
+
     # Return the loaded options
     return opts_dict
 end
@@ -191,11 +197,20 @@ function train_test_mlp_mc(
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, d["travel"])
 
+    # Run the Python experiment
+    metrics = opts["mlp"].tt_ms_mlp(local_ms)
+
+    # Unpack the metrics
+    loss, acc, sc_acc = metrics
+
     # Copy the input sim dictionary
     fulld = deepcopy(d)
 
     # Add entries for the results
     fulld["done"] = true
+    fulld["loss"] = loss
+    fulld["acc"] = acc
+    fulld["sc_acc"] = sc_acc
     # fulld["p1"] = p1
     # fulld["p2"] = p2
     # fulld["p12"] = p12
