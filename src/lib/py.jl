@@ -28,7 +28,7 @@ Loads and returns a handle to the local `mlp` Python library.
 """
 function get_mlp()
     # Load and return the mlp library
-    return getpylib(MLP)
+    return get_pylib(MLP)
 end
 
 """
