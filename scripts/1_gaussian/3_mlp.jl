@@ -48,6 +48,10 @@ sim_params = Dict{String, Any}(
 # PARALLEL DEFINITIONS
 # -----------------------------------------------------------------------------
 
+using PythonCall
+
+PythonCall.GC.disable()
+
 @everywhere begin
     # Activate the project in case
     using Pkg
@@ -64,6 +68,10 @@ sim_params = Dict{String, Any}(
         "linear_sweep",
         args...
     )
+
+    # Load the config dict
+    config = CFAR.get_gaussian_config("gaussians.yml")
+    ms = CFAR.gen_gaussians(config)
 
     # Load the MLP simulation options
     opts = CFAR.load_mlp_sim_opts()
@@ -95,6 +103,8 @@ dicts = dict_list(sim_params)
 pmap(local_sim, dicts)
 # progress_pmap(local_sim, dicts)
 
+PythonCall.GC.enable()
+
 # -----------------------------------------------------------------------------
 # CLEANUP
 # -----------------------------------------------------------------------------
@@ -104,30 +114,32 @@ if pargs["procs"] > 0
     rmprocs(workers())
 end
 
+println("--- Simulation complete ---")
+
 # -----------------------------------------------------------------------------
 # ADDITIONAL DEPENDENCIES
 # -----------------------------------------------------------------------------
 
-using PythonCall
+# using PythonCall
 
-mlp = pyimport("mlp")
-il = pyimport("importlib")
-il.reload(mlp)
+# mlp = pyimport("mlp")
+# il = pyimport("importlib")
+# il.reload(mlp)
 
 # tf = pyimport("tensorflow")
 # tf.config.list_physical_devices("CPU")
 # tf.test.is_built_with_cuda()
 
-# -----------------------------------------------------------------------------
-# EXPERIMENT
-# -----------------------------------------------------------------------------
+# # -----------------------------------------------------------------------------
+# # EXPERIMENT
+# # -----------------------------------------------------------------------------
 
-# Load the config dict
-config = CFAR.get_gaussian_config("gaussians.yml")
-ms = CFAR.gen_gaussians(config)
+# # Load the config dict
+# config = CFAR.get_gaussian_config("gaussians.yml")
+# ms = CFAR.gen_gaussians(config)
 
-# mlp.show_data_shape(ms)
-# loss, acc = mlp.examine_data(ms)
-metrics = mlp.tt_ms_mlp(ms)
-loss, acc, sc_acc = metrics
+# # mlp.show_data_shape(ms)
+# # loss, acc = mlp.examine_data(ms)
+# metrics = mlp.tt_ms_mlp(ms)
+# loss, acc, sc_acc = metrics
 

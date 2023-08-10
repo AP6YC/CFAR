@@ -201,7 +201,7 @@ function train_test_mlp_mc(
     metrics = opts["mlp"].tt_ms_mlp(local_ms)
 
     # Unpack the metrics
-    loss, acc, sc_acc = metrics
+    (loss, acc, sc_acc) = pyconvert(Vector{Any}, metrics)
 
     # Copy the input sim dictionary
     fulld = deepcopy(d)
