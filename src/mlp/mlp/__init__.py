@@ -6,6 +6,11 @@ BATCH_SIZE = 10
 N_EPOCHS = 20
 
 
+def print_loaded():
+    print("The mlp package is loaded, and functions can be run in it")
+    return
+
+
 def show_data_shape(ms):
     print(np.array(ms.static.train.x).transpose().shape)
     print(np.array(ms.static.train.y).transpose().shape)

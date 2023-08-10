@@ -9,12 +9,16 @@ using CFAR
 # ADDITIONAL DEPENDENCIES
 # -----------------------------------------------------------------------------
 
-pargs["procs"] = 2
+using Distributed
 
+# pargs["procs"] = 2
+n_procs = 2
 # Start several processes
-if pargs["procs"] > 0
-    addprocs(pargs["procs"], exeflags="--project=.")
-end
+# if pargs["procs"] > 0
+
+# addprocs(pargs["procs"], exeflags="--project=.")
+addprocs(n_procs, exeflags="--project=.")
+# end
 
 # -----------------------------------------------------------------------------
 # PARALLEL DEFINITIONS
@@ -35,7 +39,7 @@ end
     # il.reload(mlp)
 
     mlp = CFAR.get_mlp()
-
+    mlp.print_loaded()
 end
 
 # -----------------------------------------------------------------------------
