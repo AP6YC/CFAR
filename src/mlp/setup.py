@@ -1,7 +1,14 @@
-from distutils.core import setup
+#!/usr/bin/env python
 
-setup(
-    name='mlp',
-    version='1.0.0',
-    packages=['mlp']
-)
+from setuptools import setup
+
+if __name__ == "__main__":
+    setup()
+
+# from distutils.core import setup
+
+# setup(
+#     name='mlp',
+#     version='1.0.0',
+#     packages=['mlp']
+# )
