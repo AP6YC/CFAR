@@ -53,6 +53,15 @@ pargs = CFAR.exp_parse(
 df = collect_results!(sweep_dir)
 # df = collect_results(sweep_dir)
 
+# Sort by travel distance
 sort!(df, [:travel])
 
 # CFAR.plot_2d_perfs(df)
+
+attrs = [
+    "acc",
+    "loss",
+    # "sc_acc",
+]
+
+CFAR.plot_2d_attrs(df, attrs)

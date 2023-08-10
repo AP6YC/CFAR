@@ -55,4 +55,11 @@ df = collect_results!(sweep_dir)
 
 sort!(df, [:travel])
 
-CFAR.plot_2d_perfs(df)
+attrs = [
+    "p1",
+    "p2",
+    "p12",
+]
+
+# CFAR.plot_2d_perfs(df)
+CFAR.plot_2d_attrs(df, attrs)

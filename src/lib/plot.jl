@@ -159,3 +159,57 @@ function plot_2d_perfs(df::DataFrame)
     # Empty return
     return
 end
+
+function plot_2d_attrs(df::DataFrame, attrs::Vector{T}) where T <: AbstractString
+    # Instantiate the plot object
+    p = plot()
+
+    # Iteratively add each attribute line
+    for attr in attrs
+        plot!(
+            p,
+            df.travel,
+            df[:, attr],
+            label = attr,
+            linewidth = 4.0,
+            color_palette=COLORSCHEME,
+        )
+    end
+
+    # Displya the plot
+    display(p)
+
+    # Empty return
+    return
+end
+
+
+# function plot_2d_mlp(df::DataFrame)
+#     # Instantiate the plot object
+#     p = plot()
+
+#     # Create a set of tuples for iterative plotting
+#     df_plot_attrs = (
+#         (df.acc, "acc"),
+#         (df.p2, "p2"),
+#         (df.p12, "p12"),
+#     )
+
+#     # Iteratively add each performance line
+#     for (data, label) in df_plot_attrs
+#         plot!(
+#             p,
+#             df.travel,
+#             data,
+#             label = label,
+#             linewidth = 4.0,
+#             color_palette=COLORSCHEME,
+#         )
+#     end
+
+#     # Displya the plot
+#     display(p)
+
+#     # Empty return
+#     return
+# end

@@ -110,32 +110,30 @@ def jl_data_to_tf(data) -> tf.data.Dataset:
     return dataset
 
 
-def show_data_shape(ms) -> None:
+def show_data_shape(ds) -> None:
     """Prints the shape of the provided Julia CFAR.MoverSplit dataset.
 
     Parameters
     ----------
-    ms : CFAR.MoverSplit
-        _description_
+    ds : CFAR.DataSplitCombined
+        The Julia object containing the train/test split.
     """
 
     # Inspect the shape of the features as they would go into tf.Dataset
-    features, labels = jl_data_to_np(ms.static.train)
+    features, labels = jl_data_to_np(ds.train)
     print("Features:")
     print(features.shape)
-    # print(jl_features_to_np(ms.static.train.x).shape)
     print("Labels:")
     print(labels.shape)
-    # print(jl_labels_to_np(ms.static.train.y).shape)
     return
 
 
-def get_datasets(ms) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+def get_datasets(ds) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
     """Turns the provided Julia dataset into train/test tensorflow datasets.
 
     Parameters
     ----------
-    ms : CFAR.MoverSplit
+    ds : CFAR.DataSplitCombined
         A Julia object containing the datasets.
 
     Returns
@@ -144,13 +142,13 @@ def get_datasets(ms) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
         The training and testing datasets as a tuple.
     """
     # Inspect the dimensions going into the tf.Datasets
-    show_data_shape(ms)
+    show_data_shape(ds)
 
     # Training dataset
-    train_dataset = jl_data_to_tf(ms.static.train)
+    train_dataset = jl_data_to_tf(ds.train)
 
     # Testing dataset
-    test_dataset = jl_data_to_tf(ms.static.test)
+    test_dataset = jl_data_to_tf(ds.test)
 
     # Return the two as a tuple
     return train_dataset, test_dataset
@@ -247,7 +245,41 @@ def tt_ms_mlp(ms) -> Tuple:
     """
 
     # Get the datasets from the Julia object
-    train_dataset, test_dataset = get_datasets(ms)
+    train_dataset, test_dataset = get_datasets(ms.static)
+
+    # Create and compile the model
+    model = get_mlp_model()
+
+    # Train the model
+    train_mlp_model(model, train_dataset)
+
+    # Test the model
+    metrics = test_mlp_model(model, test_dataset)
+
+    # Unpack the metrics for local logging
+    (loss, acc, sc_acc) = metrics
+    print("Loss {}, Accuracy {}, SC Accuracy {}".format(loss, acc, sc_acc))
+
+    # Return the tupled metrics
+    return metrics
+
+
+def tt_ms_mlp_l2(ms) -> Tuple:
+    """Train and test an MLP on the MoverSplit dataset.
+
+    Parameters
+    ----------
+    ms : CFAR.MoverSplit
+        A Julia object defined in CFAR.
+
+    Returns
+    -------
+    Tuple
+        The metrics generated during testing.
+    """
+
+    # Get the datasets from the Julia object
+    train_dataset, test_dataset = get_datasets(ms.static)
 
     # Create and compile the model
     model = get_mlp_model()
