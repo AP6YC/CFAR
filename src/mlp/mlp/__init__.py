@@ -14,8 +14,6 @@ from typing import Tuple
 # "CONSTANTS"
 # -----------------------------------------------------------------------------
 
-# print(tf.version.VERSION)
-
 BATCH_SIZE = 10
 N_EPOCHS = 20
 
@@ -31,6 +29,7 @@ def print_loaded() -> None:
     # Print diagnostic
     print("The mlp package is loaded, and functions can be run in it.")
     print(f"Using tensorflow version {tf.version.VERSION}")
+
     # Empty return
     return
 
@@ -49,6 +48,7 @@ def jl_features_to_np(features) -> np.ndarray:
         The features cast into a numpy array and transposed.
     """
 
+    # Cast to a numpy array and transpose
     return np.array(features).transpose()
 
 
@@ -68,6 +68,7 @@ def jl_targets_to_np(targets) -> np.ndarray:
         The targets cast into a numpy array and shifted by 1 (Julia is 1-indexed, Python is 0-indexed).
     """
 
+    # Cast to a numpy array and shift by one
     return np.array(targets) - 1
 
 
@@ -174,7 +175,7 @@ def get_mlp_model() -> tf.keras.Model:
     # Define the sequential model
     model = tf.keras.Sequential([
         tf.keras.layers.Dense(4, activation='relu', name="hidden"),
-        tf.keras.layers.Dense(2, name='output'),
+        tf.keras.layers.Dense(3, name='output'),
     ])
 
     # Compile the model, declaring the optimizer, loss, and metrics
@@ -195,6 +196,7 @@ def get_mlp_model() -> tf.keras.Model:
 def train_mlp_model(
     model: tf.keras.Model,
     train_dataset: tf.data.Dataset,
+    n_epochs: int = N_EPOCHS,
 ) -> None:
     """Trains the MLP model on the provided tensorflow dataset.
 
@@ -209,7 +211,7 @@ def train_mlp_model(
     # Fit the data
     model.fit(
         train_dataset,
-        epochs=N_EPOCHS,
+        epochs=n_epochs,
     )
 
     # Empty return

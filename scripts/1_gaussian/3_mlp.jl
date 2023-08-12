@@ -31,7 +31,7 @@ pargs = CFAR.dist_exp_parse(
     "1_gaussian/3_mlp: MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 6
+pargs["procs"] = 4
 
 # Start several processes
 if pargs["procs"] > 0

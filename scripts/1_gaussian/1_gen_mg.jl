@@ -68,9 +68,12 @@ ms_loaded = CFAR.load_moversplit(out_file)
 # Arrow dev
 arrow_file = out_dir("df.arrow")
 
+# Save the arrow file
 df = CFAR.save_all(ms, arrow_file)
+
+# Check that we can load the arrow file
 df2, ar = CFAR.load_all(arrow_file)
 
+# Check the loaded dataframe from the arrow file
 @info df2
-
 # @info ar

@@ -32,7 +32,7 @@ pargs = CFAR.dist_exp_parse(
     "1_gaussian/2_art: Simplfied FuzzyARTMAP on the Gaussian dataset."
 )
 
-pargs["procs"] = 4
+pargs["procs"] = 8
 
 # Start several processes
 if pargs["procs"] > 0
