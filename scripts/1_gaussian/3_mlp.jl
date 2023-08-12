@@ -26,12 +26,14 @@ using DrWatson
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
+CFAR.conda_setup()
+
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
     "1_gaussian/3_mlp: MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 4
+pargs["procs"] = 8
 
 # Start several processes
 if pargs["procs"] > 0
@@ -48,9 +50,7 @@ sim_params = Dict{String, Any}(
 # PARALLEL DEFINITIONS
 # -----------------------------------------------------------------------------
 
-using PythonCall
-
-PythonCall.GC.disable()
+CFAR.conda_gc_disable()
 
 @everywhere begin
     # Activate the project in case
@@ -103,7 +103,7 @@ dicts = dict_list(sim_params)
 pmap(local_sim, dicts)
 # progress_pmap(local_sim, dicts)
 
-PythonCall.GC.enable()
+CFAR.conda_gc_enable()
 
 # -----------------------------------------------------------------------------
 # CLEANUP

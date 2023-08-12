@@ -23,10 +23,10 @@ addprocs(n_procs, exeflags="--project=.")
 # -----------------------------------------------------------------------------
 # PARALLEL DEFINITIONS
 # -----------------------------------------------------------------------------
-using PythonCall
+# using PythonCall
+# PythonCall.GC.disable()
 
-PythonCall.GC.disable()
-PythonCall.C.gc_disable()
+CFAR.conda_gc_disable()
 
 @everywhere begin
     # Activate the project in case
@@ -42,12 +42,11 @@ PythonCall.C.gc_disable()
     # il = pyimport("importlib")
     # il.reload(mlp)
 
-    mlp = CFAR.get_mlp()
-    mlp.print_loaded()
+    # mlp = CFAR.get_mlp()
+    # mlp.print_loaded()
 end
 
-PythonCall.GC.enable()
-PythonCall.C.gc_enable()
+CFAR.conda_gc_enable()
 
 # -----------------------------------------------------------------------------
 # CLEANUP

@@ -36,7 +36,7 @@ using
     ArgParse,
     Arrow,
     ColorSchemes,
-    CondaPkg,
+    # CondaPkg,
     CSV,
     DataFrames,
     DocStringExtensions,
@@ -46,12 +46,16 @@ using
     ElasticArrays,
     # HDF5,
     JLD2,
+    LazyModules,
     NumericalTypeAliases,
     Pkg,
     Plots,
-    PythonCall,
+    # PythonCall,
     Random,
     StatsPlots
+
+@lazy import CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
+@lazy import PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
 
 # Individual usings
 using MLUtils: splitobs, shuffleobs
@@ -80,13 +84,13 @@ include("lib/lib.jl")
 # INIT
 # -----------------------------------------------------------------------------
 
-"""
-Initialization function for the `CFAR` project.
-"""
-function __init__()
-    # Run the conda setup
-    conda_setup()
-end
+# """
+# Initialization function for the `CFAR` project.
+# """
+# function __init__()
+#     # Run the conda setup
+#     conda_setup()
+# end
 
 # -----------------------------------------------------------------------------
 # EXPORTS

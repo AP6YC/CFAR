@@ -76,6 +76,7 @@ end
 Sets up the Conda dependencies, including local libraries.
 """
 function conda_setup()
+    # @info "I SHOULDN'T BE RUNNING"
     # Install the CondaPkg.toml
     CondaPkg.resolve()
 
@@ -86,4 +87,12 @@ function conda_setup()
 
     # Empty return
     return
+end
+
+function conda_gc_disable()
+    PythonCall.GC.disable()
+end
+
+function conda_gc_enable()
+    PythonCall.GC.enable()
 end
