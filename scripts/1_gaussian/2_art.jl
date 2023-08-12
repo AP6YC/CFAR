@@ -32,7 +32,7 @@ pargs = CFAR.dist_exp_parse(
     "1_gaussian/2_art: Simplfied FuzzyARTMAP on the Gaussian dataset."
 )
 
-pargs["procs"] = 12
+pargs["procs"] = 3
 
 # Start several processes
 if pargs["procs"] > 0
@@ -42,7 +42,7 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "sfam",
-    "travel" => collect(range(0, 10, 100))
+    "travel" => collect(range(0, 10, 1000))
 )
 
 # -----------------------------------------------------------------------------

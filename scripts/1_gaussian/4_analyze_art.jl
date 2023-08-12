@@ -62,4 +62,8 @@ attrs = [
 ]
 
 # CFAR.plot_2d_perfs(df)
-CFAR.plot_2d_attrs(df, attrs)
+CFAR.plot_2d_attrs(
+    df,
+    attrs,
+    avg=true,
+)

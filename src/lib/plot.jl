@@ -160,6 +160,12 @@ end
 #     return
 # end
 
+function sliding_avg(vs::RealVector, n::Integer)
+    return [
+        sum(@view vs[i:(i+n-1)])/n for i in 1:(length(vs)-(n-1))
+    ]
+end
+
 """
 Plots the 2D performances trends.
 
@@ -169,17 +175,34 @@ Plots the 2D performances trends.
 """
 function plot_2d_attrs(
     df::DataFrame,
-    attrs::Vector{T}
+    attrs::Vector{T};
+    avg::Bool=false,
+    n::Integer=10,
 ) where T <: AbstractString
     # Instantiate the plot object
     p = plot()
 
     # Iteratively add each attribute line
+    local_df = dropmissing(df)
     for attr in attrs
+        # local_y = collect(skipmissing(df[:, attr]))
+        # local_x = collect(skipmissing(df.travel))
+        local_x = local_df.travel
+        local_y = local_df[:, attr]
+        if avg
+            local_y = sliding_avg(local_y, n)
+            local_x = local_x[1:end-n+1]
+        # else
+        #     plot_attr = df[:, attr]
+        end
+
         plot!(
             p,
-            df.travel,
-            df[:, attr],
+            # df.travel,
+            # df[:, attr],
+            local_x,
+            local_y,
+            # plot_attr,
             label = attr,
             linewidth = 4.0,
             color_palette=COLORSCHEME,
