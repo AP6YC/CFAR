@@ -1,4 +1,7 @@
 jupyterlab
 numpy
 pandas
-pyarrow
+pyarrow==11
+tensorflow
+l2logger
+l2metrics
