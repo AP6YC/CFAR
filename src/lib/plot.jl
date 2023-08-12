@@ -12,14 +12,16 @@ function scatter_gaussian!(p::Plots.Plot, data::DataSplitCombined)
     # Get the combined train/test data
     X = CFAR.get_x(data)
     y = CFAR.get_y(data)
+
     # Scatter the data with a grouping
     scatter!(
         p,
         X[1, :],
         X[2, :],
-        group=y,
+        group = y,
         color_palette=COLORSCHEME,
     )
+
     # Explicitly empty return
     return
 end
@@ -42,12 +44,15 @@ function plot_covellipses(
             p,
             dist["mu"],
             dist["var"],
-            n_std=3,
-            aspect_ratio=1,
-            label=string(ix),
+            n_std = 3,
+            aspect_ratio = 1,
+            label = string(ix),
             color_palette=COLORSCHEME,
         )
     end
+
+    # Empty return
+    return
 end
 
 """
@@ -63,11 +68,7 @@ function get_mover_line(
     n_points::Integer=2,
     length::Float=10.0
 )
-    # Identify which mean belongs to the mover
-    mover_index = config["mover"]
-
     # Get the mean of the mover
-    # mu = config["dists"][mover_index]["mu"]
     mu = config["mover_dist"]["mu"]
 
     # Create the interpolation points
@@ -88,15 +89,12 @@ Plots the mover line plot with scattered data points, covariance lines, and move
 
 # Arguments
 - `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset.
-$ARG_CONFIG_DICT
 """
 function plot_mover(
     ms::MoverSplit,
-    # config::ConfigDict
 )
-    config = ms.config
     # Get the mover line for visualization
-    ml = CFAR.get_mover_line(config)
+    ml = CFAR.get_mover_line(ms.config)
 
     # Init a plot object
     p = plot()
@@ -108,7 +106,7 @@ function plot_mover(
     CFAR.scatter_gaussian!(p, ms.mover)
 
     # Plot the covariance ellipses
-    CFAR.plot_covellipses(p, config)
+    CFAR.plot_covellipses(p, ms.config)
 
     # Plot the mover's line
     plot!(
@@ -120,8 +118,108 @@ function plot_mover(
     )
 
     # Finally display the plot
-    display(p)
+    isinteractive() && display(p)
 
     # Empty return
     return
 end
+
+# """
+# Plots the 2D performances trends.
+
+# # Arguments
+# - `df::DataFrame`: the collected simulation results.
+# """
+# function plot_2d_perfs(df::DataFrame)
+#     # Instantiate the plot object
+#     p = plot()
+
+#     # Create a set of tuples for iterative plotting
+#     df_plot_attrs = (
+#         (df.p1, "p1"),
+#         (df.p2, "p2"),
+#         (df.p12, "p12"),
+#     )
+
+#     # Iteratively add each performance line
+#     for (data, label) in df_plot_attrs
+#         plot!(
+#             p,
+#             df.travel,
+#             data,
+#             label = label,
+#             linewidth = 4.0,
+#             color_palette=COLORSCHEME,
+#         )
+#     end
+
+#     # Displya the plot
+#     isinteractive() && display(p)
+
+#     # Empty return
+#     return
+# end
+
+"""
+Plots the 2D performances trends.
+
+# Arguments
+- `df::DataFrame`: the collected simulation results.
+- `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+"""
+function plot_2d_attrs(
+    df::DataFrame,
+    attrs::Vector{T}
+) where T <: AbstractString
+    # Instantiate the plot object
+    p = plot()
+
+    # Iteratively add each attribute line
+    for attr in attrs
+        plot!(
+            p,
+            df.travel,
+            df[:, attr],
+            label = attr,
+            linewidth = 4.0,
+            color_palette=COLORSCHEME,
+        )
+    end
+
+    # Display the plot
+    isinteractive() && display(p)
+
+    # Empty return
+    return
+end
+
+
+# function plot_2d_mlp(df::DataFrame)
+#     # Instantiate the plot object
+#     p = plot()
+
+#     # Create a set of tuples for iterative plotting
+#     df_plot_attrs = (
+#         (df.acc, "acc"),
+#         (df.p2, "p2"),
+#         (df.p12, "p12"),
+#     )
+
+#     # Iteratively add each performance line
+#     for (data, label) in df_plot_attrs
+#         plot!(
+#             p,
+#             df.travel,
+#             data,
+#             label = label,
+#             linewidth = 4.0,
+#             color_palette=COLORSCHEME,
+#         )
+#     end
+
+#     # Displya the plot
+#     display(p)
+
+#     # Empty return
+#     return
+# end

@@ -1,8 +1,8 @@
 """
-    2a_analyze_sfam.jl
+    5_analyze_mlp.jl
 
 # Description
-This script takes the results of the Monte Carlo and generates plots of their statistics.
+This script takes the results of the MLP simulations and generates plots of their statistics.
 
 # Authors
 - Sasha Petrenko <petrenkos@mst.edu>
@@ -20,16 +20,19 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using DrWatson      # collect_results!
+using DataFrames
 
 # -----------------------------------------------------------------------------
 # OPTIONS
 # -----------------------------------------------------------------------------
 
-experiment = "2a_analyze_sfam"
+# This experiment name
+experiment = "5_analyze_mlp"
 
+# Point to the sweep results
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
-    "2_sfam",
+    "3_mlp",
     "linear_sweep"
 )
 
@@ -39,7 +42,7 @@ sweep_dir = CFAR.results_dir(
 
 # Parse the arguments provided to this script
 pargs = CFAR.exp_parse(
-    "$(experiment): analyze SFAM results."
+    "$(experiment): analyze MLP results."
 )
 
 # -----------------------------------------------------------------------------
@@ -48,3 +51,17 @@ pargs = CFAR.exp_parse(
 
 # Collect the results into a single dataframe
 df = collect_results!(sweep_dir)
+# df = collect_results(sweep_dir)
+
+# Sort by travel distance
+sort!(df, [:travel])
+
+# CFAR.plot_2d_perfs(df)
+
+attrs = [
+    "acc",
+    "loss",
+    # "sc_acc",
+]
+
+CFAR.plot_2d_attrs(df, attrs)
