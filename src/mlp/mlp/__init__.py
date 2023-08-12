@@ -14,7 +14,7 @@ from typing import Tuple
 # "CONSTANTS"
 # -----------------------------------------------------------------------------
 
-print(tf.version.VERSION)
+# print(tf.version.VERSION)
 
 BATCH_SIZE = 10
 N_EPOCHS = 20
@@ -29,8 +29,8 @@ def print_loaded() -> None:
     """
 
     # Print diagnostic
-    print("The mlp package is loaded, and functions can be run in it")
-
+    print("The mlp package is loaded, and functions can be run in it.")
+    print(f"Using tensorflow version {tf.version.VERSION}")
     # Empty return
     return
 
@@ -48,6 +48,7 @@ def jl_features_to_np(features) -> np.ndarray:
     np.ndarray
         The features cast into a numpy array and transposed.
     """
+
     return np.array(features).transpose()
 
 
@@ -66,6 +67,7 @@ def jl_targets_to_np(targets) -> np.ndarray:
     np.ndarray
         The targets cast into a numpy array and shifted by 1 (Julia is 1-indexed, Python is 0-indexed).
     """
+
     return np.array(targets) - 1
 
 
@@ -82,6 +84,7 @@ def jl_data_to_np(data) -> Tuple[np.ndarray, np.ndarray]:
     Tuple[np.ndarray, np.ndarray]
         The features and labels in numpy arrays.
     """
+
     # Convert the features and labels
     features = jl_features_to_np(data.x)
     labels = jl_targets_to_np(data.y)
@@ -103,10 +106,13 @@ def jl_data_to_tf(data) -> tf.data.Dataset:
     tf.data.dataset
         A pre-batched tensorflow dataset.
     """
+
+    # Create the dataset from numpy arrays and batch
     dataset = tf.data.Dataset.from_tensor_slices(
         jl_data_to_np(data)
     ).batch(BATCH_SIZE)
 
+    # Return the prebatched dataset
     return dataset
 
 
@@ -125,6 +131,8 @@ def show_data_shape(ds) -> None:
     print(features.shape)
     print("Labels:")
     print(labels.shape)
+
+    # Empty return
     return
 
 
@@ -208,10 +216,19 @@ def train_mlp_model(
     return
 
 
+def stdout_metrics(metrics: Tuple) -> None:
+    # Unpack the metrics for local logging
+    (loss, acc, sc_acc) = metrics
+    print("Loss {}, Accuracy {}, SC Accuracy {}".format(loss, acc, sc_acc))
+
+    # Empty return
+    return
+
+
 def test_mlp_model(
     model: tf.keras.Model,
     test_dataset: tf.data.Dataset,
-) -> None:
+) -> Tuple:
     """_summary_
 
     _extended_summary_
@@ -223,10 +240,14 @@ def test_mlp_model(
     test_dataset : tf.data.Dataset
         _description_
     """
-    metrics = model.evaluate(test_dataset)
-    (loss, acc, sc_acc) = metrics
-    print("Loss {}, Accuracy {}, SC Accuracy {}".format(loss, acc, sc_acc))
 
+    # Evaluate the model on the test datset
+    metrics = model.evaluate(test_dataset)
+
+    # Display these metrics
+    stdout_metrics(metrics)
+
+    # Return the metrics from the evaluation
     return metrics
 
 
@@ -279,20 +300,27 @@ def tt_ms_mlp_l2(ms) -> Tuple:
     """
 
     # Get the datasets from the Julia object
-    train_dataset, test_dataset = get_datasets(ms.static)
+    train_static, test_static = get_datasets(ms.static)
+    train_mover, test_mover = get_datasets(ms.mover)
 
     # Create and compile the model
     model = get_mlp_model()
 
-    # Train the model
-    train_mlp_model(model, train_dataset)
+    # Train the model on the train dataset
+    train_mlp_model(model, train_static)
 
     # Test the model
-    metrics = test_mlp_model(model, test_dataset)
+    metrics_pre = test_mlp_model(model, test_static)
 
-    # Unpack the metrics for local logging
-    (loss, acc, sc_acc) = metrics
-    print("Loss {}, Accuracy {}, SC Accuracy {}".format(loss, acc, sc_acc))
+    # Train the model on the mover dataset
+    train_mlp_model(model, train_mover)
+
+    # Test the model again
+    metrics_post = test_mlp_model(model, test_mover)
+
+    test_combined = test_mover.concatenate(test_static)
+
+    metrics_combined = test_mlp_model(model, test_combined)
 
     # Return the tupled metrics
-    return metrics
+    return metrics_pre, metrics_post, metrics_combined

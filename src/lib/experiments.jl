@@ -198,19 +198,23 @@ function train_test_mlp_mc(
     local_ms = CFAR.shift_mover(ms, d["travel"])
 
     # Run the Python experiment
-    metrics = opts["mlp"].tt_ms_mlp(local_ms)
+    # metrics = opts["mlp"].tt_ms_mlp(local_ms)
+    metrics = opts["mlp"].tt_ms_mlp_l2(local_ms)
 
     # Unpack the metrics
-    (loss, acc, sc_acc) = pyconvert(Vector{Any}, metrics)
+    m1, m2, m12 = pyconvert(Vector{Any}, metrics)
 
     # Copy the input sim dictionary
     fulld = deepcopy(d)
 
     # Add entries for the results
     fulld["done"] = true
-    fulld["loss"] = loss
-    fulld["acc"] = acc
-    fulld["sc_acc"] = sc_acc
+    fulld["p1"] = m1[2]
+    fulld["p2"] = m2[2]
+    fulld["p12"] = m12[2]
+    # fulld["loss"] = loss
+    # fulld["acc"] = acc
+    # fulld["sc_acc"] = sc_acc
     # fulld["p1"] = p1
     # fulld["p2"] = p2
     # fulld["p12"] = p12

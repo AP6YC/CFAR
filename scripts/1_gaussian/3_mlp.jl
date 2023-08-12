@@ -31,7 +31,7 @@ pargs = CFAR.dist_exp_parse(
     "1_gaussian/3_mlp: MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 4
+pargs["procs"] = 6
 
 # Start several processes
 if pargs["procs"] > 0
@@ -41,7 +41,7 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "mlp",
-    "travel" => collect(range(0, 10, 10))
+    "travel" => collect(range(0, 10, 100))
 )
 
 # -----------------------------------------------------------------------------
