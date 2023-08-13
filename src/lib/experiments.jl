@@ -199,10 +199,12 @@ function train_test_mlp_mc(
 
     # Run the Python experiment
     # metrics = opts["mlp"].tt_ms_mlp(local_ms)
-    metrics = opts["mlp"].tt_ms_mlp_l2(local_ms)
+    metrics = opts["mlp"].tt_ms_mlp_l2(
+        local_ms,
+    )
 
     # Unpack the metrics
-    m1, m2, m12 = pyconvert(Vector{Any}, metrics)
+    m1, m2, m12 = PythonCall.pyconvert(Vector{Any}, metrics)
 
     # Copy the input sim dictionary
     fulld = deepcopy(d)

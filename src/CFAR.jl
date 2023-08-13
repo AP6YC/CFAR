@@ -54,8 +54,10 @@ using
     Random,
     StatsPlots
 
-@lazy import CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
-@lazy import PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
+# @lazy import CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
+# @lazy import PythonCall = "6099a3de-0909-46bc-b1f4-468b9a2dfc0d"
+import CondaPkg
+import PythonCall
 
 # Individual usings
 using MLUtils: splitobs, shuffleobs

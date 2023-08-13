@@ -185,24 +185,20 @@ function plot_2d_attrs(
     # Iteratively add each attribute line
     local_df = dropmissing(df)
     for attr in attrs
-        # local_y = collect(skipmissing(df[:, attr]))
-        # local_x = collect(skipmissing(df.travel))
+        # Point to the the x and y of the plot
         local_x = local_df.travel
         local_y = local_df[:, attr]
+        # If selected, do the windowed averaging procedure
         if avg
             local_y = sliding_avg(local_y, n)
             local_x = local_x[1:end-n+1]
-        # else
-        #     plot_attr = df[:, attr]
         end
 
+        # Add the local line to the plot
         plot!(
             p,
-            # df.travel,
-            # df[:, attr],
             local_x,
             local_y,
-            # plot_attr,
             label = attr,
             linewidth = 4.0,
             color_palette=COLORSCHEME,

@@ -33,7 +33,7 @@ pargs = CFAR.dist_exp_parse(
     "1_gaussian/3_mlp: MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 8
+pargs["procs"] = 4
 
 # Start several processes
 if pargs["procs"] > 0
@@ -43,7 +43,7 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "mlp",
-    "travel" => collect(range(0, 10, 100))
+    "travel" => collect(range(0, 10, 1000))
 )
 
 # -----------------------------------------------------------------------------
@@ -58,7 +58,7 @@ CFAR.conda_gc_disable()
     Pkg.activate(".")
 
     # Modules
-    using Revise
+    # using Revise
     using CFAR
 
     # Point to the sweep results
@@ -110,9 +110,10 @@ CFAR.conda_gc_enable()
 # -----------------------------------------------------------------------------
 
 # Close the workers after simulation
-if pargs["procs"] > 0
-    rmprocs(workers())
-end
+rmprocs(workers())
+# if pargs["procs"] > 0
+#     rmprocs(workers())
+# end
 
 println("--- Simulation complete ---")
 

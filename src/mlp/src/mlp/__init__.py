@@ -17,6 +17,9 @@ from typing import Tuple
 BATCH_SIZE = 10
 N_EPOCHS = 20
 
+# Set the version variable of the package
+__version__ = "1.0.0"
+
 # -----------------------------------------------------------------------------
 # FUNCTIONS
 # -----------------------------------------------------------------------------
@@ -197,6 +200,7 @@ def train_mlp_model(
     model: tf.keras.Model,
     train_dataset: tf.data.Dataset,
     n_epochs: int = N_EPOCHS,
+    verbose: int = 2,
 ) -> None:
     """Trains the MLP model on the provided tensorflow dataset.
 
@@ -212,6 +216,7 @@ def train_mlp_model(
     model.fit(
         train_dataset,
         epochs=n_epochs,
+        verbose=verbose,
     )
 
     # Empty return
@@ -230,6 +235,7 @@ def stdout_metrics(metrics: Tuple) -> None:
 def test_mlp_model(
     model: tf.keras.Model,
     test_dataset: tf.data.Dataset,
+    verbose: int = 2
 ) -> Tuple:
     """_summary_
 
@@ -244,7 +250,10 @@ def test_mlp_model(
     """
 
     # Evaluate the model on the test datset
-    metrics = model.evaluate(test_dataset)
+    metrics = model.evaluate(
+        test_dataset,
+        verbose=verbose,
+    )
 
     # Display these metrics
     stdout_metrics(metrics)
@@ -253,7 +262,10 @@ def test_mlp_model(
     return metrics
 
 
-def tt_ms_mlp(ms) -> Tuple:
+def tt_ms_mlp(
+    ms,
+    verbose=2,
+) -> Tuple:
     """Train and test an MLP on the MoverSplit dataset.
 
     Parameters
@@ -274,10 +286,18 @@ def tt_ms_mlp(ms) -> Tuple:
     model = get_mlp_model()
 
     # Train the model
-    train_mlp_model(model, train_dataset)
+    train_mlp_model(
+        model,
+        train_dataset,
+        verbose=verbose,
+    )
 
     # Test the model
-    metrics = test_mlp_model(model, test_dataset)
+    metrics = test_mlp_model(
+        model,
+        test_dataset,
+        verbose=verbose,
+    )
 
     # Unpack the metrics for local logging
     (loss, acc, sc_acc) = metrics
@@ -287,7 +307,10 @@ def tt_ms_mlp(ms) -> Tuple:
     return metrics
 
 
-def tt_ms_mlp_l2(ms) -> Tuple:
+def tt_ms_mlp_l2(
+    ms,
+    verbose=2,
+) -> Tuple:
     """Train and test an MLP on the MoverSplit dataset.
 
     Parameters
@@ -309,20 +332,40 @@ def tt_ms_mlp_l2(ms) -> Tuple:
     model = get_mlp_model()
 
     # Train the model on the train dataset
-    train_mlp_model(model, train_static)
+    train_mlp_model(
+        model,
+        train_static,
+        verbose=verbose,
+    )
 
     # Test the model
-    metrics_pre = test_mlp_model(model, test_static)
+    metrics_pre = test_mlp_model(
+        model,
+        test_static,
+        verbose=verbose,
+    )
 
     # Train the model on the mover dataset
-    train_mlp_model(model, train_mover)
+    train_mlp_model(
+        model,
+        train_mover,
+        verbose=verbose,
+    )
 
     # Test the model again
-    metrics_post = test_mlp_model(model, test_mover)
+    metrics_post = test_mlp_model(
+        model,
+        test_mover,
+        verbose=verbose,
+    )
 
     test_combined = test_mover.concatenate(test_static)
 
-    metrics_combined = test_mlp_model(model, test_combined)
+    metrics_combined = test_mlp_model(
+        model,
+        test_combined,
+        verbose=verbose,
+    )
 
     # Return the tupled metrics
     return metrics_pre, metrics_post, metrics_combined

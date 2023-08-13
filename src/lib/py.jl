@@ -13,10 +13,10 @@ Loads and returns a handle to the provided local Python library.
 """
 function get_pylib(lib::AbstractString)
     # Load the library
-    pylib = pyimport(lib)
+    pylib = PythonCall.pyimport(lib)
 
     # Reload definitions for development
-    il = pyimport("importlib")
+    il = PythonCall.pyimport("importlib")
     il.reload(pylib)
 
     # Return the library
@@ -59,7 +59,7 @@ function setup_local_pylib(lib::AbstractString)
     # Try to import the library
     try
         # @info "Local lib '$(lib)' is set up"
-        pyimport(lib)
+        PythonCall.pyimport(lib)
     # If this failed, then install the package
     catch
         @info "Local lib '$(lib)' not set up; installing now"
@@ -89,10 +89,24 @@ function conda_setup()
     return
 end
 
+"""
+Wrapper for disabling the PythonCall garbage collector.
+"""
 function conda_gc_disable()
+    # PythonCall garbage collector API
     PythonCall.GC.disable()
+
+    # Explicit empty return
+    return
 end
 
+"""
+Wrapper for reenabling the PythonCall garbage collector.
+"""
 function conda_gc_enable()
+    # PythonCall garbage collector API
     PythonCall.GC.enable()
+
+    # Explicit empty return
+    return
 end
