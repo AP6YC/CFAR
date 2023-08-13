@@ -74,4 +74,11 @@ CFAR.plot_2d_attrs(
     df,
     attrs,
     avg=true,
+    n=50,
+)
+
+CFAR.plot_2d_errlines(
+    df,
+    attrs,
+    n=50,
 )

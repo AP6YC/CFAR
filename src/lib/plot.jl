@@ -124,43 +124,16 @@ function plot_mover(
     return
 end
 
-# """
-# Plots the 2D performances trends.
 
-# # Arguments
-# - `df::DataFrame`: the collected simulation results.
-# """
-# function plot_2d_perfs(df::DataFrame)
-#     # Instantiate the plot object
-#     p = plot()
+"""
+Computes the sliding window average of a vector with window size `n`.
 
-#     # Create a set of tuples for iterative plotting
-#     df_plot_attrs = (
-#         (df.p1, "p1"),
-#         (df.p2, "p2"),
-#         (df.p12, "p12"),
-#     )
-
-#     # Iteratively add each performance line
-#     for (data, label) in df_plot_attrs
-#         plot!(
-#             p,
-#             df.travel,
-#             data,
-#             label = label,
-#             linewidth = 4.0,
-#             color_palette=COLORSCHEME,
-#         )
-#     end
-
-#     # Displya the plot
-#     isinteractive() && display(p)
-
-#     # Empty return
-#     return
-# end
-
+# Arguments
+- `vs::RealVector`: the original vector for sliding window averages.
+- `n::Integer`: the size of the sliding window.
+"""
 function sliding_avg(vs::RealVector, n::Integer)
+    # Construct and return the sliding window average
     return [
         sum(@view vs[i:(i+n-1)])/n for i in 1:(length(vs)-(n-1))
     ]
@@ -179,15 +152,19 @@ function plot_2d_attrs(
     avg::Bool=false,
     n::Integer=10,
 ) where T <: AbstractString
+
     # Instantiate the plot object
     p = plot()
 
-    # Iteratively add each attribute line
+    # Clean the dataframe of missing entries
     local_df = dropmissing(df)
+
+    # Iteratively add each attribute line
     for attr in attrs
         # Point to the the x and y of the plot
         local_x = local_df.travel
         local_y = local_df[:, attr]
+
         # If selected, do the windowed averaging procedure
         if avg
             local_y = sliding_avg(local_y, n)
@@ -208,37 +185,72 @@ function plot_2d_attrs(
     # Display the plot
     isinteractive() && display(p)
 
-    # Empty return
-    return
+    # Return the plot handle
+    return p
 end
 
+"""
+Constructs a windowed matrix of a vector.
 
-# function plot_2d_mlp(df::DataFrame)
-#     # Instantiate the plot object
-#     p = plot()
+# Arguments
+- `vs::RealVector`: the original vector.
+- `n::Integer`: the size of the sliding window.
+"""
+function get_windows(vs::RealVector, n::Integer)
+    # Compute the size of the window
+    n_window = length(vs) - n + 1
 
-#     # Create a set of tuples for iterative plotting
-#     df_plot_attrs = (
-#         (df.acc, "acc"),
-#         (df.p2, "p2"),
-#         (df.p12, "p12"),
-#     )
+    # Initialize the windowed matrix version of the input vector
+    local_window = zeros(n, n_window)
 
-#     # Iteratively add each performance line
-#     for (data, label) in df_plot_attrs
-#         plot!(
-#             p,
-#             df.travel,
-#             data,
-#             label = label,
-#             linewidth = 4.0,
-#             color_palette=COLORSCHEME,
-#         )
-#     end
+    # Construct a windowed version of vector at each index of n_window
+    for ix = 1:n_window
+        local_window[:, ix] = vs[ix:(ix + n - 1)]
+    end
 
-#     # Displya the plot
-#     display(p)
+    # Return the windowed matrix version of the vector
+    return local_window
+end
 
-#     # Empty return
-#     return
-# end
+"""
+Plots the 2D performances trends.
+
+# Arguments
+- `df::DataFrame`: the collected simulation results.
+- `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+"""
+function plot_2d_errlines(
+    df::DataFrame,
+    attrs::Vector{T};
+    n::Integer=10,
+) where T <: AbstractString
+    # Instantiate the plot object
+    p = plot()
+
+    # Clean the dataframe of missing entries
+    local_df = dropmissing(df)
+
+    # Iteratively add each attribute line
+    for attr in attrs
+        # Point to the the x and y of the plot
+        local_x = local_df.travel[1:end - n + 1]
+        local_err = transpose(get_windows(local_df[:, attr], n))
+
+        # Add the errorline to the plot
+        errorline!(p,
+            local_x,
+            local_err,
+            linewidth = 4.0,
+            label = attr,
+            color_palette=COLORSCHEME,
+            errorstyle=:ribbon,
+        )
+
+    end
+
+    # Display the plot
+    isinteractive() && display(p)
+
+    # Return the plot handle
+    return p
+end
