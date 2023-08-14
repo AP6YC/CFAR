@@ -69,15 +69,15 @@ CFAR.conda_gc_disable()
         args...
     )
 
+    # Make the path
+    mkpath(sweep_results_dir())
+
     # Load the config dict
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
 
     # Load the MLP simulation options
     opts = CFAR.load_mlp_sim_opts()
-
-    # Make the path
-    mkpath(sweep_results_dir())
 
     # Define the single-parameter function used for pmap
     local_sim(dict) = CFAR.train_test_mlp_mc(
@@ -116,31 +116,3 @@ rmprocs(workers())
 # end
 
 println("--- Simulation complete ---")
-
-# -----------------------------------------------------------------------------
-# ADDITIONAL DEPENDENCIES
-# -----------------------------------------------------------------------------
-
-# using PythonCall
-
-# mlp = pyimport("mlp")
-# il = pyimport("importlib")
-# il.reload(mlp)
-
-# tf = pyimport("tensorflow")
-# tf.config.list_physical_devices("CPU")
-# tf.test.is_built_with_cuda()
-
-# # -----------------------------------------------------------------------------
-# # EXPERIMENT
-# # -----------------------------------------------------------------------------
-
-# # Load the config dict
-# config = CFAR.get_gaussian_config("gaussians.yml")
-# ms = CFAR.gen_gaussians(config)
-
-# # mlp.show_data_shape(ms)
-# # loss, acc = mlp.examine_data(ms)
-# metrics = mlp.tt_ms_mlp(ms)
-# loss, acc, sc_acc = metrics
-

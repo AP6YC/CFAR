@@ -52,6 +52,9 @@ $(METHODLIST)
 # This is useful when many functions utilize the same arguments, etc.
 # -----------------------------------------------------------------------------
 
+"""
+Docstring prefix denoting that the constant is used as a common docstring element for other docstrings.
+"""
 const COMMON_DOC = "Common docstring:"
 
 """
