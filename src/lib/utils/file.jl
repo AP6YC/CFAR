@@ -5,11 +5,19 @@
 A collection of file saving and loading utilities.
 """
 
+# -----------------------------------------------------------------------------
+# ALIASES
+# -----------------------------------------------------------------------------
+
 """
 Definition of a configuration dictionary loaded from a config file.
 """
 const ConfigDict = Dict{Any, Any}
 # const ConfigDict = Dict{String, Any}
+
+# -----------------------------------------------------------------------------
+# FUNCTIONS
+# -----------------------------------------------------------------------------
 
 """
 Wrapper for loading the configuration file with the provided filename.
