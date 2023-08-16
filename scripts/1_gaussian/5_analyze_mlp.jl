@@ -23,12 +23,15 @@ using DrWatson      # collect_results!
 using DataFrames
 
 # -----------------------------------------------------------------------------
-# OPTIONS
+# VARIABLES
 # -----------------------------------------------------------------------------
 
 # This experiment name
 exp_top = "1_gaussian"
 exp_name = "5_analyze_mlp.jl"
+
+perf_plot = "perf.png"
+err_plot = "err.png"
 
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -72,18 +75,20 @@ attrs = [
 ]
 
 # Plot the average trendlines
-CFAR.plot_2d_attrs(
+p1 = CFAR.plot_2d_attrs(
     df,
     attrs,
     avg=true,
     n=50,
 )
+CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
 # Plot the StatsPlots error lines
-CFAR.plot_2d_errlines(
+p2 = CFAR.plot_2d_errlines(
     df,
     attrs,
     n=50,
 )
+CFAR.save_plot(p2, perf_plot, exp_top, exp_name)
 
 @info "Done plotting for $(exp_name)"

@@ -254,3 +254,73 @@ function plot_2d_errlines(
     # Return the plot handle
     return p
 end
+
+"""
+Wrapper for how figures are saved in the CFAR project.
+
+# Arguments
+- `p::Plots.Plot`: the Plot object to save.
+$ARG_FILENAME
+"""
+function _save_cfar_plot(p::Plots.Plot, filename::AbstractString)
+    savefig(p, filename)
+end
+
+"""
+Wrapper for how tables are saved in the CFAR project.
+
+# Arguments
+- `table`: the table object to save.
+$ARG_FILENAME
+"""
+function _save_cfar_table(table, filename::AbstractString)
+    open(filename, "w") do io
+        write(io, table)
+    end
+end
+
+"""
+Dictionary mapping the names of result save types to the private wrapper functions that implement them.
+"""
+const SAVE_MAP = Dict(
+    "figure" => :_save_cfar_fig,
+    "table" => :_save_cfar_table,
+)
+
+"""
+
+"""
+function save_plot(p::Plots.Plot, fig_name::AbstractString, exp_top::AbstractString, exp_name::AbstractString)
+    # Save to the local results directory
+    mkpath(results_dir(exp_top, exp_name))
+    _save_cfar_plot(p, results_dir(exp_top, exp_name, fig_name))
+    # Save to the paper directory
+    mkpath(paper_results_dir(exp_top, exp_name))
+    _save_cfar_plot(p, paper_results_dir(exp_top, exp_name, fig_name))
+
+    return
+end
+
+# """
+# Saving function for results in the DCCR project.
+
+# This function dispatches to the correct private wrapper saving function via the `type` option, and the `to_paper` flag determines if the result is also saved to a secondary location, which is mainly used for also saving the result to the cloud location for the journal paper.
+
+# # Arguments
+# - `type::AbstractString`: the type of object being saved (see [`SAVE_MAP`](@ref)).
+# - `object`: the object to save as `type`, whether a figure, table, or something else.
+# - `exp_name::AbstractString`: the name of the experiment, used for the final saving directories.
+# - `save_name::AbstractString`: the name of the save file itself.
+# - `to_paper::Bool=false`: optional, flag for saving to the paper results directory (default `false`).
+# """
+# function save_cfar(type::AbstractString, object, exp_name::AbstractString, save_name::AbstractString ; to_paper::Bool=false)
+#     # Save the figure to the local results directory
+#     mkpath(results_dir(exp_name))
+#     eval(SAVE_MAP[type])(object, results_dir(exp_name, save_name))
+
+#     # Check if saving to the paper directory as well
+#     if to_paper
+#         mkpath(paper_results_dir(exp_name))
+#         eval(SAVE_MAP[type])(object, paper_results_dir(exp_name, save_name))
+#     end
+# end

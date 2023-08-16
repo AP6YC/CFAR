@@ -1,5 +1,5 @@
 """
-    3_mlp_single.jl
+    3_mlp.jl
 
 # Description
 Trains and tests an MLP in Python.

@@ -30,6 +30,9 @@ using DataFrames
 exp_top = "1_gaussian"
 exp_name = "4_analyze_art.jl"
 
+perf_plot = "perf.png"
+err_plot = "err.png"
+
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
@@ -68,6 +71,7 @@ p1 = CFAR.plot_2d_attrs(
     attrs,
     avg=true,
 )
+CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
 # Plot the StatsPlots error lines
 p2 = CFAR.plot_2d_errlines(
@@ -75,5 +79,6 @@ p2 = CFAR.plot_2d_errlines(
     attrs,
     n=100,
 )
+CFAR.save_plot(p2, perf_plot, exp_top, exp_name)
 
 @info "Done plotting for $(exp_name)"
