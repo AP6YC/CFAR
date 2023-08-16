@@ -310,6 +310,7 @@ def tt_ms_mlp(
 def tt_ms_mlp_l2(
     ms,
     verbose=2,
+    epochs=N_EPOCHS,
 ) -> Tuple:
     """Train and test an MLP on the MoverSplit dataset.
 
@@ -336,6 +337,7 @@ def tt_ms_mlp_l2(
         model,
         train_static,
         verbose=verbose,
+        epochs=epochs,
     )
 
     # Test the model
@@ -350,6 +352,7 @@ def tt_ms_mlp_l2(
         model,
         train_mover,
         verbose=verbose,
+        epochs=epochs,
     )
 
     # Test the model again

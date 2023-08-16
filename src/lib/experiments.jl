@@ -177,7 +177,7 @@ end
 
 
 """
-Train and test SFAM in parallel.
+Train and test an MLP on the [`MoverSplit`](@ref) dataset.
 
 # Arguments
 $ARG_SIM_D
@@ -201,6 +201,8 @@ function train_test_mlp_mc(
     # metrics = opts["mlp"].tt_ms_mlp(local_ms)
     metrics = opts["mlp"].tt_ms_mlp_l2(
         local_ms,
+        verbose=opts["verbose"],
+        epochs=opts["epochs"],
     )
 
     # Unpack the metrics
