@@ -6,6 +6,16 @@ A collection of high-level constants for the package, such as the default names 
 """
 
 """
+The default number of processes to start in distributed experiments on Windows.
+"""
+const DEFAULT_N_PROCS_WINDOWS = 11
+
+"""
+The default number of processes to start in distributed experiments on Linux.
+"""
+const DEFAULT_N_PROCS_UNIX = 31
+
+"""
 Location of the ART options file for simulations.
 """
 const DEFAULT_ART_OPTS_FILE = "art.yml"

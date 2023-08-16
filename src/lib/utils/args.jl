@@ -62,16 +62,23 @@ function dist_exp_parse(description::AbstractString="A distributed CFAR experime
     # Set up the parse settings
     s = get_argparsesettings(description)
 
+    # Pick the default number of distributed processes
+    default_n_procs = if Sys.iswindows()
+        DEFAULT_N_PROCS_WINDOWS
+    else
+        DEFAULT_N_PROCS_UNIX
+    end
+
     # Set up the arguments table
     @add_arg_table! s begin
         "--procs", "-p"
             help = "number of parallel processes"
             arg_type = Int
-            default = 0
-        "--n_sims", "-n"
-            help = "the number of simulations to run"
-            arg_type = Int
-            default = 1
+            default = default_n_procs
+        # "--n_sims", "-n"
+        #     help = "the number of simulations to run"
+        #     arg_type = Int
+        #     default = 1
         "--verbose", "-v"
             help = "verbose output"
             action = :store_true

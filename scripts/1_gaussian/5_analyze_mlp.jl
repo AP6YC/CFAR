@@ -27,7 +27,8 @@ using DataFrames
 # -----------------------------------------------------------------------------
 
 # This experiment name
-experiment = "5_analyze_mlp"
+exp_top = "1_gaussian"
+exp_name = "5_analyze_mlp.jl"
 
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -42,7 +43,7 @@ sweep_dir = CFAR.results_dir(
 
 # Parse the arguments provided to this script
 pargs = CFAR.exp_parse(
-    "$(experiment): analyze MLP results."
+    "$(exp_top)/$(exp_name): analyze MLP results."
 )
 
 # -----------------------------------------------------------------------------
@@ -70,6 +71,7 @@ attrs = [
     "p12",
 ]
 
+# Plot the average trendlines
 CFAR.plot_2d_attrs(
     df,
     attrs,
@@ -77,8 +79,11 @@ CFAR.plot_2d_attrs(
     n=50,
 )
 
+# Plot the StatsPlots error lines
 CFAR.plot_2d_errlines(
     df,
     attrs,
     n=50,
 )
+
+@info "Done plotting for $(exp_name)"
