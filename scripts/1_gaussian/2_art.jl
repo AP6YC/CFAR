@@ -24,15 +24,24 @@ using DrWatson
 # using ProgressMeter
 
 # -----------------------------------------------------------------------------
+# VARIABLES
+# -----------------------------------------------------------------------------
+
+exp_top = "1_gaussian"
+exp_name = "2_art.jl"
+config_file = "art.yml"
+
+# -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
-    "1_gaussian/2_art: Simplfied FuzzyARTMAP on the Gaussian dataset."
+    "$(exp_top)/$(exp_name): Simplfied FuzzyARTMAP on the Gaussian dataset."
 )
 
-pargs["procs"] = 3
+# Load the simulation options
+opts = CFAR.load_art_sim_opts(config_file)
 
 # Start several processes
 if pargs["procs"] > 0
@@ -42,7 +51,11 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "sfam",
-    "travel" => collect(range(0, 10, 1000))
+    "travel" => collect(range(
+        opts["travel_lb"],
+        opts["travel_ub"],
+        opts["n_points"],
+    )),
 )
 
 # -----------------------------------------------------------------------------
@@ -104,8 +117,6 @@ pmap(local_sim, dicts)
 # -----------------------------------------------------------------------------
 
 # Close the workers after simulation
-if pargs["procs"] > 0
-    rmprocs(workers())
-end
+rmprocs(workers())
 
 println("--- Simulation complete ---")

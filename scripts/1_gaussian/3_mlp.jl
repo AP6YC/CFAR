@@ -23,17 +23,28 @@ using Distributed
 using DrWatson
 
 # -----------------------------------------------------------------------------
+# VARIABLES
+# -----------------------------------------------------------------------------
+
+exp_top = "1_gaussian"
+exp_name = "3_mlp.jl"
+config_file = "mlp.yml"
+
+# -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
 CFAR.conda_setup()
+CFAR.conda_gc_disable()
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
-    "1_gaussian/3_mlp: MLP on the Gaussian dataset."
+    "$(exp_top)/$(exp_name): MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 4
+# Load the MLP simulation options
+opts = CFAR.load_mlp_sim_opts(config_file)
+
 
 # Start several processes
 if pargs["procs"] > 0
@@ -43,14 +54,16 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "mlp",
-    "travel" => collect(range(0, 10, 1000))
+    "travel" => collect(range(
+        opts["travel_lb"],
+        opts["travel_ub"],
+        opts["n_points"],
+    )),
 )
 
 # -----------------------------------------------------------------------------
 # PARALLEL DEFINITIONS
 # -----------------------------------------------------------------------------
-
-CFAR.conda_gc_disable()
 
 @everywhere begin
     # Activate the project in case
@@ -86,7 +99,6 @@ CFAR.conda_gc_disable()
         sweep_results_dir,
         opts,
     )
-
 end
 
 # -----------------------------------------------------------------------------
@@ -111,8 +123,5 @@ CFAR.conda_gc_enable()
 
 # Close the workers after simulation
 rmprocs(workers())
-# if pargs["procs"] > 0
-#     rmprocs(workers())
-# end
 
 println("--- Simulation complete ---")
