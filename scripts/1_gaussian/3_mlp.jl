@@ -26,16 +26,19 @@ using DrWatson
 # VARIABLES
 # -----------------------------------------------------------------------------
 
+#
 exp_top = "1_gaussian"
 exp_name = "3_mlp.jl"
 config_file = "mlp.yml"
+
+# Plot names
 
 # -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
 CFAR.conda_setup()
-CFAR.conda_gc_disable()
+# CFAR.conda_gc_disable()
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
@@ -45,6 +48,7 @@ pargs = CFAR.dist_exp_parse(
 # Load the MLP simulation options
 opts = CFAR.load_mlp_sim_opts(config_file)
 
+# pargs["procs"] = 0
 
 # Start several processes
 if pargs["procs"] > 0
@@ -89,6 +93,9 @@ sim_params = Dict{String, Any}(
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
 
+    using Random
+    sleep(5*rand())
+
     # Load the MLP simulation options
     opts = CFAR.load_mlp_sim_opts()
 
@@ -115,7 +122,7 @@ dicts = dict_list(sim_params)
 pmap(local_sim, dicts)
 # progress_pmap(local_sim, dicts)
 
-CFAR.conda_gc_enable()
+# CFAR.conda_gc_enable()
 
 # -----------------------------------------------------------------------------
 # CLEANUP

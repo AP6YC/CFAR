@@ -199,7 +199,7 @@ def get_mlp_model() -> tf.keras.Model:
 def train_mlp_model(
     model: tf.keras.Model,
     train_dataset: tf.data.Dataset,
-    n_epochs: int = N_EPOCHS,
+    epochs: int = N_EPOCHS,
     verbose: int = 2,
 ) -> None:
     """Trains the MLP model on the provided tensorflow dataset.
@@ -215,7 +215,7 @@ def train_mlp_model(
     # Fit the data
     model.fit(
         train_dataset,
-        epochs=n_epochs,
+        epochs=epochs,
         verbose=verbose,
     )
 
