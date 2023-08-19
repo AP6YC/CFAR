@@ -21,6 +21,7 @@ using CFAR
 
 using Distributions, Random
 using DelimitedFiles
+using Plots
 
 # -----------------------------------------------------------------------------
 # VARIABLES
@@ -30,7 +31,8 @@ using DelimitedFiles
 OUT_FILENAME = "gaussians.jld2"
 move_plot = "mover"
 exp_top = "1_gaussian"
-exp_name = "1_gen_mg.jl"
+exp_name = "1_gen_mg"
+fps = 2
 
 # -----------------------------------------------------------------------------
 # DEPENDENT SETUP
@@ -63,6 +65,18 @@ for ix = 1:10
     local_name = move_plot * string(ix) * ".png"
     CFAR.save_plot(p, local_name, exp_top, exp_name)
 end
+
+ms_new = deepcopy(ms)
+anim = @animate for ix = 1:10
+    # circleplot(x, y, i)
+    global ms_new = CFAR.shift_mover(ms_new, 1.0)
+    # CFAR.plot_mover(ms_new, config)
+    CFAR.plot_mover(ms_new)
+    # local_name = move_plot * string(ix) * ".png"
+    # CFAR.save_plot(p, local_name, exp_top, exp_name)
+end
+gif_savename = CFAR.results_dir(exp_top, exp_name, move_plot * ".gif")
+gif(anim, gif_savename, fps=2)
 
 # Save the mover split
 CFAR.save_moversplit(ms, out_file)
