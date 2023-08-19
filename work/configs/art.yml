@@ -2,6 +2,11 @@ rng_seed: 1234
 travel_lb: 0
 travel_ub: 10
 n_points: 1000
+model: "SFAM"
 
 opts_SFAM:
   rho: 0.6
+
+opts_DDVFA:
+  rho_lb: 0.4
+  rho_ub: 0.75

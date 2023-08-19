@@ -28,6 +28,9 @@ using DelimitedFiles
 
 # N_MOVES = 10
 OUT_FILENAME = "gaussians.jld2"
+move_plot = "mover"
+exp_top = "1_gaussian"
+exp_name = "1_gen_mg.jl"
 
 # -----------------------------------------------------------------------------
 # DEPENDENT SETUP
@@ -56,7 +59,9 @@ ms_new = deepcopy(ms)
 for ix = 1:10
     global ms_new = CFAR.shift_mover(ms_new, 1.0)
     # CFAR.plot_mover(ms_new, config)
-    CFAR.plot_mover(ms_new)
+    p = CFAR.plot_mover(ms_new)
+    local_name = move_plot * string(ix) * ".png"
+    CFAR.save_plot(p, local_name, exp_top, exp_name)
 end
 
 # Save the mover split

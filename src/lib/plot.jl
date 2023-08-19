@@ -120,8 +120,8 @@ function plot_mover(
     # Finally display the plot
     isinteractive() && display(p)
 
-    # Empty return
-    return
+    # Return the plot handle
+    return p
 end
 
 
