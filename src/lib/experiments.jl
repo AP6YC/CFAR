@@ -102,6 +102,10 @@ function train_test_sfam_mc(
 
     # Init the SFAM module
     art = SFAM(opts["opts_SFAM"])
+    art.config = AdaptiveResonance.DataConfig(
+        opts["feature_bounds"]["min"],
+        opts["feature_bounds"]["max"],
+    )
 
     # Task 1: static gaussians
     train!(
@@ -121,6 +125,7 @@ function train_test_sfam_mc(
         yh1,
         local_ms.static.test.y
     )
+    n_cats_1 = art.n_categories
 
     # Task 2: moving gaussian
     train!(
@@ -140,6 +145,7 @@ function train_test_sfam_mc(
         yh2,
         local_ms.mover.test.y,
     )
+    n_cats_2 = art.n_categories
 
     # Classify combined data
     yh12 = classify(
@@ -166,6 +172,8 @@ function train_test_sfam_mc(
     fulld["p1"] = p1
     fulld["p2"] = p2
     fulld["p12"] = p12
+    fulld["nc1"] = n_cats_1
+    fulld["nc2"] = n_cats_2
     # fulld["rho"] = opts["rho"]
 
     # Save the results

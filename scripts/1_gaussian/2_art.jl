@@ -21,7 +21,6 @@ using CFAR
 
 using Distributed
 using DrWatson
-# using ProgressMeter
 
 # -----------------------------------------------------------------------------
 # VARIABLES
@@ -42,6 +41,8 @@ pargs = CFAR.dist_exp_parse(
 
 # Load the simulation options
 opts = CFAR.load_art_sim_opts(config_file)
+
+pargs["procs"] = 0
 
 # Start several processes
 if pargs["procs"] > 0

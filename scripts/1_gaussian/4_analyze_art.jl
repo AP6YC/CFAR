@@ -21,6 +21,7 @@ using CFAR
 
 using DrWatson      # collect_results!
 using DataFrames
+using Plots
 
 # -----------------------------------------------------------------------------
 # OPTIONS
@@ -32,6 +33,7 @@ exp_name = "4_analyze_art.jl"
 
 perf_plot = "perf.png"
 err_plot = "err.png"
+n_cats_plot = "n_categories.png"
 
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -70,6 +72,8 @@ p1 = CFAR.plot_2d_attrs(
     df,
     attrs,
     avg=true,
+    n=100,
+    title="Peformances",
 )
 CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
@@ -78,7 +82,21 @@ p2 = CFAR.plot_2d_errlines(
     df,
     attrs,
     n=100,
+    title="Performances with Error Bars",
 )
-CFAR.save_plot(p2, perf_plot, exp_top, exp_name)
+CFAR.save_plot(p2, err_plot, exp_top, exp_name)
+
+# Plot the number of categoreis
+p3= CFAR.plot_2d_attrs(
+    df,
+    ["nc1", "nc2"],
+    n=200,
+    title="Number of Categories",
+)
+CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
+
+# -----------------------------------------------------------------------------
+# CLEANUP
+# -----------------------------------------------------------------------------
 
 @info "Done plotting for $(exp_name)"

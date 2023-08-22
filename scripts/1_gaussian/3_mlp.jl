@@ -26,7 +26,6 @@ using DrWatson
 # VARIABLES
 # -----------------------------------------------------------------------------
 
-#
 exp_top = "1_gaussian"
 exp_name = "3_mlp.jl"
 config_file = "mlp.yml"

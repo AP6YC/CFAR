@@ -4,6 +4,16 @@ travel_ub: 10
 n_points: 1000
 model: "SFAM"
 
+feature_bounds:
+  min: [
+    0.0,
+    0.0
+  ]
+  max: [
+    10.0,
+    10.0
+  ]
+
 opts_SFAM:
   rho: 0.6
 

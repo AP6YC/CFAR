@@ -151,6 +151,7 @@ function plot_2d_attrs(
     attrs::Vector{T};
     avg::Bool=false,
     n::Integer=10,
+    title="",
 ) where T <: AbstractString
 
     # Instantiate the plot object
@@ -181,6 +182,8 @@ function plot_2d_attrs(
             color_palette=COLORSCHEME,
         )
     end
+
+    !isempty(title) && title!(p, title)
 
     # Display the plot
     isinteractive() && display(p)
@@ -223,6 +226,7 @@ function plot_2d_errlines(
     df::DataFrame,
     attrs::Vector{T};
     n::Integer=10,
+    title="",
 ) where T <: AbstractString
     # Instantiate the plot object
     p = plot()
@@ -247,6 +251,8 @@ function plot_2d_errlines(
         )
 
     end
+
+    !isempty(title) && title!(p, title)
 
     # Display the plot
     isinteractive() && display(p)
