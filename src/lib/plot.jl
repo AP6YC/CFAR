@@ -268,7 +268,7 @@ Wrapper for how figures are saved in the CFAR project.
 - `p::Plots.Plot`: the Plot object to save.
 $ARG_FILENAME
 """
-function _save_cfar_plot(p::Plots.Plot, filename::AbstractString)
+function _save_plot(p::Plots.Plot, filename::AbstractString)
     savefig(p, filename)
 end
 
@@ -279,7 +279,7 @@ Wrapper for how tables are saved in the CFAR project.
 - `table`: the table object to save.
 $ARG_FILENAME
 """
-function _save_cfar_table(table, filename::AbstractString)
+function _save_table(table, filename::AbstractString)
     open(filename, "w") do io
         write(io, table)
     end
@@ -289,20 +289,31 @@ end
 Dictionary mapping the names of result save types to the private wrapper functions that implement them.
 """
 const SAVE_MAP = Dict(
-    "figure" => :_save_cfar_fig,
-    "table" => :_save_cfar_table,
+    "figure" => :_save_fig,
+    "table" => :_save_table,
 )
 
 """
+Saves the plot to the both the local results directory and to the paper directory.
 
+# Arguments
+- `p::Plots.Plot`: the handle of the plot to save.
+- `fig_name::AbstractString`: the name of the figure file itself.
+- `exp_top::AbstractString`: the top of the experiment directory.
+- `exp_name::AbstractString`: the name of the experiment itself.
 """
-function save_plot(p::Plots.Plot, fig_name::AbstractString, exp_top::AbstractString, exp_name::AbstractString)
+function save_plot(
+    p::Plots.Plot,
+    fig_name::AbstractString,
+    exp_top::AbstractString,
+    exp_name::AbstractString
+)
     # Save to the local results directory
     mkpath(results_dir(exp_top, exp_name))
-    _save_cfar_plot(p, results_dir(exp_top, exp_name, fig_name))
+    _save_plot(p, results_dir(exp_top, exp_name, fig_name))
     # Save to the paper directory
     mkpath(paper_results_dir(exp_top, exp_name))
-    _save_cfar_plot(p, paper_results_dir(exp_top, exp_name, fig_name))
+    _save_plot(p, paper_results_dir(exp_top, exp_name, fig_name))
 
     return
 end
