@@ -43,3 +43,8 @@ Location of the local Python libraries that are included in the project.
 const LOCAL_PYTHON_LIB_LOCATION = projectdir("src")
 # const LOCAL_PYTHON_LIB_LOCATION = joinpath(".", "src")
 # const LOCAL_PYTHON_LIB_LOCATION = "./src/"
+
+"""
+The default plotting dots-per-inch for saving.
+"""
+const DPI=600

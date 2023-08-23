@@ -20,6 +20,7 @@ function scatter_gaussian!(p::Plots.Plot, data::DataSplitCombined)
         X[2, :],
         group = y,
         color_palette=COLORSCHEME,
+        dpi=DPI,
     )
 
     # Explicitly empty return
@@ -48,6 +49,7 @@ function plot_covellipses(
             aspect_ratio = 1,
             label = string(ix),
             color_palette=COLORSCHEME,
+            dpi=DPI,
         )
     end
 
@@ -115,6 +117,7 @@ function plot_mover(
         ml[2, :],
         linewidth = 3,
         color_palette = COLORSCHEME,
+        dpi=DPI,
     )
 
     # Finally display the plot
@@ -123,7 +126,6 @@ function plot_mover(
     # Return the plot handle
     return p
 end
-
 
 """
 Computes the sliding window average of a vector with window size `n`.
@@ -145,6 +147,8 @@ Plots the 2D performances trends.
 # Arguments
 - `df::DataFrame`: the collected simulation results.
 - `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+- `avg::Bool=false`: flag for using the sliding average procedure.
+- `n::Integer=10`: used if `avg` is high, the size of the sliding window.
 """
 function plot_2d_attrs(
     df::DataFrame,
@@ -180,6 +184,7 @@ function plot_2d_attrs(
             label = attr,
             linewidth = 4.0,
             color_palette=COLORSCHEME,
+            dpi=DPI,
         )
     end
 
@@ -248,6 +253,7 @@ function plot_2d_errlines(
             label = attr,
             color_palette=COLORSCHEME,
             errorstyle=:ribbon,
+            dpi=DPI,
         )
 
     end

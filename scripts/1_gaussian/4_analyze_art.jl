@@ -86,11 +86,11 @@ p2 = CFAR.plot_2d_errlines(
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 
-# Plot the number of categoreis
+# Plot the number of categories
 p3= CFAR.plot_2d_attrs(
     df,
     ["nc1", "nc2"],
-    n=200,
+    # n=200,
     title="Number of Categories",
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
