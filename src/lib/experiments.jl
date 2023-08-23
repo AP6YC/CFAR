@@ -107,17 +107,21 @@ function train_test_sfam_mc(
         opts["feature_bounds"]["max"],
     )
 
+    n_epochs = 5
     # Task 1: static gaussians
-    train!(
-        art,
-        local_ms.static.train.x,
-        local_ms.static.train.y,
-    )
+    for _ = 1:n_epochs
+        train!(
+            art,
+            local_ms.static.train.x,
+            local_ms.static.train.y,
+        )
+    end
 
     # Task 1: classify
     yh1 = classify(
         art,
         local_ms.static.test.x,
+        get_bmu=true,
     )
 
     # Task 1: performance
@@ -128,16 +132,19 @@ function train_test_sfam_mc(
     n_cats_1 = art.n_categories
 
     # Task 2: moving gaussian
-    train!(
-        art,
-        local_ms.mover.train.x,
-        local_ms.mover.train.y,
-    )
+    for _ = 1:n_epochs
+        train!(
+            art,
+            local_ms.mover.train.x,
+            local_ms.mover.train.y,
+        )
+    end
 
     # Task 2: classify
     yh2 = classify(
         art,
         local_ms.mover.test.x,
+        get_bmu=true,
     )
 
     # Task 2: performance

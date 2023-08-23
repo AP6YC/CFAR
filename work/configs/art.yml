@@ -15,7 +15,7 @@ feature_bounds:
   ]
 
 opts_SFAM:
-  rho: 0.6
+  rho: 0.7
 
 opts_DDVFA:
   rho_lb: 0.4
