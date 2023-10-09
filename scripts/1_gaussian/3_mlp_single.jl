@@ -5,7 +5,7 @@
 Trains and tests an MLP in Python.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------

@@ -3,6 +3,9 @@
 
 # Description
 A set of utilities for interacting with the Python component of the project via `PythonCall.jl`.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """

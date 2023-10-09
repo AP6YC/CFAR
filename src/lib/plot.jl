@@ -3,12 +3,22 @@
 
 # Description
 A collection of plotting utilities and recipes for the project.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """
 Combines and plots data from a gaussian distribution.
+
+# Arguments
+- `p::Plots.Plot`: the plot handle to add the gaussians to.
+- `data::DataSplitCombined`: the data to plot.
 """
-function scatter_gaussian!(p::Plots.Plot, data::DataSplitCombined)
+function scatter_gaussian!(
+    p::Plots.Plot,
+    data::DataSplitCombined,
+)
     # Get the combined train/test data
     X = CFAR.get_x(data)
     y = CFAR.get_y(data)
@@ -160,9 +170,16 @@ end
 #     return
 # end
 
+"""
+Computes the averages of a sliding window along a vector.
+
+# Arguments
+- `vs::RealVector`: the vector to compute windowed averages of.
+- `n::Integer`: the size of the sliding window.
+"""
 function sliding_avg(vs::RealVector, n::Integer)
     return [
-        sum(@view vs[i:(i+n-1)])/n for i in 1:(length(vs)-(n-1))
+        sum(@view vs[i:(i + n - 1)]) / n for i in 1:(length(vs) - (n - 1))
     ]
 end
 
@@ -172,6 +189,8 @@ Plots the 2D performances trends.
 # Arguments
 - `df::DataFrame`: the collected simulation results.
 - `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+- `avg::Bool=false`: optional, default false, flag to compute the windowed averages of the trends.
+- `n::Integer=10`: optional, default 10, the size of the average sliding window if that option is used.
 """
 function plot_2d_attrs(
     df::DataFrame,

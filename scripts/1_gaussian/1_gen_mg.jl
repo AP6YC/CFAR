@@ -5,7 +5,7 @@
 This script implements an experiment using multivariate gaussian samples for illustrating apparent catastrophic forgetting.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------

@@ -5,7 +5,7 @@
 Experiment functions for the project.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """
@@ -174,7 +174,6 @@ function train_test_sfam_mc(
     # Empty return
     return
 end
-
 
 """
 Train and test SFAM in parallel.

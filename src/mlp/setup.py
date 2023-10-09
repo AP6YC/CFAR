@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+"""
+    setup.py
+
+# Description
+Runs the setup routine for the local `mlp` package.
+"""
+
 from setuptools import setup
 
 if __name__ == "__main__":

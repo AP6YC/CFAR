@@ -3,6 +3,9 @@
 
 # Description
 Definitions for the training and testing dataset containers for the project.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------

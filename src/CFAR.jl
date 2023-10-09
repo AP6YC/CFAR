@@ -5,7 +5,7 @@
 Definition of the `CFAR` module, which encapsulates experiment driver code.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """

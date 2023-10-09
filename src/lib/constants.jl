@@ -3,6 +3,9 @@
 
 # Description
 A collection of high-level constants for the package, such as the default names of config files.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """
