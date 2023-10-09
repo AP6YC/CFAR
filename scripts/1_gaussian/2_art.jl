@@ -5,7 +5,7 @@
 Trains and tests Simplified FuzzyARTMAP on the Gaussian dataset.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------

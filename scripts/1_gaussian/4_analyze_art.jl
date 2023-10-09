@@ -5,7 +5,7 @@
 This script takes the results of the ART simulations and generates plots of their statistics.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------

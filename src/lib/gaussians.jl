@@ -3,6 +3,9 @@
 
 # Description
 A collection of the functions for generating and saving Gaussian samples for training/testing.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """

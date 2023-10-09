@@ -1,5 +1,11 @@
 """
+    __init__.py
+
+# Description
 Definitions for the local `mlp` Python package containing driver code for multilayer perceptron training and testing in the `CFAR` project.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------
