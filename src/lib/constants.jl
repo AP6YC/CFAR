@@ -3,7 +3,20 @@
 
 # Description
 A collection of high-level constants for the package, such as the default names of config files.
+
+# Authors
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
+
+"""
+The default number of processes to start in distributed experiments on Windows.
+"""
+const DEFAULT_N_PROCS_WINDOWS = 11
+
+"""
+The default number of processes to start in distributed experiments on Linux.
+"""
+const DEFAULT_N_PROCS_UNIX = 31
 
 """
 Location of the ART options file for simulations.
@@ -33,3 +46,8 @@ Location of the local Python libraries that are included in the project.
 const LOCAL_PYTHON_LIB_LOCATION = projectdir("src")
 # const LOCAL_PYTHON_LIB_LOCATION = joinpath(".", "src")
 # const LOCAL_PYTHON_LIB_LOCATION = "./src/"
+
+"""
+The default plotting dots-per-inch for saving.
+"""
+const DPI=600

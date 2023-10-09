@@ -18,9 +18,10 @@ Points to the work directory containing raw datasets, processed datasets, and re
 $DRWATSON_ARGS_DOC
 """
 function work_dir(args...)
-    newdir(args...) = projectdir("work", args...)
-    # mkpath(newdir(args...))
-    return newdir(args...)
+    return projectdir("work", args...)
+    # newdir(args...) = projectdir("work", args...)
+    # # mkpath(newdir(args...))
+    # return newdir(args...)
 end
 
 """
@@ -29,9 +30,10 @@ Points to the results directory.
 $DRWATSON_ARGS_DOC
 """
 function results_dir(args...)
-    newdir(args...) = work_dir("results", args...)
-    # mkpath(newdir(args...))
-    return newdir(args...)
+    return work_dir("results", args...)
+    # newdir(args...) = work_dir("results", args...)
+    # # mkpath(newdir(args...))
+    # return newdir(args...)
 end
 
 """
@@ -40,9 +42,10 @@ Points to the data directory.
 $DRWATSON_ARGS_DOC
 """
 function data_dir(args...)
-    newdir(args...) = work_dir("data", args...)
-    # mkpath(newdir(args...))
-    return newdir(args...)
+    return work_dir("data", args...)
+    # newdir(args...) = work_dir("data", args...)
+    # # mkpath(newdir(args...))
+    # return newdir(args...)
 end
 
 """
@@ -51,7 +54,28 @@ Points to the configs directory.
 $DRWATSON_ARGS_DOC
 """
 function config_dir(args...)
-    newdir(args...) = work_dir("configs", args...)
-    # mkpath(newdir(args...))
-    return newdir(args...)
+    return work_dir("configs", args...)
+    # newdir(args...) = work_dir("configs", args...)
+    # # mkpath(newdir(args...))
+    # return newdir(args...)
+end
+
+"""
+`DrWatson`-style paper results directory.
+
+$DRWATSON_ARGS_DOC
+"""
+function paper_results_dir(args...)
+    return joinpath(
+        "C:\\",
+        "Users",
+        "Sasha",
+        "Dropbox",
+        "Apps",
+        "Overleaf",
+        "Paper-ART-Catastrophic-Forgetting",
+        "images",
+        "results",
+        args...
+    )
 end

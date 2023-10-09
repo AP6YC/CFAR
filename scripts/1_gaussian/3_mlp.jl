@@ -5,7 +5,7 @@
 Trains and tests an MLP in Python.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------
@@ -23,17 +23,31 @@ using Distributed
 using DrWatson
 
 # -----------------------------------------------------------------------------
+# VARIABLES
+# -----------------------------------------------------------------------------
+
+exp_top = "1_gaussian"
+exp_name = "3_mlp.jl"
+config_file = "mlp.yml"
+
+# Plot names
+
+# -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------
 
 CFAR.conda_setup()
+# CFAR.conda_gc_disable()
 
 # Parse the arguments provided to this script
 pargs = CFAR.dist_exp_parse(
-    "1_gaussian/3_mlp: MLP on the Gaussian dataset."
+    "$(exp_top)/$(exp_name): MLP on the Gaussian dataset."
 )
 
-pargs["procs"] = 8
+# Load the MLP simulation options
+opts = CFAR.load_mlp_sim_opts(config_file)
+
+# pargs["procs"] = 0
 
 # Start several processes
 if pargs["procs"] > 0
@@ -43,14 +57,16 @@ end
 # Set the simulation parameters
 sim_params = Dict{String, Any}(
     "m" => "mlp",
-    "travel" => collect(range(0, 10, 100))
+    "travel" => collect(range(
+        opts["travel_lb"],
+        opts["travel_ub"],
+        opts["n_points"],
+    )),
 )
 
 # -----------------------------------------------------------------------------
 # PARALLEL DEFINITIONS
 # -----------------------------------------------------------------------------
-
-CFAR.conda_gc_disable()
 
 @everywhere begin
     # Activate the project in case
@@ -58,7 +74,7 @@ CFAR.conda_gc_disable()
     Pkg.activate(".")
 
     # Modules
-    using Revise
+    # using Revise
     using CFAR
 
     # Point to the sweep results
@@ -69,15 +85,18 @@ CFAR.conda_gc_disable()
         args...
     )
 
+    # Make the path
+    mkpath(sweep_results_dir())
+
     # Load the config dict
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
 
+    using Random
+    sleep(5*rand())
+
     # Load the MLP simulation options
     opts = CFAR.load_mlp_sim_opts()
-
-    # Make the path
-    mkpath(sweep_results_dir())
 
     # Define the single-parameter function used for pmap
     local_sim(dict) = CFAR.train_test_mlp_mc(
@@ -86,7 +105,6 @@ CFAR.conda_gc_disable()
         sweep_results_dir,
         opts,
     )
-
 end
 
 # -----------------------------------------------------------------------------
@@ -103,43 +121,13 @@ dicts = dict_list(sim_params)
 pmap(local_sim, dicts)
 # progress_pmap(local_sim, dicts)
 
-CFAR.conda_gc_enable()
+# CFAR.conda_gc_enable()
 
 # -----------------------------------------------------------------------------
 # CLEANUP
 # -----------------------------------------------------------------------------
 
 # Close the workers after simulation
-if pargs["procs"] > 0
-    rmprocs(workers())
-end
+rmprocs(workers())
 
 println("--- Simulation complete ---")
-
-# -----------------------------------------------------------------------------
-# ADDITIONAL DEPENDENCIES
-# -----------------------------------------------------------------------------
-
-# using PythonCall
-
-# mlp = pyimport("mlp")
-# il = pyimport("importlib")
-# il.reload(mlp)
-
-# tf = pyimport("tensorflow")
-# tf.config.list_physical_devices("CPU")
-# tf.test.is_built_with_cuda()
-
-# # -----------------------------------------------------------------------------
-# # EXPERIMENT
-# # -----------------------------------------------------------------------------
-
-# # Load the config dict
-# config = CFAR.get_gaussian_config("gaussians.yml")
-# ms = CFAR.gen_gaussians(config)
-
-# # mlp.show_data_shape(ms)
-# # loss, acc = mlp.examine_data(ms)
-# metrics = mlp.tt_ms_mlp(ms)
-# loss, acc, sc_acc = metrics
-

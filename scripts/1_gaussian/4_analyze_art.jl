@@ -5,7 +5,7 @@
 This script takes the results of the ART simulations and generates plots of their statistics.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 # -----------------------------------------------------------------------------
@@ -21,13 +21,19 @@ using CFAR
 
 using DrWatson      # collect_results!
 using DataFrames
+using Plots
 
 # -----------------------------------------------------------------------------
 # OPTIONS
 # -----------------------------------------------------------------------------
 
 # This experiment name
-experiment = "2a_analyze_art"
+exp_top = "1_gaussian"
+exp_name = "4_analyze_art.jl"
+
+perf_plot = "perf.png"
+err_plot = "err.png"
+n_cats_plot = "n_categories.png"
 
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -42,7 +48,7 @@ sweep_dir = CFAR.results_dir(
 
 # Parse the arguments provided to this script
 pargs = CFAR.exp_parse(
-    "$(experiment): analyze ART results."
+    "$(exp_top)/$(exp_name): analyze ART results."
 )
 
 # -----------------------------------------------------------------------------
@@ -61,9 +67,36 @@ attrs = [
     "p12",
 ]
 
-# CFAR.plot_2d_perfs(df)
-CFAR.plot_2d_attrs(
+# Plot the average trendlines
+p1 = CFAR.plot_2d_attrs(
     df,
     attrs,
     avg=true,
+    n=100,
+    title="Peformances",
 )
+CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
+
+# Plot the StatsPlots error lines
+p2 = CFAR.plot_2d_errlines(
+    df,
+    attrs,
+    n=100,
+    title="Performances with Error Bars",
+)
+CFAR.save_plot(p2, err_plot, exp_top, exp_name)
+
+# Plot the number of categories
+p3= CFAR.plot_2d_attrs(
+    df,
+    ["nc1", "nc2"],
+    # n=200,
+    title="Number of Categories",
+)
+CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
+
+# -----------------------------------------------------------------------------
+# CLEANUP
+# -----------------------------------------------------------------------------
+
+@info "Done plotting for $(exp_name)"

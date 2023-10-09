@@ -12,7 +12,7 @@ using CFAR
 using Distributed
 
 # pargs["procs"] = 2
-n_procs = 2
+n_procs = 16
 # Start several processes
 # if pargs["procs"] > 0
 
@@ -33,17 +33,36 @@ CFAR.conda_gc_disable()
     using Pkg
     Pkg.activate(".")
 
-    # Modules
-    using Revise
-    using CFAR
+    function par_get()
+        mlp = try
+            # CFAR.get_mlp()
+            mlp = pyimport("mlp")
+            il = pyimport("importlib")
+            il.reload(mlp)
+        catch
+            @info "failed to load, trying again"
+            sleep(1)
+            par_get()
+        end
+        return mlp
+    end
 
-    # using PythonCall
+    # Modules
+    # using Revise
+    using CFAR
+    # CFAR.conda_gc_disable()
+    using PythonCall
     # mlp = pyimport("mlp")
     # il = pyimport("importlib")
     # il.reload(mlp)
 
-    # mlp = CFAR.get_mlp()
-    # mlp.print_loaded()
+    @info "Worker $(myid()) pre load"
+    # # mlp = CFAR.get_mlp()
+    mlp = par_get()
+    @info "Worker $(myid()) post load"
+    mlp.print_loaded()
+    @info "Worker $(myid()) post print"
+    # CFAR.conda_gc_enable()
 end
 
 CFAR.conda_gc_enable()

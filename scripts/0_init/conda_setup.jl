@@ -5,7 +5,7 @@
 This script demonstrates how a local python package is installed in editable mode using `CondaPkg.jl`.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 using CondaPkg

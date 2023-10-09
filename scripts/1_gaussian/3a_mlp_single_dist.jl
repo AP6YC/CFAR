@@ -1,11 +1,11 @@
 """
-    3_mlp_single.jl
+    3_mlp.jl
 
 # Description
 Trains and tests an MLP in Python.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
+- Sasha Petrenko <petrenkos@mst.edu>
 """
 
 # -----------------------------------------------------------------------------

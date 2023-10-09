@@ -1,4 +1,27 @@
 rng_seed: 1234
+travel_lb: 0
+travel_ub: 10
+n_points: 1000
+model: "SFAM"
+
+feature_bounds:
+  min: [
+    0.0,
+    0.0
+  ]
+  max: [
+    10.0,
+    10.0
+  ]
 
 opts_SFAM:
-  rho: 0.6
+  rho: 0.7
+
+opts_DDVFA:
+  rho_lb: 0.4
+  rho_ub: 0.75
+  similarity: "single"
+
+opts_DVFA:
+  rho_lb: 0.4
+  rho_ub: 0.75

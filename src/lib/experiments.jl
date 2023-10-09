@@ -5,7 +5,7 @@
 Experiment functions for the project.
 
 # Authors
-- Sasha Petrenko <petrenkos@mst.edu>
+- Sasha Petrenko <petrenkos@mst.edu> @AP6YC
 """
 
 """
@@ -102,18 +102,26 @@ function train_test_sfam_mc(
 
     # Init the SFAM module
     art = SFAM(opts["opts_SFAM"])
-
-    # Task 1: static gaussians
-    train!(
-        art,
-        local_ms.static.train.x,
-        local_ms.static.train.y,
+    art.config = AdaptiveResonance.DataConfig(
+        opts["feature_bounds"]["min"],
+        opts["feature_bounds"]["max"],
     )
+
+    n_epochs = 5
+    # Task 1: static gaussians
+    for _ = 1:n_epochs
+        train!(
+            art,
+            local_ms.static.train.x,
+            local_ms.static.train.y,
+        )
+    end
 
     # Task 1: classify
     yh1 = classify(
         art,
         local_ms.static.test.x,
+        get_bmu=true,
     )
 
     # Task 1: performance
@@ -121,18 +129,22 @@ function train_test_sfam_mc(
         yh1,
         local_ms.static.test.y
     )
+    n_cats_1 = art.n_categories
 
     # Task 2: moving gaussian
-    train!(
-        art,
-        local_ms.mover.train.x,
-        local_ms.mover.train.y,
-    )
+    for _ = 1:n_epochs
+        train!(
+            art,
+            local_ms.mover.train.x,
+            local_ms.mover.train.y,
+        )
+    end
 
     # Task 2: classify
     yh2 = classify(
         art,
         local_ms.mover.test.x,
+        get_bmu=true,
     )
 
     # Task 2: performance
@@ -140,6 +152,7 @@ function train_test_sfam_mc(
         yh2,
         local_ms.mover.test.y,
     )
+    n_cats_2 = art.n_categories
 
     # Classify combined data
     yh12 = classify(
@@ -166,6 +179,8 @@ function train_test_sfam_mc(
     fulld["p1"] = p1
     fulld["p2"] = p2
     fulld["p12"] = p12
+    fulld["nc1"] = n_cats_1
+    fulld["nc2"] = n_cats_2
     # fulld["rho"] = opts["rho"]
 
     # Save the results
@@ -175,9 +190,8 @@ function train_test_sfam_mc(
     return
 end
 
-
 """
-Train and test SFAM in parallel.
+Train and test an MLP on the [`MoverSplit`](@ref) dataset.
 
 # Arguments
 $ARG_SIM_D
@@ -199,10 +213,14 @@ function train_test_mlp_mc(
 
     # Run the Python experiment
     # metrics = opts["mlp"].tt_ms_mlp(local_ms)
-    metrics = opts["mlp"].tt_ms_mlp_l2(local_ms)
+    metrics = opts["mlp"].tt_ms_mlp_l2(
+        local_ms,
+        verbose=opts["verbose"],
+        epochs=opts["epochs"],
+    )
 
     # Unpack the metrics
-    m1, m2, m12 = pyconvert(Vector{Any}, metrics)
+    m1, m2, m12 = PythonCall.pyconvert(Vector{Any}, metrics)
 
     # Copy the input sim dictionary
     fulld = deepcopy(d)
