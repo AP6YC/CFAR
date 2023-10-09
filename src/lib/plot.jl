@@ -137,13 +137,13 @@ function plot_mover(
     return p
 end
 
-"""
-Computes the sliding window average of a vector with window size `n`.
+# """
+# Computes the sliding window average of a vector with window size `n`.
 
-# Arguments
-- `vs::RealVector`: the original vector for sliding window averages.
-- `n::Integer`: the size of the sliding window.
-"""
+# # Arguments
+# - `vs::RealVector`: the original vector for sliding window averages.
+# - `n::Integer`: the size of the sliding window.
+# """
 # # Arguments
 # - `df::DataFrame`: the collected simulation results.
 # """
@@ -191,14 +191,15 @@ function sliding_avg(vs::RealVector, n::Integer)
     ]
 end
 
+# - `avg::Bool=false`: flag for using the sliding average procedure.
+# - `n::Integer=10`: used if `avg` is high, the size of the sliding window.
+
 """
 Plots the 2D performances trends.
 
 # Arguments
 - `df::DataFrame`: the collected simulation results.
 - `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
-- `avg::Bool=false`: flag for using the sliding average procedure.
-- `n::Integer=10`: used if `avg` is high, the size of the sliding window.
 - `avg::Bool=false`: optional, default false, flag to compute the windowed averages of the trends.
 - `n::Integer=10`: optional, default 10, the size of the average sliding window if that option is used.
 """
