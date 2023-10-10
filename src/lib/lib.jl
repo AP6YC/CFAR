@@ -32,3 +32,6 @@ include("experiments.jl")
 
 # PythonCall utilities
 include("py.jl")
+
+# L2 metrics
+include("l2/lib.jl")
