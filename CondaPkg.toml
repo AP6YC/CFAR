@@ -1,5 +1,5 @@
 
 [pip.deps]
-l2metrics = ""
+# l2metrics = ""
 l2logger = ""
 # tensorflow = ""
