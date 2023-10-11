@@ -1,5 +1,7 @@
 
 [pip.deps]
-# l2metrics = ""
+l2metrics = ""
 l2logger = ""
-# tensorflow = ""
+
+[deps.python]
+version = "=3.11"
