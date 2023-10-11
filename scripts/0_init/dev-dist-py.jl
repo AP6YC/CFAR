@@ -10,9 +10,11 @@ using CFAR
 # -----------------------------------------------------------------------------
 
 using Distributed
+# using PythonCall
 
 # pargs["procs"] = 2
-n_procs = 16
+# n_procs = 16
+n_procs = 3
 # Start several processes
 # if pargs["procs"] > 0
 
@@ -26,12 +28,18 @@ addprocs(n_procs, exeflags="--project=.")
 # using PythonCall
 # PythonCall.GC.disable()
 
-CFAR.conda_gc_disable()
+# CFAR.conda_gc_disable()
 
 @everywhere begin
     # Activate the project in case
     using Pkg
     Pkg.activate(".")
+
+    # Modules
+    # using Revise
+    using CFAR
+    # CFAR.conda_gc_disable()
+    using PythonCall
 
     function par_get()
         mlp = try
@@ -42,16 +50,12 @@ CFAR.conda_gc_disable()
         catch
             @info "failed to load, trying again"
             sleep(1)
-            par_get()
+            mlp = par_get()
         end
         return mlp
     end
 
-    # Modules
-    # using Revise
-    using CFAR
-    # CFAR.conda_gc_disable()
-    using PythonCall
+
     # mlp = pyimport("mlp")
     # il = pyimport("importlib")
     # il.reload(mlp)
@@ -65,7 +69,7 @@ CFAR.conda_gc_disable()
     # CFAR.conda_gc_enable()
 end
 
-CFAR.conda_gc_enable()
+# CFAR.conda_gc_enable()
 
 # -----------------------------------------------------------------------------
 # CLEANUP
