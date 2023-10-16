@@ -332,10 +332,8 @@ function load_dataset(
     # Load the data
     data = readdlm(filename, ',', header=false)
 
+    # Get the number of features
     n_features = size(data)[2] - 1
-
-    # Declare the names for the nonterminal symbols
-    N = letter_vec[1:n_features]
 
     # Get the features and labels
     features = data[:, 1:n_features]'
@@ -344,3 +342,4 @@ function load_dataset(
     # Return the features and labels
     return features, labels
 end
+

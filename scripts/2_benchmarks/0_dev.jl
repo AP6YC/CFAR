@@ -12,6 +12,7 @@ for (root, dirs, files) in walkdir(topdir)
         # Get the full filename for the current data file
         filename = joinpath(root, file)
         data = CFAR.load_dataset(filename)
-        @info data
+        # @info data
+        @info "Loaded $file"
     end
 end
