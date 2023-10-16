@@ -15,3 +15,6 @@ pip install -e src/mlp
 ## Usage
 
 Most of the functions in the package are used for initializing, training, and testing Tensorflow and/or PyTorch models, so please see the source code for information on what methods are available.
+
+> NOTE:
+> This package is now not being used for the time being within the project due to randomly introduced instability during parallel experiments.
