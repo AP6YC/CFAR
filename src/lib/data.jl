@@ -343,3 +343,6 @@ function load_dataset(
     return features, labels
 end
 
+function gen_scenario()
+
+end

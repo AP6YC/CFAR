@@ -79,3 +79,16 @@ function paper_results_dir(args...)
         args...
     )
 end
+
+# """
+# `DrWatson`-style configs results directory.
+
+# $DRWATSON_ARGS_DOC
+# """
+# function configs_dir(args...)
+#     return work_dir("configs", args...)
+#     # Make the config folder for the experiment if it does not exist
+#     # mkpath(configs_dir())
+# end
+
+
