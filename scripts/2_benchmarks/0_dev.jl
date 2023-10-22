@@ -14,5 +14,8 @@ for (root, dirs, files) in walkdir(topdir)
         data = CFAR.load_dataset(filename)
         # @info data
         @info "Loaded $file"
+        @info "filename is " splitext(file)[1]
     end
 end
+
+datasets = CFAR.load_datasets()
