@@ -20,8 +20,15 @@ end
 datasets = CFAR.load_datasets()
 
 # vec_datasets = CFAR.VectorLabeledDataset(datasets["ring"])
+
+new_datasets = CFAR.split_datasets(datasets; p=0.8)
+
 # vec_datasets = CFAR.vectorize_datasets(datasets)
+# dsic = CFAR.DSIC(new_datasets["ring"])
+dsic = CFAR.vectorize_datasets(new_datasets)
 
-new_datasets = CFAR.split_datasets(datasets)
 
-dsic = CFAR.DSIC(new_datasets["ring"])
+data = CFAR.load_vec_datasets()
+
+# CFAR.gen_scenario("ring", data["ring"])
+CFAR.gen_scenarios(data)

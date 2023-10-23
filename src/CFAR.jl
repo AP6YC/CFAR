@@ -47,6 +47,7 @@ using
     Distributions,          # MvNormal
     ElasticArrays,
     # HDF5,
+    JSON,
     JLD2,
     LazyModules,
     NumericalTypeAliases,

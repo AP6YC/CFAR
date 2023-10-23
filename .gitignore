@@ -19,6 +19,9 @@ work/**
 # Except for the configs folder
 !work/configs/**
 
+# Ignore generated l2metrics configs
+work/configs/l2/
+
 # -----------------------------------------------------------------------------
 # JULIA IGNORES
 # -----------------------------------------------------------------------------

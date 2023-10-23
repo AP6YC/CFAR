@@ -487,9 +487,11 @@ function VectorLabeledDataset(
     )
 end
 
+"""
+"""
 function split_datasets(
     datasets::Dict{String, LabeledDataset};
-    p=0.8
+    p::Float=0.8
 )
     new_datasets = Dict{String, DataSplitCombined}()
     for (key, value) in datasets
@@ -500,30 +502,63 @@ function split_datasets(
 
 end
 
+# """
+
+# """
+# function vectorize_datasets(
+#     datasets::Dict{String, LabeledDataset}
+# )
+
+#     vec_datasets = Dict{String, VectorLabeledDataset}()
+#     for (key, value) in datasets
+#         vec_datasets[key] = VectorLabeledDataset(value)
+#     end
+
+#     return vec_datasets
+# end
+
 """
 
 """
 function vectorize_datasets(
-    datasets::Dict{String, LabeledDataset}
+    datasets::Dict{String, DataSplitCombined}
 )
-
-    vec_datasets = Dict{String, VectorLabeledDataset}()
+    vec_datasets = Dict{String, DSIC}()
     for (key, value) in datasets
-        vec_datasets[key] = VectorLabeledDataset(value)
+        vec_datasets[key] = DSIC(value)
     end
 
     return vec_datasets
 end
 
 """
+
+"""
+function load_vec_datasets(
+    p::Float=0.8
+)
+    datasets = CFAR.load_datasets()
+
+    new_datasets = CFAR.split_datasets(datasets; p=0.8)
+
+    dsic = CFAR.vectorize_datasets(new_datasets)
+
+    return dsic
+end
+
+
+"""
 Generates a configuration and scenario from a dataset.
 """
 function gen_scenario(
     exp_top::AbstractString,
+    data_indexed::DSIC,
 )
     # Point to config and scenario files
-    config_file = configs_dir(exp_top, "config.json")
-    scenario_file = configs_dir(exp_top, "scenario.json")
+    exp_dir = config_dir("l2", exp_top)
+    mkpath(exp_dir)
+    config_file = config_dir("l2", exp_top, "config.json")
+    scenario_file = config_dir("l2", exp_top, "scenario.json")
 
     # -----------------------------------------------------------------------------
     # CONFIG FILE
@@ -559,64 +594,79 @@ function gen_scenario(
     # Write the config file
     CFAR.json_save(config_file, config_dict)
 
-    # # -----------------------------------------------------------------------------
-    # # SCENARIO FILE
-    # # -----------------------------------------------------------------------------
+    # -----------------------------------------------------------------------------
+    # SCENARIO FILE
+    # -----------------------------------------------------------------------------
 
-    # # Load the default data configuration
-    # # data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
+    # Load the default data configuration
+    # data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
 
-    # # Build the scenario vector
-    # SCENARIO = []
-    # for ix = 1:n_classes
-    #     # Create a train step and push
-    #     train_step = Dict(
-    #         "type" => "train",
-    #         "regimes" => [Dict(
-    #             # "task" => class_labels[ix],
-    #             "task" => data_selection[ix],
-    #             "count" => length(data_indexed.train.y[ix]),
-    #         )],
-    #     )
-    #     push!(SCENARIO, train_step)
+    # Build the scenario vector
+    SCENARIO = []
+    n_classes = length(data_indexed.train.labels)
 
-    #     # Create all test steps and push
-    #     regimes = []
-    #     for jx = 1:n_classes
-    #         local_regime = Dict(
-    #             # "task" => class_labels[jx],
-    #             "task" => data_selection[jx],
-    #             "count" => length(data_indexed.test.y[jx]),
-    #         )
-    #         push!(regimes, local_regime)
-    #     end
+    for ix = 1:n_classes
+        # Create a train step and push
+        train_step = Dict(
+            "type" => "train",
+            "regimes" => [Dict(
+                # "task" => class_labels[ix],
+                # "task" => data_selection[ix],
+                "task" => data_indexed.train.labels[ix],
+                "count" => length(data_indexed.train.y[ix]),
+            )],
+        )
+        push!(SCENARIO, train_step)
 
-    #     test_step = Dict(
-    #         "type" => "test",
-    #         "regimes" => regimes,
-    #     )
+        # Create all test steps and push
+        regimes = []
+        for jx = 1:n_classes
+            local_regime = Dict(
+                # "task" => class_labels[jx],
+                # "task" => data_selection[jx],
+                "task" => data_indexed.test.labels[jx],
+                "count" => length(data_indexed.test.y[jx]),
+            )
+            push!(regimes, local_regime)
+        end
 
-    #     push!(SCENARIO, test_step)
+        test_step = Dict(
+            "type" => "test",
+            "regimes" => regimes,
+        )
 
-    #     # # Create all test steps and push
-    #     # for jx = 1:n_classes
-    #     #     test_step = Dict(
-    #     #         "type" => "test",
-    #     #         "regimes" => [Dict(
-    #     #             "task" => class_labels[jx],
-    #     #             "count" => length(data_indexed.test_y[jx]),
-    #     #         )],
-    #     #     )
-    #     #     push!(SCENARIO, test_step)
-    #     # end
-    # end
+        push!(SCENARIO, test_step)
 
-    # # Make scenario list into a dict entry
-    # scenario_dict = Dict(
-    #     "scenario" => SCENARIO,
-    # )
+        # # Create all test steps and push
+        # for jx = 1:n_classes
+        #     test_step = Dict(
+        #         "type" => "test",
+        #         "regimes" => [Dict(
+        #             "task" => class_labels[jx],
+        #             "count" => length(data_indexed.test_y[jx]),
+        #         )],
+        #     )
+        #     push!(SCENARIO, test_step)
+        # end
+    end
 
-    # # Save the scenario
-    # CFAR.json_save(scenario_file, scenario_dict)
+    # Make scenario list into a dict entry
+    scenario_dict = Dict(
+        "scenario" => SCENARIO,
+    )
 
+    # Save the scenario
+    CFAR.json_save(scenario_file, scenario_dict)
+
+end
+
+"""
+
+"""
+function gen_scenarios(
+    data::Dict{String, DSIC}
+)
+    for (key, value) in data
+        gen_scenario(key, value)
+    end
 end
