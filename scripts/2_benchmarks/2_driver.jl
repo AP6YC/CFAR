@@ -14,13 +14,13 @@ Runs the l2 condensed scenario specified by the 1_gen_scenario.jl file.
 
 using Revise
 using CFAR
-using JSON
 
 # -----------------------------------------------------------------------------
 # ADDITIONAL DEPENDENCIES
 # -----------------------------------------------------------------------------
 
 using AdaptiveResonance
+using PythonCall
 
 # -----------------------------------------------------------------------------
 # OPTIONS
@@ -29,6 +29,9 @@ using AdaptiveResonance
 # Experiment save directory name
 experiment_top = "9_l2metrics"
 
+l2logger = pyimport("l2logger.l2logger")
+il = pyimport("importlib")
+il.reload(l2logger)
 # DCCR project files
 # include(projectdir("src", "setup.jl"))
 
@@ -39,8 +42,8 @@ experiment_top = "9_l2metrics"
 # l2logger = pyimport("l2logger.l2logger")
 
 # Load the config and scenario
-config = json_load(CFAR.config_dir("l2", "iris", "config.json"))
-scenario = json_load(CFAR.config_dir("l2", "iris", "scenario.json"))
+config = CFAR.json_load(CFAR.config_dir("l2", "iris", "config.json"))
+scenario = CFAR.json_load(CFAR.config_dir("l2", "iris", "scenario.json"))
 
 # -----------------------------------------------------------------------------
 # LOAD DATA
@@ -58,13 +61,25 @@ data = CFAR.load_vec_datasets()
 scenario_info = config["META"]
 scenario_info["input_file"] = scenario
 
+# config["COLS"]["metrics_columns"] = Vector{String}(config["COLS"]["metrics_columns"])
+
+new_cols = pydict(config["COLS"])
+new_cols["metrics_columns"] = pylist(new_cols["metrics_columns"])
+
+# Why on Earth isn't this included in the PythonCall package?
+Py(T::Dict) = pydict(T)
+Py(T::AbstractVector) = pylist(T)
+
 # Instantiate the data logger
 data_logger = l2logger.DataLogger(
     config["DIR"],
     config["NAME"],
-    config["COLS"],
+    config["COLS"],     # This one right here, officer
     scenario_info,
 )
+
+# g = Dict{Any, Any}("asdf" => ["as", "poiu", "bb"], "bb" => "ppoiu")
+g = Dict("asdf" => ["as", "poiu", "bb"], "bb" => "ppoiu")
 
 # Create the DDVFA options for both initialization and logging
 ddvfa_opts = opts_DDVFA(
