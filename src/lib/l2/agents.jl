@@ -15,20 +15,20 @@ Definitions of agents and their evaluation.
 """
 L2 agent supertype.
 """
-abstract type Agent end
+abstract type AbstractAgent end
 
 # -----------------------------------------------------------------------------
 # STRUCTS
 # -----------------------------------------------------------------------------
 
 """
-DDVFA-based L2 [`Agent`](@ref).
+L2 [`AbstractAgent`](@ref) struct.
 """
-struct DDVFAAgent <: Agent
+struct Agent{T} <: AbstractAgent
     """
     The DDVFA module.
     """
-    agent::DDVFA
+    agent::T
 
     """
     Parameters used for l2logging.
@@ -51,9 +51,10 @@ Creates a DDVFA agent with an empty experience queue.
 # Arguments
 - `ddvfa_opts::opts_DDVFA`: the options struct used to initialize the DDVFA module and set the logging params.
 """
-function DDVFAAgent(ddvfa_opts::opts_DDVFA)
+function Agent(agent, opts)
+# function DDVFAAgent(ddvfa_opts::opts_DDVFA)
     # Create the DDVFA object from the opts
-    ddvfa = DDVFA(ddvfa_opts)
+    # ddvfa = DDVFA(ddvfa_opts)
 
     # Create the experience dequeue
     # exp_container = ExperienceQueueContainer(scenario_dict)
@@ -61,26 +62,25 @@ function DDVFAAgent(ddvfa_opts::opts_DDVFA)
 
     # Create the params object for Logging
     params = StatsDict()
-    fields_to_dict!(params, ddvfa_opts)
+    fields_to_dict!(params, opts)
 
     # Construct and return the DDVFAAgent
-    return DDVFAAgent(
-        ddvfa,
+    return Agent(
+        agent,
         params,
         exp_container,
     )
 end
 
 """
-Constructor for a [`DDVFAAgent`](@ref) using the scenario dictionary and optional DDVFA keyword argument options.
+Constructor for a [`Agent`](@ref) using the scenario dictionary and optional DDVFA keyword argument options.
 
 # Arguments
-- `opts::AbstractDict`: keyword arguments for DDVFA options.
 - `scenario::AbstractDict`: l2logger scenario as a dictionary.
 """
-function DDVFAAgent(ddvfa_opts::opts_DDVFA, scenario_dict::AbstractDict)
+function Agent(agent, opts, scenario_dict::AbstractDict)
     # Create an agent with an empty queue
-    agent = DDVFAAgent(ddvfa_opts)
+    agent = Agent(agent, opts)
     # Initialize the agent's scenario container with the dictionary
     initialize_exp_queue!(agent.scenario, scenario_dict)
     # Return the agent with an initialized queue
@@ -92,16 +92,16 @@ end
 # -----------------------------------------------------------------------------
 
 """
-Overload of the show function for [`DDVFAAgent`](@ref).
+Overload of the show function for [`Agent`](@ref).
 
 # Arguments
 - `io::IO`: the current IO stream.
-- `cont::DDVFAAgent`: the [`DDVFAAgent`](@ref) to print/display.
+- `cont::AbstractAgent`: the [`Agent`](@ref) to print/display.
 """
-function Base.show(io::IO, agent::DDVFAAgent)
+function Base.show(io::IO, agent::Agent)
 # function Base.show(io::IO, ::MIME"text/plain", agent::DDVFAAgent)
     # compact = get(io, :compact, false)
-    print(io, "--- DDVFA agent with options:\n")
+    print(io, "--- Agent with options:\n")
     # print(io, agent.agent.opts)
     print(io, agent.params)
     print(io, "\n--- Scenario: \n")
@@ -182,12 +182,12 @@ end
 Logs data from an L2 [`Experience`](@ref).
 
 # Arguments
-- `data_logger::PyObject`: the l2logger DataLogger.
-- `exp::Experience`: the [`Experience`](@ref) that the [`Agent`](@ref) just processed.
-- `results::Dict`: the results from the [`Agent`](@ref)'s [`Experience`](@ref).
+- `data_logger::PythonCall.Py`: the l2logger DataLogger.
+- `exp::Experience`: the [`Experience`](@ref) that the [`AbstractAgent`](@ref) just processed.
+- `results::Dict`: the results from the [`AbstractAgent`](@ref)'s [`Experience`](@ref).
 - `status::AbstractString`: string expressing if the [`Experience`](@ref) was processed.
 """
-function log_data(data_logger::PyObject, experience::Experience, results::Dict, params::Dict ; status::AbstractString="complete")
+function log_data(data_logger::PythonCall.Py, experience::Experience, results::Dict, params::Dict ; status::AbstractString="complete")
     seq = experience.seq_nums
     worker = "l2metrics"
     record = Dict(
@@ -209,9 +209,9 @@ Runs an agent's scenario.
 
 # Arguments
 - `agent::Agent`: a struct that contains an [`Agent`](@ref) and `scenario`.
-- `data_logger::PyObject`: a l2logger object.
+- `data_logger::PythonCall.Py`: a l2logger object.
 """
-function run_scenario(agent::Agent, data::VectoredData, data_logger::PyObject)
+function run_scenario(agent::Agent, data::VectoredData, data_logger::PythonCall.Py)
     # Initialize the "last sequence"
     # last_seq = SequenceNums(-1, -1, -1)
 

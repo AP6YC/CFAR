@@ -1,8 +1,8 @@
 """
-    3_driver.jl
+    2_driver.jl
 
 # Description
-Runs the l2 condensed scenario specified by the gen_scenario.jl file.
+Runs the l2 condensed scenario specified by the 1_gen_scenario.jl file.
 
 # Authors
 - Sasha Petrenko <sap625@mst.edu>
@@ -13,7 +13,8 @@ Runs the l2 condensed scenario specified by the gen_scenario.jl file.
 # -----------------------------------------------------------------------------
 
 using Revise
-using DCCR
+using CFAR
+using JSON
 
 # -----------------------------------------------------------------------------
 # ADDITIONAL DEPENDENCIES
@@ -32,21 +33,22 @@ experiment_top = "9_l2metrics"
 # include(projectdir("src", "setup.jl"))
 
 # Special l2 setup for this experiment (setting the pyenv, etc.)
-include(DCCR.projectdir("src", "setup_l2.jl"))
+# include(DCCR.projectdir("src", "setup_l2.jl"))
 
 # Load the l2logger PyCall dependency
-l2logger = pyimport("l2logger.l2logger")
+# l2logger = pyimport("l2logger.l2logger")
 
 # Load the config and scenario
-config = json_load(configs_dir("config.json"))
-scenario = json_load(configs_dir("scenario.json"))
+config = json_load(CFAR.config_dir("l2", "iris", "config.json"))
+scenario = json_load(CFAR.config_dir("l2", "iris", "scenario.json"))
 
 # -----------------------------------------------------------------------------
 # LOAD DATA
 # -----------------------------------------------------------------------------
 
 # Load the default data configuration
-data, data_indexed, class_labels, data_selection, n_classes = load_default_orbit_data(data_dir)
+# data, data_indexed, class_labels, data_selection, n_classes = load_default_orbit_data(data_dir)
+data = CFAR.load_vec_datasets()
 
 # -----------------------------------------------------------------------------
 # EXPERIMENT
@@ -76,18 +78,23 @@ ddvfa_opts = opts_DDVFA(
     display = false,
 )
 
+local_art = DDVFA(ddvfa_opts)
+
+# Specify the input data configuration
+local_art.config = DataConfig(0, 1, 128)
+
 # Construct the agent from the scenario
-agent = DDVFAAgent(
+agent = Agent(
+    local_art,
     ddvfa_opts,
     scenario,
 )
 
-# Specify the input data configuration
-agent.agent.config = DataConfig(0, 1, 128)
+
 
 # -----------------------------------------------------------------------------
 # TRAIN/TEST
 # -----------------------------------------------------------------------------
 
 # Run the scenario
-run_scenario(agent, data_indexed, data_logger)
+# run_scenario(agent, data_indexed, data_logger)
