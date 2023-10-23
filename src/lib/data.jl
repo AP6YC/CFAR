@@ -535,10 +535,12 @@ end
 
 """
 function load_vec_datasets(
-    p::Float=0.8
+    p::Float=0.8,
+    seed::Real=1,
 )
     datasets = CFAR.load_datasets()
 
+    Random.seed!(seed)
     new_datasets = CFAR.split_datasets(datasets; p=0.8)
 
     dsic = CFAR.vectorize_datasets(new_datasets)
@@ -564,7 +566,7 @@ function gen_scenario(
     # CONFIG FILE
     # -----------------------------------------------------------------------------
 
-    DIR = CFAR.results_dir(exp_top, "logs")
+    DIR = CFAR.results_dir("l2", exp_top, "logs")
     # NAME = "9_l2metrics_logger"
     NAME = exp_top
     COLS = Dict(

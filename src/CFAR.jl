@@ -53,6 +53,7 @@ using
     NumericalTypeAliases,
     Pkg,
     Plots,
+    ProgressMeter,
     # PythonCall,
     Random,
     # Statistics,

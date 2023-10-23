@@ -211,7 +211,11 @@ Runs an agent's scenario.
 - `agent::Agent`: a struct that contains an [`Agent`](@ref) and `scenario`.
 - `data_logger::PythonCall.Py`: a l2logger object.
 """
-function run_scenario(agent::Agent, data::VectoredData, data_logger::PythonCall.Py)
+function run_scenario(
+    agent::Agent,
+    data::VectoredData,
+    data_logger::PythonCall.Py,
+)
     # Initialize the "last sequence"
     # last_seq = SequenceNums(-1, -1, -1)
 
