@@ -5,7 +5,6 @@ topdir =  CFAR.data_dir("data-package")
 
 isdir(topdir)
 
-
 for (root, dirs, files) in walkdir(topdir)
     # Iterate over all of the files
     for file in files
@@ -19,3 +18,10 @@ for (root, dirs, files) in walkdir(topdir)
 end
 
 datasets = CFAR.load_datasets()
+
+# vec_datasets = CFAR.VectorLabeledDataset(datasets["ring"])
+# vec_datasets = CFAR.vectorize_datasets(datasets)
+
+new_datasets = CFAR.split_datasets(datasets)
+
+dsic = CFAR.DSIC(new_datasets["ring"])

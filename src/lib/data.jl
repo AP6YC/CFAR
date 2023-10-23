@@ -32,28 +32,42 @@ abstract type VectoredData <: TTDataset end
 # -----------------------------------------------------------------------------
 
 """
+"""
+const Sample = Vector{Float}
+
+"""
+"""
+const Target = Int
+
+"""
+"""
+const Samples = Vector{Sample}
+
+"""
+"""
+const Label = String
+
+"""
 Definition of features as a matrix of floating-point numbers of dimension (feature_dim, n_samples).
 """
-const Features = ElasticMatrix{Float}
-# const Features = Matrix{Float}
+const Features = Matrix{Float}
+# const Features = ElasticMatrix{Float}
 
 """
 Definition of targets as a vector of integers.
 """
-const Targets = ElasticVector{Int}
-# const Targets = Vector{Int}
+const Targets = Vector{Target}
+# const Targets = ElasticVector{Target}
 
 """
 Definition of labels as a vector of strings.
 """
-const Labels = ElasticVector{String}
-# const Labels = Vector{String}
+const Labels = Vector{Label}
+# const Labels = ElasticVector{String}
 
 # -----------------------------------------------------------------------------
 # TYPES
 # -----------------------------------------------------------------------------
-
-# struct
 
 """
 A single dataset of [`Features`](@ref), [`Targets`](@ref), and human-readable string [`Labels`](@ref).
@@ -83,11 +97,13 @@ struct VectorLabeledDataset
     A vector of [`Features`](@ref) matrices.
     """
     x::Vector{Features}
+    # x::Vector{Sample}
 
     """
     A vector of [`Targets`](@ref) corresponding to the [`Features`](@ref).
     """
     y::Vector{Targets}
+    # y::Vector{Target}
 
     """
     String [`Labels`](@ref) corresponding to the [`Targets`](@ref).
@@ -136,6 +152,23 @@ struct DataSplitIndexed <: VectoredData
 end
 
 """
+DataSplitIndexedCombined
+
+A struct for encapsulating the components of supervised training in vectorized form.
+"""
+struct DSIC <: VectoredData
+    """
+    Training [`VectorLabeledDataset`](@ref).
+    """
+    train::VectorLabeledDataset
+
+    """
+    Test [`VectorLabeledDataset`](@ref).
+    """
+    test::VectorLabeledDataset
+end
+
+"""
 A struct for combining training and validation data, containing only train and test splits.
 """
 struct DataSplitCombined <: MatrixData
@@ -153,6 +186,59 @@ end
 # -----------------------------------------------------------------------------
 # CONSTRUCTORS
 # -----------------------------------------------------------------------------
+
+
+"""
+Create a DSIC object from a DataSplitCombined.
+
+# Arguments
+- `data::DataSplitCombined`: the [`DataSplitCombined`](@ref) to separate into vectors of matrices.
+"""
+function DSIC(data::DataSplitCombined)
+    # Assume the same number of classes in each category
+    n_classes = length(unique(data.train.y))
+
+    # Construct empty fields
+    train_x = Vector{Matrix{Float}}()
+    # train_x = Vector{Samples}()
+    train_y = Vector{Targets}()
+    train_labels = Labels()
+    test_x = Vector{Matrix{Float}}()
+    # test_x = Vector{Samples}()
+    test_y = Vector{Targets}()
+    test_labels = Labels()
+
+    # Iterate over every class
+    for i = 1:n_classes
+        i_train = findall(x -> x == i, data.train.y)
+        push!(train_x, data.train.x[:, i_train])
+        push!(train_y, data.train.y[i_train])
+        i_test = findall(x -> x == i, data.test.y)
+        push!(test_x, data.test.x[:, i_test])
+        push!(test_y, data.test.y[i_test])
+    end
+
+    # @info typeof(test_x)
+
+    train_labels = data.train.labels
+    test_labels = data.test.labels
+
+    # Construct the indexed data split
+    data_indexed = DSIC(
+        VectorLabeledDataset(
+            train_x,
+            train_y,
+            train_labels,
+        ),
+        VectorLabeledDataset(
+            test_x,
+            test_y,
+            test_labels,
+        ),
+    )
+    return data_indexed
+end
+
 
 """
 Teturns a manual train/test x/y split from a data matrix and labels using MLDataUtils.
@@ -205,6 +291,7 @@ $ARG_P
 function DataSplitCombined(data::LabeledDataset; p::Float=0.8)
     # Split the data
     train, test = split_data(data, p=p)
+
     # Construct and return the dataset
     return DataSplitCombined(
         train,
@@ -336,7 +423,8 @@ function load_dataset(
     n_features = size(data)[2] - 1
 
     # Get the features and labels
-    features = data[:, 1:n_features]'
+    # features = data[:, 1:n_features]'
+    features = permutedims(data[:, 1:n_features])
     labels = Vector{Int}(data[:, end])
 
     # Return the features and labels
@@ -350,12 +438,8 @@ end
 function load_datasets(
     topdir::AbstractString = data_dir("data-package")
 )
-    # Point to the top of the data package directory
-    # topdir =
-
-    # isdir(topdir)
-
-    datasets = Dict{String, Any}()
+    # datasets = Dict{String, Any}()
+    datasets = Dict{String, LabeledDataset}()
     for (root, _, files) in walkdir(topdir)
         # Iterate over all of the files
         for file in files
@@ -365,14 +449,70 @@ function load_datasets(
             data = CFAR.load_dataset(filename)
             # Get the data name from the filename
             data_name = splitext(file)[1]
-            datasets[data_name] = data
+            # datasets[data_name] = data
+            local_data = LabeledDataset(
+                data[1],
+                data[2],
+                string.(unique(data[2])),
+            )
+            datasets[data_name] = local_data
             # @info data
             # @info "Loaded $file"
         end
     end
-
+# DataSplitCombined
     return datasets
 
+end
+
+"""
+
+"""
+function VectorLabeledDataset(
+    data::LabeledDataset
+)
+    n_samples = length(data.y)
+    x_vec = Vector{Vector{Float}}()
+    # y_vec = Vector{Int}()
+    for ix = 1:n_samples
+        push!(x_vec, data.x[:, ix])
+        # push!(y_vec, data.y[ix])
+    end
+
+    return VectorLabeledDataset(
+        x_vec,
+        # y_vec,
+        data.y,
+        data.labels,
+    )
+end
+
+function split_datasets(
+    datasets::Dict{String, LabeledDataset};
+    p=0.8
+)
+    new_datasets = Dict{String, DataSplitCombined}()
+    for (key, value) in datasets
+        new_datasets[key] = DataSplitCombined(value; p=p)
+    end
+
+    return new_datasets
+
+end
+
+"""
+
+"""
+function vectorize_datasets(
+    datasets::Dict{String, LabeledDataset}
+)
+
+    vec_datasets = Dict{String, VectorLabeledDataset}()
+    for (key, value) in datasets
+        vec_datasets[key] = VectorLabeledDataset(value)
+    end
+
+    return vec_datasets
 end
 
 """
@@ -419,12 +559,12 @@ function gen_scenario(
     # Write the config file
     CFAR.json_save(config_file, config_dict)
 
-    # -----------------------------------------------------------------------------
-    # SCENARIO FILE
-    # -----------------------------------------------------------------------------
+    # # -----------------------------------------------------------------------------
+    # # SCENARIO FILE
+    # # -----------------------------------------------------------------------------
 
-    # Load the default data configuration
-    # data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
+    # # Load the default data configuration
+    # # data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
 
     # # Build the scenario vector
     # SCENARIO = []
