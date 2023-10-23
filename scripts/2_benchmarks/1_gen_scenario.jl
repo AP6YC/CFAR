@@ -23,60 +23,66 @@ using CFAR
 # Experiment save directory name
 exp_top = "2_benchmarks"
 
-# -----------------------------------------------------------------------------
-# OPTIONS
-# -----------------------------------------------------------------------------
+# Load the vectorized datasets
+data = CFAR.load_vec_datasets()
 
-# CFAR project files
-# include(projectdir("src", "setup.jl"))
+# CFAR.gen_scenario("ring", data["ring"])
+CFAR.gen_scenarios(data)
 
-# Special folders for this experiment
-# include(CFAR.projectdir("src", "setup_l2.jl"))
+# # -----------------------------------------------------------------------------
+# # OPTIONS
+# # -----------------------------------------------------------------------------
 
-# Point to config and scenario files
-config_file = configs_dir(exp_top, "config.json")
-scenario_file = configs_dir(exp_top, "scenario.json")
+# # CFAR project files
+# # include(projectdir("src", "setup.jl"))
 
-# -----------------------------------------------------------------------------
-# CONFIG FILE
-# -----------------------------------------------------------------------------
+# # Special folders for this experiment
+# # include(CFAR.projectdir("src", "setup_l2.jl"))
 
-DIR = CFAR.results_dir(exp_top, "logs")
-# NAME = "9_l2metrics_logger"
-NAME = exp_top
-COLS = Dict(
-    # "metrics_columns" => "reward",
-    "metrics_columns" => [
-        "performance",
-        "art_match",
-        "art_activation",
-    ],
-    "log_format_version" => "1.0",
-)
-META = Dict(
-    "author" => "Sasha Petrenko",
-    "complexity" => "1-low",
-    "difficulty" => "2-medium",
-    "scenario_type" => "custom",
-)
+# # Point to config and scenario files
+# config_file = configs_dir(exp_top, "config.json")
+# scenario_file = configs_dir(exp_top, "scenario.json")
 
-# Create the config dict
-config_dict = Dict(
-    "DIR" => DIR,
-    "NAME" => NAME,
-    "COLS" => COLS,
-    "META" => META,
-)
+# # -----------------------------------------------------------------------------
+# # CONFIG FILE
+# # -----------------------------------------------------------------------------
 
-# Write the config file
-CFAR.json_save(config_file, config_dict)
+# DIR = CFAR.results_dir(exp_top, "logs")
+# # NAME = "9_l2metrics_logger"
+# NAME = exp_top
+# COLS = Dict(
+#     # "metrics_columns" => "reward",
+#     "metrics_columns" => [
+#         "performance",
+#         "art_match",
+#         "art_activation",
+#     ],
+#     "log_format_version" => "1.0",
+# )
+# META = Dict(
+#     "author" => "Sasha Petrenko",
+#     "complexity" => "1-low",
+#     "difficulty" => "2-medium",
+#     "scenario_type" => "custom",
+# )
 
-# -----------------------------------------------------------------------------
-# SCENARIO FILE
-# -----------------------------------------------------------------------------
+# # Create the config dict
+# config_dict = Dict(
+#     "DIR" => DIR,
+#     "NAME" => NAME,
+#     "COLS" => COLS,
+#     "META" => META,
+# )
 
-# Load the default data configuration
-# data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
+# # Write the config file
+# CFAR.json_save(config_file, config_dict)
+
+# # -----------------------------------------------------------------------------
+# # SCENARIO FILE
+# # -----------------------------------------------------------------------------
+
+# # Load the default data configuration
+# # data, data_indexed, class_labels, data_selection, n_classes = CFAR.load_default_orbit_data(data_dir)
 
 # # Build the scenario vector
 # SCENARIO = []
