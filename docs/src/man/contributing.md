@@ -1,6 +1,6 @@
 # Contributing
 
-This page serves as the contribution guide for the `SFAR` package.
+This page serves as the contribution guide for the `CFAR` package.
 From top to bottom, the ways of contributing are:
 
 - [GitHub Issues:](@ref Issues) how to raise an issue with the project.
@@ -12,7 +12,7 @@ Please also see the [Attribution](@ref Attribution) to learn about the authors a
 
 ## Issues
 
-The main point of contact is the [GitHub issues](https://github.com/AP6YC/SFAR/issues) page for the project.
+The main point of contact is the [GitHub issues](https://github.com/AP6YC/CFAR/issues) page for the project.
 This is the easiest way to contribute to the project, as any issue you find or request you have will be addressed there by the authors of the package.
 Depending on the issue, the authors will collaborate with you, and after making changes they will link a [pull request](@ref GitFlow) which addresses your concern or implements your proposed changes.
 
@@ -28,7 +28,7 @@ As a Julia package, development follows the usual procedure:
 For example, you can get the package and startup Julia with
 
 ```sh
-git clone git@github.com:AP6YC/SFAR.jl.git
+git clone git@github.com:AP6YC/CFAR.jl.git
 julia --project=.
 ```
 
@@ -41,7 +41,7 @@ julia --project=.
     julia
     julia> ]
     (@v1.9) pkg> activate .
-    (SFAR) pkg>
+    (CFAR) pkg>
     ```
 
 You may run the package's unit tests after the above setup in Julia with
@@ -56,19 +56,19 @@ or interactively though the Julia package manager with
 
 ```julia-repl
 julia> ]
-(SFAR) pkg> instantiate
-(SFAR) pkg> test
+(CFAR) pkg> instantiate
+(CFAR) pkg> test
 ```
 
 ## GitFlow
 
-The `SFAR` package follows the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) git working model.
+The `CFAR` package follows the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) git working model.
 The [original post](https://nvie.com/posts/a-successful-git-branching-model/) by Vincent Driessen outlines this methodology quite well, while [Atlassian](https://www.atlassian.com/git/tutorials/comparing-workflows/gitflow-workflow) has a good tutorial as well.
 In summary:
 
 1. Create a feature branch off of the `develop` branch with the name `feature/<my-feature-name>`.
 2. Commit your changes and push to this feature branch.
-3. When you are satisfied with your changes, initiate a [GitHub pull request](https://github.com/AP6YC/SFAR.jl/pulls) (PR) to merge the feature branch with `develop`.
+3. When you are satisfied with your changes, initiate a [GitHub pull request](https://github.com/AP6YC/CFAR.jl/pulls) (PR) to merge the feature branch with `develop`.
 4. If the unit tests pass, the feature branch will first be merged with develop and then be deleted.
 5. Releases will be periodically initiated from the `develop` branch and versioned onto the `master` branch.
 6. Immediate bug fixes circumvent this process through a `hotfix` branch off of `master`.
@@ -82,10 +82,10 @@ They are setup to be built and served in a separate branch called `gh-pages` fro
 
 ### Package Structure
 
-The `SFAR` project has the following file structure:
+The `CFAR` project has the following file structure:
 
 ```console
-SFAR
+CFAR
 ├── .github/workflows       // GitHub: workflows for testing and documentation.
 ├── cluster                 // HPC: scripts and submission files for clusters.
 ├── dockerfiles             // Docker: dockerfiles for experiment reproducibility.
@@ -94,7 +94,7 @@ SFAR
 ├── notebooks               // Source: experiment notebooks.
 ├── scripts                 // Source: experiment scripts.
 ├── src                     // Source: library source code.
-│   └───lib                 //      Library for the SFAR module.
+│   └───lib                 //      Library for the CFAR module.
 │       └───utils           //      Project utilities
 ├── test                    // Test: Unit, integration, and environment tests.
 ├── work                    // Data: datasets, results, plots, etc.
@@ -125,4 +125,4 @@ This project does not currently test for the support of [arbitrary precision ari
 
 This package is developed and maintained by [Sasha Petrenko](https://github.com/AP6YC) with sponsorship by the [Applied Computational Intelligence Laboratory (ACIL)](https://acil.mst.edu/).
 
-If you simply have suggestions for improvement, Sasha Petrenko (<petrenkos@mst.edu>) is the current developer and maintainer of the `SFAR` package, so please feel free to reach out with thoughts and questions.
+If you simply have suggestions for improvement, Sasha Petrenko (<petrenkos@mst.edu>) is the current developer and maintainer of the `CFAR` package, so please feel free to reach out with thoughts and questions.
