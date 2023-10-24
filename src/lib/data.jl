@@ -288,9 +288,34 @@ Returns a [`DataSplitCombined`](@ref) from a [`LabeledDataset`](@ref) with a pro
 - `data::LabeledDataset`: the original [`LabeledDataset`](@ref) to split into a [`DataSplitCombined`](@ref).
 $ARG_P
 """
-function DataSplitCombined(data::LabeledDataset; p::Float=0.8)
+function DataSplitCombined(
+    data::LabeledDataset;
+    p::Float=0.8,
+    normalize::Bool=true,
+    scaling::Float=3.0,
+)
     # Split the data
     train, test = split_data(data, p=p)
+
+    if normalize
+        # Get the distribution parameters for the training data
+        dt = get_dist(train.x)
+
+        # Preprocess all of the data based upon the statistics of the training data
+        new_train_x = feature_preprocess(dt, scaling, train.x)
+        new_test_x = feature_preprocess(dt, scaling, test.x)
+        # train =
+        train = LabeledDataset(
+            new_train_x,
+            train.y,
+            train.labels,
+        )
+        test = LabeledDataset(
+            new_test_x,
+            test.y,
+            test.labels,
+        )
+    end
 
     # Construct and return the dataset
     return DataSplitCombined(
@@ -432,11 +457,49 @@ function load_dataset(
 end
 
 """
+Returns the sigmoid function on x.
+
+# Arguments
+- `x::Real`: the float or int to compute the sigmoid function upon.
+"""
+function sigmoid(x::Real)
+    return one(x) / (one(x) + exp(-x))
+end
+
+"""
+Get the distribution parameters for preprocessing.
+
+# Arguments
+- `data::RealMatrix`: a 2-D matrix of features for computing the Gaussian statistics of.
+"""
+function get_dist(data::RealMatrix)
+    return fit(ZScoreTransform, data, dims=2)
+end
+
+"""
+Preprocesses one dataset of features, scaling and squashing along the feature axes.
+
+# Arguments
+- `dt::ZScoreTransform`: the Gaussian statistics of the features.
+- `scaling::Real`: the sigmoid scaling parameter.
+- `data::RealMatrix`: the 2-D matrix of features to transform.
+"""
+function feature_preprocess(dt::ZScoreTransform, scaling::Real, data::RealMatrix)
+    # Normalize the dataset via the ZScoreTransform
+    new_data = StatsBase.transform(dt, data)
+    # Squash the data sigmoidally with the scaling parameter
+    new_data = sigmoid.(scaling*new_data)
+    # Return the normalized and scaled data
+    return new_data
+end
+
+"""
 # Arguments
 - `topdir::AbstractString = data_dir("data-package")`:
 """
 function load_datasets(
-    topdir::AbstractString = data_dir("data-package")
+    topdir::AbstractString = data_dir("data-package"),
+    # scaling::Real=3.0,
 )
     # datasets = Dict{String, Any}()
     datasets = Dict{String, LabeledDataset}()
@@ -450,7 +513,10 @@ function load_datasets(
             # Get the data name from the filename
             data_name = splitext(file)[1]
             # datasets[data_name] = data
+
             local_data = LabeledDataset(
+                # train_x,
+                # test_x
                 data[1],
                 data[2],
                 string.(unique(data[2])),
@@ -548,6 +614,15 @@ function load_vec_datasets(
     return dsic
 end
 
+"""
+Vector of alphabetical letters as Strings for discretized feature labels.
+"""
+const alphabet = string.(collect('A':'Z'))
+
+"""
+Two-letter alphabetical feature names.
+"""
+const letter_vec = reduce(vcat, [letter .* alphabet for letter in alphabet])
 
 """
 Generates a configuration and scenario from a dataset.
@@ -615,6 +690,7 @@ function gen_scenario(
                 # "task" => class_labels[ix],
                 # "task" => data_selection[ix],
                 "task" => data_indexed.train.labels[ix],
+                # "task" => alphabet[parse(Int, data_indexed.train.labels[ix])],
                 "count" => length(data_indexed.train.y[ix]),
             )],
         )
@@ -627,6 +703,7 @@ function gen_scenario(
                 # "task" => class_labels[jx],
                 # "task" => data_selection[jx],
                 "task" => data_indexed.test.labels[jx],
+                # "task" => alphabet[parse(Int, data_indexed.test.labels[jx])],
                 "count" => length(data_indexed.test.y[jx]),
             )
             push!(regimes, local_regime)

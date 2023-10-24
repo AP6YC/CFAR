@@ -36,7 +36,7 @@ using
     ArgParse,
     Arrow,
     ColorSchemes,
-    # CondaPkg,
+    CondaPkg,
     CSV,
     DataFrames,
     DataStructures,
@@ -57,6 +57,7 @@ using
     # PythonCall,
     Random,
     # Statistics,
+    StatsBase,
     StatsPlots
 
 # @lazy import CondaPkg = "992eb4ea-22a4-4c89-a5bb-47a3300528ab"
