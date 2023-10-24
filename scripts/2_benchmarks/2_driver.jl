@@ -52,50 +52,54 @@ data = CFAR.load_vec_datasets()
 
 # Run the scenario
 for (data_key, data_value) in data
-    # Load the config and scenario
-    config = CFAR.json_load(CFAR.config_dir("l2", data_key, "config.json"))
-    scenario = CFAR.json_load(CFAR.config_dir("l2", data_key, "scenario.json"))
-
-    # Setup the scenario_info dictionary as a function of the config and scenario
-    scenario_info = config["META"]
-    scenario_info["input_file"] = scenario
-
-    # Instantiate the data logger
-    data_logger = l2logger.DataLogger(
-        config["DIR"],
-        config["NAME"],
-        config["COLS"],     # This one right here, officer
-        scenario_info,
+    CFAR.full_scenario(
+        data_value,
+        CFAR.config_dir("l2", data_key),
     )
+    # # Load the config and scenario
+    # config = CFAR.json_load(CFAR.config_dir("l2", data_key, "config.json"))
+    # scenario = CFAR.json_load(CFAR.config_dir("l2", data_key, "scenario.json"))
 
-    # Create the DDVFA options for both initialization and logging
-    opts = opts_DDVFA(
-        # DDVFA options
-        gamma = 5.0,
-        gamma_ref = 1.0,
-        # rho=0.45,
-        rho_lb = 0.45,
-        rho_ub = 0.7,
-        similarity = :single,
-        display = false,
-    )
+    # # Setup the scenario_info dictionary as a function of the config and scenario
+    # scenario_info = config["META"]
+    # scenario_info["input_file"] = scenario
 
-    # Instantiate the art module
-    local_art = DDVFA(opts)
+    # # Instantiate the data logger
+    # data_logger = l2logger.DataLogger(
+    #     config["DIR"],
+    #     config["NAME"],
+    #     config["COLS"],     # This one right here, officer
+    #     scenario_info,
+    # )
 
-    # Infer the data dimension
-    dim = size(data_value.train.x[1])[1]
+    # # Create the DDVFA options for both initialization and logging
+    # opts = opts_DDVFA(
+    #     # DDVFA options
+    #     gamma = 5.0,
+    #     gamma_ref = 1.0,
+    #     # rho=0.45,
+    #     rho_lb = 0.45,
+    #     rho_ub = 0.7,
+    #     similarity = :single,
+    #     display = false,
+    # )
 
-    # Specify the input data configuration
-    local_art.config = DataConfig(0, 1, dim)
+    # # Instantiate the art module
+    # local_art = DDVFA(opts)
 
-    # Construct the agent from the scenario
-    agent = CFAR.Agent(
-        local_art,
-        opts,
-        scenario,
-    )
+    # # Infer the data dimension
+    # dim = size(data_value.train.x[1])[1]
 
-    # Run the scenario for this dataset
-    CFAR.run_scenario(agent, data_value, data_logger)
+    # # Specify the input data configuration
+    # local_art.config = DataConfig(0, 1, dim)
+
+    # # Construct the agent from the scenario
+    # agent = CFAR.Agent(
+    #     local_art,
+    #     opts,
+    #     scenario,
+    # )
+
+    # # Run the scenario for this dataset
+    # CFAR.run_scenario(agent, data_value, data_logger)
 end
