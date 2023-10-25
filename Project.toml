@@ -61,6 +61,7 @@ PrecompileSignatures = "3"
 ProgressMeter = "1"
 PythonCall = "0.9"
 Revise = "3"
+StatsBase = "0.34"
 StatsPlots = "0.15"
 YAML = "0.4"
 
