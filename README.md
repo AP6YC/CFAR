@@ -21,8 +21,8 @@ Please see the [documentation][docs-url].
 [coveralls-img]: https://coveralls.io/repos/github/AP6YC/CFAR/badge.svg?branch=main
 [coveralls-url]: https://coveralls.io/github/AP6YC/CFAR?branch=main
 
-[zenodo-img]: https://zenodo.org/badge/601743357.svg
-[zenodo-url]: https://zenodo.org/badge/latestdoi/601743357
+[zenodo-img]: https://zenodo.org/badge/DOI/10.5281/zenodo.10048326.svg
+[zenodo-url]: https://doi.org/10.5281/zenodo.10048327
 
 [docs-img]: https://img.shields.io/badge/docs-blue.svg
 [docs-url]: https://AP6YC.github.io/CFAR/dev/

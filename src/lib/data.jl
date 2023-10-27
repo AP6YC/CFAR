@@ -607,7 +607,7 @@ function load_vec_datasets(
     datasets = CFAR.load_datasets()
 
     Random.seed!(seed)
-    new_datasets = CFAR.split_datasets(datasets; p=0.8)
+    new_datasets = CFAR.split_datasets(datasets; p=p)
 
     dsic = CFAR.vectorize_datasets(new_datasets)
 

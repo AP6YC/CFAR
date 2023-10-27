@@ -82,24 +82,6 @@ ENV["DATADEPS_ALWAYS_ACCEPT"] = true
 ENV["GKSwstype"] = 100
 
 # -----------------------------------------------------------------------------
-# INCLUDES
-# -----------------------------------------------------------------------------
-
-const l2logger = Ref{PythonCall.Py}()
-function __init__()
-    # foo[] = pyimport("foo")
-    # Load the l2logger PythonCall dependency
-    l2logger[] = PythonCall.pyimport("l2logger.l2logger")
-    # il = pyimport("importlib")
-    # il.reload(l2logger)
-end
-
-# DataLogger
-
-# Library code
-include("lib/lib.jl")
-
-# -----------------------------------------------------------------------------
 # INIT
 # -----------------------------------------------------------------------------
 
@@ -110,6 +92,23 @@ include("lib/lib.jl")
 #     # Run the conda setup
 #     conda_setup()
 # end
+
+const l2logger = Ref{PythonCall.Py}()
+function __init__()
+    # foo[] = pyimport("foo")
+    # Load the l2logger PythonCall dependency
+    l2logger[] = PythonCall.pyimport("l2logger.l2logger")
+    # il = pyimport("importlib")
+    # il.reload(l2logger)
+end
+# DataLogger
+
+# -----------------------------------------------------------------------------
+# INCLUDES
+# -----------------------------------------------------------------------------
+
+# Library code
+include("lib/lib.jl")
 
 # -----------------------------------------------------------------------------
 # EXPORTS
