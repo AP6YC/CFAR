@@ -27,6 +27,16 @@ using
 @testset "DrWatson Modifications" begin
     # Temp dir for
     test_dir = "testing"
+    # @info CFAR
+    @info "Dir is: " @__DIR__
+    @info "File is: " @__FILE__
+    using DrWatson
+    @info projectdir()
+    @info CFAR.work_dir()
+    @info isdir(CFAR.work_dir())
     @info CFAR.work_dir(test_dir)
     @info CFAR.results_dir(test_dir)
+    @info CFAR.data_dir(test_dir)
+    @info CFAR.config_dir(test_dir)
+    @info CFAR.paper_results_dir(test_dir)
 end
