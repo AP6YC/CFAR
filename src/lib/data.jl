@@ -32,18 +32,22 @@ abstract type VectoredData <: TTDataset end
 # -----------------------------------------------------------------------------
 
 """
+Alias declaring a sample as a vector of floating-point values.
 """
 const Sample = Vector{Float}
 
 """
+Alias declaring that a supervised target is an integer.
 """
 const Target = Int
 
 """
+Alias declaring that a sample batch is a vector of samples.
 """
 const Samples = Vector{Sample}
 
 """
+Alias declaring that a supervised label is a string.
 """
 const Label = String
 
@@ -494,6 +498,8 @@ function feature_preprocess(dt::ZScoreTransform, scaling::Real, data::RealMatrix
 end
 
 """
+Loads all of the data sets from the local data package folder.
+
 # Arguments
 - `topdir::AbstractString = data_dir("data-package")`:
 """
@@ -532,7 +538,10 @@ function load_datasets(
 end
 
 """
+Constructor for a [`VectorLabeledDataset`](@ref) transformed from an existing [`LabeledDataset`](@ref).
 
+# Arguments
+- `data::LabeledDataset`: the [`LabeledDataset`](@ref) to turn into a corresponding vectorized version.
 """
 function VectorLabeledDataset(
     data::LabeledDataset
@@ -554,6 +563,11 @@ function VectorLabeledDataset(
 end
 
 """
+Splits the provided [`LabeledDataset`](@ref)s into train/test splits with a provided ratio `p`.
+
+# Argument
+- `datasets::Dict{String, LabeledDataset}`: a named mapping to a set of [`LabeledDataset`](@ref)s.
+$ARG_P
 """
 function split_datasets(
     datasets::Dict{String, LabeledDataset};
@@ -584,7 +598,10 @@ end
 # end
 
 """
+Turns a named set of [`DataSplitCombined`](@ref)s into vectorized [`DSIC`](@ref) datasets.
 
+# Arguments
+- `datasets::Dict{String, DataSplitCombined}`: the named set of [`DataSplitCombined`](@ref)s to turn into corresponding vectorized [`DSIC`](@ref).
 """
 function vectorize_datasets(
     datasets::Dict{String, DataSplitCombined}
@@ -617,15 +634,18 @@ end
 """
 Vector of alphabetical letters as Strings for discretized feature labels.
 """
-const alphabet = string.(collect('A':'Z'))
+const ALPHABET = string.(collect('A':'Z'))
 
 """
 Two-letter alphabetical feature names.
 """
-const letter_vec = reduce(vcat, [letter .* alphabet for letter in alphabet])
+const LETTER_VEC = reduce(vcat, [letter .* ALPHABET for letter in ALPHABET])
 
 """
 Generates a configuration and scenario from a dataset.
+
+# Arguments
+- `exp_top::AbstractString`:
 """
 function gen_scenario(
     exp_top::AbstractString,
@@ -740,7 +760,10 @@ function gen_scenario(
 end
 
 """
+Generates all L2 scenarios as inferred from an existing named set of [`DSIC`](@ref) datasets.
 
+# Arguments
+- `data::Dict{String, DSIC}`: the named set of [`DSIC`](@ref) datasets to use for generating scenario files.
 """
 function gen_scenarios(
     data::Dict{String, DSIC}
