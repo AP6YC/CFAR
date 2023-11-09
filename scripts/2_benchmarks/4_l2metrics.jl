@@ -13,7 +13,7 @@ Runs the l2metrics batch script from within Julia.
 # -----------------------------------------------------------------------------
 
 using Revise
-using DCCR
+using CFAR
 
 # -----------------------------------------------------------------------------
 # ADDITIONAL DEPENDENCIES
@@ -32,14 +32,14 @@ experiment_top = "9_l2metrics"
 # EXPERIMENT
 # -----------------------------------------------------------------------------
 
-# DCCR project files
+# CFAR project files
 # include(projectdir("src", "setup.jl"))
 
 # Get the location of the last log
-last_log = readdir(DCCR.results_dir(experiment_top, "logs"))[end]
+last_log = readdir(CFAR.results_dir(experiment_top, "logs"))[end]
 
 # Get the batch script location
-exp_dir(args...) = DCCR.projectdir("scripts", experiment_top, args...)
+exp_dir(args...) = CFAR.projectdir("scripts", experiment_top, args...)
 l2m_script = "4_l2metrics.bat"
 full_l2m_script = exp_dir(l2m_script)
 
