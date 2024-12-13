@@ -31,6 +31,7 @@ Please see the [documentation][docs-url].
 
 - [Table of Contents](#table-of-contents)
 - [Overview](#overview)
+- [Installation](#installation)
 - [Usage](#usage)
 - [Attribution](#attribution)
   - [Authors](#authors)
@@ -39,6 +40,14 @@ Please see the [documentation][docs-url].
 ## Overview
 
 TODO
+
+## Installation
+
+```shell
+mamba create -n cfar python=3.11
+mamba activate cfar
+pip install -e '.[dev]'
+```
 
 ## Usage
 
