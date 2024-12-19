@@ -120,7 +120,7 @@ function gen_gaussians(config::ConfigDict)
 
     # Init the random number generator
     rng = MersenneTwister(config["rng_seed"])
-
+    Random.seed!(rng)
     # Iterate over all generators
     n_dist = length(dist_gens)
     mx = []
@@ -129,10 +129,10 @@ function gen_gaussians(config::ConfigDict)
     # for ix in eachindex(dist_gens)
         # Create a new set of data from the generator
         data_x = rand(
-            rng,
             dist_gens[ix],
             config["n_points_per"],
         )
+        # @info data_x |> maximum
 
         # Create a set of labels for this dataset
         data_y = ones(Int, config["n_points_per"]) * ix
@@ -153,13 +153,18 @@ function gen_gaussians(config::ConfigDict)
             )
         end
     end
+    # @info X |> maximum
 
     static = LabeledDataset(X, y, ["1", "2"])
     mover = LabeledDataset(mx, my, ["mover"])
+    # @info static.x |> maximum
+    # @info mover.x |> maximum
+
     # @info static
     # @info mover
     ms = MoverSplit(static, mover, config)
     # DataSplitCombined()
+    @info ms.mover.train.x |> maximum
 
     # return X, y, mx, my
     return ms

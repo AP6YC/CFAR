@@ -360,8 +360,16 @@ function MoverSplit(
     mover::LabeledDataset,
     config::ConfigDict
 )
-    new_static = DataSplitCombined(static, p=config["split"])
-    new_mover = DataSplitCombined(mover, p=config["split"])
+    new_static = DataSplitCombined(
+        static,
+        p=config["split"],
+        normalize=false,
+    )
+    new_mover = DataSplitCombined(
+        mover,
+        p=config["split"],
+        normalize=false,
+    )
     return MoverSplit(
         new_static,
         new_mover,

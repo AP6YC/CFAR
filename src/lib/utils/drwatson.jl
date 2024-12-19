@@ -66,18 +66,26 @@ end
 $DRWATSON_ARGS_DOC
 """
 function paper_results_dir(args...)
+    home = if Sys.iswindows()
+        joinpath(
+            "C:\\",
+            "Users",
+            "Sasha",
+        )
+    else
+        expanduser("~")
+    end
+
     return joinpath(
-        "C:\\",
-        "Users",
-        "Sasha",
-        "Dropbox",
-        "Apps",
-        "Overleaf",
-        "Paper-ART-Catastrophic-Forgetting",
-        "images",
-        "results",
-        args...
-    )
+            home,
+            "Dropbox",
+            "Apps",
+            "Overleaf",
+            "Paper-ART-Catastrophic-Forgetting",
+            "images",
+            "results",
+            args...
+        )
 end
 
 # """
