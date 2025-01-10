@@ -33,6 +33,7 @@ Please see the [documentation][docs-url].
 - [Overview](#overview)
 - [Installation](#installation)
 - [Usage](#usage)
+- [Notes](#notes)
 - [Attribution](#attribution)
   - [Authors](#authors)
   - [Images](#images)
@@ -52,6 +53,13 @@ pip install -e '.[dev]'
 ## Usage
 
 TODO
+
+## Notes
+
+TODO:
+1. Mover dataset
+2. TT 1-2, final perfs, n_cats,
+3. CVIs
 
 ## Attribution
 
