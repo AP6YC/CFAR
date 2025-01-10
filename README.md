@@ -60,6 +60,8 @@ TODO:
 1. Mover dataset
 2. TT 1-2, final perfs, n_cats,
 3. CVIs
+4. Vary vigilance
+5. Refactor data utils
 
 ## Attribution
 

@@ -27,3 +27,4 @@ config = CFAR.get_gaussian_config("gaussians.yml")
 ms = CFAR.gen_gaussians(config)
 
 ms
+# get_cvi!(ch, m)

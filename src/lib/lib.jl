@@ -16,7 +16,7 @@ Aggregates all types and functions that are used throughout the `CFAR` project.
 include("constants.jl")
 
 # Common experiment and file utilities
-include("utils/lib.jl")
+include(joinpath("utils", "lib.jl"))
 
 # Train/test data container definitions
 include("data.jl")
@@ -34,4 +34,4 @@ include("experiments.jl")
 include("py.jl")
 
 # L2 metrics
-include("l2/lib.jl")
+include(joinpath("l2", "lib.jl"))
