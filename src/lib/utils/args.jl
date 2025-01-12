@@ -53,6 +53,16 @@ function exp_parse(description::AbstractString="A CFAR experiment script.")
     return parse_args(s)
 end
 
+function get_n_procs()
+    return if Sys.iswindows()
+        DEFAULT_N_PROCS["windows"]
+    elseif Sys.isunix()
+        DEFAULT_N_PROCS["linux"]
+    else
+        DEFAULT_N_PROCS["darwin"]
+    end
+end
+
 """
 Parses the command line for common options in distributed experiments.
 
@@ -63,11 +73,7 @@ function dist_exp_parse(description::AbstractString="A distributed CFAR experime
     s = get_argparsesettings(description)
 
     # Pick the default number of distributed processes
-    default_n_procs = if Sys.iswindows()
-        DEFAULT_N_PROCS_WINDOWS
-    else
-        DEFAULT_N_PROCS_UNIX
-    end
+    default_n_procs = get_n_procs()
 
     # Set up the arguments table
     @add_arg_table! s begin
@@ -82,6 +88,14 @@ function dist_exp_parse(description::AbstractString="A distributed CFAR experime
         "--verbose", "-v"
             help = "verbose output"
             action = :store_true
+        "--exp_name", "-e"
+            help = "the name of the experiment"
+            arg_type = String
+            default = "exp"
+        "--config_file", "-c"
+            help = "the name of the configuration file"
+            arg_type = String
+            default = "art.yml"
     end
 
     # Parse and return the arguments

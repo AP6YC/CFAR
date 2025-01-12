@@ -31,6 +31,9 @@ exp_top = "1_gaussian"
 exp_name = basename(@__FILE__)
 config_file = "art.yml"
 
+@info PROGRAM_FILE
+# @info CFAR.exp_name
+
 # -----------------------------------------------------------------------------
 # PARSE ARGS
 # -----------------------------------------------------------------------------

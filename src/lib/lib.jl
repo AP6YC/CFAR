@@ -21,6 +21,7 @@ include(joinpath("utils", "lib.jl"))
 # Train/test data container definitions
 include("data.jl")
 
+# Experimental driver code
 include("drivers.jl")
 
 # Gaussian data definitions

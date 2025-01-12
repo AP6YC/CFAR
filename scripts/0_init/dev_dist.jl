@@ -5,6 +5,11 @@ function dist_test()
     addprocs(4)
     @everywhere begin
         @info "Hello from $(myid())"
+        # using CFAR
+        @eval import Pkg
+        Pkg.activate(".")
+        @eval using CFAR
+        print(CFAR.exp_name)
     end
     rmprocs(workers())
     return

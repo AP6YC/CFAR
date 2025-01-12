@@ -9,14 +9,13 @@ A collection of high-level constants for the package, such as the default names 
 """
 
 """
-The default number of processes to start in distributed experiments on Windows.
+The default number of processes to start in distributed experiments on different platforms.
 """
-const DEFAULT_N_PROCS_WINDOWS = 11
-
-"""
-The default number of processes to start in distributed experiments on Linux.
-"""
-const DEFAULT_N_PROCS_UNIX = 31
+const DEFAULT_N_PROCS = Dict(
+    "linux" => 31,
+    "windows" => 11,
+    "darwin" => 4,
+)
 
 """
 Location of the ART options file for simulations.
