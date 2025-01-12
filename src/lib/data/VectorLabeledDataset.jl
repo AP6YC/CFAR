@@ -1,4 +1,8 @@
 
+# -----------------------------------------------------------------------------
+# STRUCTS
+# -----------------------------------------------------------------------------
+
 """
 A single dataset of vectored labeled data with [`Features`](@ref), [`Targets`](@ref), and human-readable string [`Labels`](@ref).
 """
@@ -21,6 +25,9 @@ struct VectorLabeledDataset
     labels::Labels
 end
 
+# -----------------------------------------------------------------------------
+# CONSTRUCTORS
+# -----------------------------------------------------------------------------
 
 """
 Constructor for a [`VectorLabeledDataset`](@ref) transformed from an existing [`LabeledDataset`](@ref).
@@ -46,3 +53,7 @@ function VectorLabeledDataset(
         data.labels,
     )
 end
+
+# -----------------------------------------------------------------------------
+# FUNCTIONS
+# -----------------------------------------------------------------------------

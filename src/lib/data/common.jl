@@ -60,3 +60,6 @@ Definition of labels as a vector of strings.
 const Labels = Vector{Label}
 # const Labels = ElasticVector{String}
 
+# -----------------------------------------------------------------------------
+# FUNCTIONS
+# -----------------------------------------------------------------------------

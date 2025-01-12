@@ -23,6 +23,9 @@ struct LabeledDataset
     labels::Labels
 end
 
+# -----------------------------------------------------------------------------
+# FUNCTIONS
+# -----------------------------------------------------------------------------
 
 """
 Teturns a manual train/test x/y split from a data matrix and labels using MLDataUtils.

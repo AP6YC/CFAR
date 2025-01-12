@@ -1,3 +1,6 @@
+# -----------------------------------------------------------------------------
+# STRUCTS
+# -----------------------------------------------------------------------------
 
 """
 A struct for combining training and validation data, containing only train and test splits.
@@ -17,7 +20,6 @@ end
 # -----------------------------------------------------------------------------
 # CONSTRUCTORS
 # -----------------------------------------------------------------------------
-
 
 """
 Returns a [`DataSplitCombined`](@ref) from a [`LabeledDataset`](@ref) with a provided split ratio `p`.
@@ -62,11 +64,9 @@ function DataSplitCombined(
     )
 end
 
-
 # -----------------------------------------------------------------------------
 # FUNCTIONS
 # -----------------------------------------------------------------------------
-
 
 """
 Returns the concatenated training and testing features data from a [`DataSplitCombined`](@ref).
