@@ -1,8 +1,8 @@
 """
-    1_gen_mg.jl
+    6_cvi.jl
 
 # Description
-This script implements an experiment using multivariate gaussian samples for illustrating apparent catastrophic forgetting.
+CVI generation for the mover datasets
 
 # Authors
 - Sasha Petrenko <petrenkos@mst.edu> @AP6YC
@@ -38,7 +38,7 @@ ch = CH()
 config = CFAR.get_gaussian_config("gaussians.yml")
 ms = CFAR.gen_gaussians(config)
 
-ms
+# ms
 # get_cvi!(ch, m)
 
 # -----------------------------------------------------------------------------
@@ -83,6 +83,19 @@ sim_params = Dict{String, Any}(
     # Modules
     using Revise
     using CFAR
+
+    # Additional dependencies
+    using ClusterValidityIndices
+    using DrWatson
+
+    # Load the simulation options
+    opts = CFAR.load_art_sim_opts("art.yml")
+
+    # Load the config dict
+    config = CFAR.get_gaussian_config("gaussians.yml")
+    ms = CFAR.gen_gaussians(config)
+
+
 end
 
 
@@ -97,7 +110,7 @@ end
 dicts = dict_list(sim_params)
 
 # Parallel map the sims
-pmap(local_sim, dicts)
+# pmap(local_sim, dicts)
 # progress_pmap(local_sim, dicts)
 
 # -----------------------------------------------------------------------------

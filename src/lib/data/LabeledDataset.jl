@@ -24,6 +24,35 @@ struct LabeledDataset
 end
 
 # -----------------------------------------------------------------------------
+# INTERFACES
+# https://docs.julialang.org/en/v1/manual/interfaces/
+# -----------------------------------------------------------------------------
+
+function Base.size(data::LabeledDataset)
+    return size(data.x)
+end
+
+function Base.getindex(data::LabeledDataset, i::Int)
+    return data.x[:, i], data.y[i]
+end
+
+# function getindex(data::LabeledDataset, I::Vararg{Int, N})
+#     return data.x[I...], data.y[I...]
+# end
+
+function Base.setindex!(data::LabeledDataset, i::Int, value)
+    data.x[:, i], data.y[i] = value
+end
+
+function Base.firstindex(data::LabeledDataset)
+    return firstindex(data.x), firstindex(data.y)
+end
+
+function Base.lastindex(data::LabeledDataset)
+    return lastindex(data.x), lastindex(data.y)
+end
+
+# -----------------------------------------------------------------------------
 # FUNCTIONS
 # -----------------------------------------------------------------------------
 
