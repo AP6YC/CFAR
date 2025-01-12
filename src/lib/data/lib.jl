@@ -16,9 +16,9 @@ include("DataSplit.jl")
 
 include("DataSplitIndexed.jl")
 
-include("DSIC.jl")
-
 include("DataSplitCombined.jl")
+
+include("DSIC.jl")
 
 include("MoverSplit.jl")
 
