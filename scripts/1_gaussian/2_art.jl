@@ -27,7 +27,8 @@ using DrWatson
 # -----------------------------------------------------------------------------
 
 exp_top = "1_gaussian"
-exp_name = "2_art.jl"
+# exp_name = "2_art.jl"
+exp_name = basename(@__FILE__)
 config_file = "art.yml"
 
 # -----------------------------------------------------------------------------
@@ -88,7 +89,7 @@ sim_params = Dict{String, Any}(
     ms = CFAR.gen_gaussians(config)
 
     # Load the simulation options
-    opts = CFAR.load_art_sim_opts()
+    opts = CFAR.load_art_sim_opts("art.yml")
 
     # Define the single-parameter function used for pmap
     local_sim(dict) = CFAR.train_test_sfam_mc(
@@ -104,7 +105,7 @@ end
 # -----------------------------------------------------------------------------
 
 # Log the simulation scale
-@info "START: $(dict_list_count(sim_params)) simulations across $(nprocs()) processes."
+@info "CFAR: $(dict_list_count(sim_params)) simulations across $(nprocs()) processes."
 
 # Turn the dictionary of lists into a list of dictionaries
 dicts = dict_list(sim_params)

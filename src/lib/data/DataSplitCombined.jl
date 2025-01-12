@@ -44,6 +44,7 @@ function DataSplitCombined(
         # Preprocess all of the data based upon the statistics of the training data
         new_train_x = feature_preprocess(dt, scaling, train.x)
         new_test_x = feature_preprocess(dt, scaling, test.x)
+
         # train =
         train = LabeledDataset(
             new_train_x,
