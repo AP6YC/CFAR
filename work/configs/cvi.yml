@@ -4,6 +4,9 @@ name: "cvi"
 # rng_seed: 1234
 n_points: 1000
 
+results:
+  - "1_gaussian"
+
 varying:
   travel:
     lb: 0
