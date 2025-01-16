@@ -22,9 +22,14 @@ using Distributed
 exp_name = basename(@__FILE__)
 
 
+"""
+Parses the config dictionary to a parameters dictionary for use in a distributed simulation.
+"""
 function config_to_params(opts::ConfigDict)
-
+    # Copy the options
     sim_params = deepcopy(opts)
+
+    # Parse the varying parameters
     delete!(sim_params, "varying")
     for (key, value) in opts["varying"]
         sim_params[key] = collect(range(
@@ -34,6 +39,7 @@ function config_to_params(opts::ConfigDict)
         ))
     end
 
+    # Return the new dictionary
     return sim_params
 end
 

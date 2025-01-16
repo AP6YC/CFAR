@@ -2,7 +2,7 @@
     6_cvi.jl
 
 # Description
-CVI generation for the mover datasets
+CVI generation for the mover datasets.
 
 # Authors
 - Sasha Petrenko <petrenkos@mst.edu> @AP6YC
