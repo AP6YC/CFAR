@@ -53,13 +53,16 @@ function exp_parse(description::AbstractString="A CFAR experiment script.")
     return parse_args(s)
 end
 
+"""
+Returns the default number of processes to start in distributed experiments on different platforms.
+"""
 function get_n_procs()
     return if Sys.iswindows()
         DEFAULT_N_PROCS["windows"]
-    elseif Sys.isunix()
-        DEFAULT_N_PROCS["linux"]
-    else
+    elseif Sys.isapple()
         DEFAULT_N_PROCS["darwin"]
+    else
+        DEFAULT_N_PROCS["linux"]
     end
 end
 

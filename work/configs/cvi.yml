@@ -4,8 +4,13 @@ name: "cvi"
 # rng_seed: 1234
 n_points: 1000
 
+# Results destination directory
 results:
-  - "1_gaussian"
+  - 1_gaussian
+  - cvi
+
+# Parsed options
+procs: 1
 
 varying:
   travel:
