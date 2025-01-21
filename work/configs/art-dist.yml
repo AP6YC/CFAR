@@ -1,9 +1,6 @@
 name: "art-dist"
 exp: "art_exp"
-# travel_lb: 0
-# travel_ub: 10
 rng_seed: 1
-# n_points: 1000
 
 feature_bounds:
   min: [
@@ -14,19 +11,6 @@ feature_bounds:
     10.0,
     10.0
   ]
-
-opts_SFAM:
-  rho: 0.7
-
-# opts_DDVFA:
-#   rho_lb: 0.4
-#   rho_ub: 0.75
-#   similarity: "single"
-
-# opts_DVFA:
-#   rho_lb: 0.4
-#   rho_ub: 0.75
-
 
 # Results destination directory
 results:
@@ -41,3 +25,16 @@ varying:
     lb: 0
     ub: 10
     n_points: 1000
+
+
+opts_SFAM:
+  rho: 0.7
+
+# opts_DDVFA:
+#   rho_lb: 0.4
+#   rho_ub: 0.75
+#   similarity: "single"
+
+# opts_DVFA:
+#   rho_lb: 0.4
+#   rho_ub: 0.75

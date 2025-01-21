@@ -123,30 +123,11 @@ function art_exp(opts::AbstractDict)
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
 
-    # Load the simulation options
-    # opts = CFAR.load_art_sim_opts("art.yml")
-
-    # # Define the single-parameter function used for pmap
-    # local_sim(dict) = CFAR.train_test_sfam_mc(
-    #     dict,
-    #     ms,
-    #     sweep_results_dir,
-    #     opts,
-    # )
-
     # Initialize the random seed at the beginning of the experiment
     Random.seed!(opts["rng_seed"])
 
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, opts["travel"])
-
-    # Parse the SFAM options
-    # dd = opts_dict["opts_SFAM"]
-
-    # Instantiate the options
-    # opts_SFAM(
-    #     rho = dd["rho"],
-    # )
 
     # Init the SFAM module
     art = SFAM(
@@ -157,7 +138,8 @@ function art_exp(opts::AbstractDict)
         opts["feature_bounds"]["max"],
     )
 
-    n_epochs = 5
+    n_epochs = 1
+
     # Task 1: static gaussians
     for _ = 1:n_epochs
         train!(
@@ -239,19 +221,75 @@ function art_exp(opts::AbstractDict)
     delete!(savename_opts, "results")
     delete!(savename_opts, "name")
     delete!(savename_opts, "procs")
-    @info savename_opts
+
+    # @info savename_opts
     save_sim(dir_func, savename_opts, fulld)
 
 end
 
+# function analyze_arg_exp(opts::AbstractDict)
 
-# greet() = @info "Hello from $(myid())"
+#     # This experiment name
+#     exp_top = "1_gaussian"
+#     exp_name = "4_analyze_art"
+
+#     perf_plot = "perf.png"
+#     err_plot = "err.png"
+#     n_cats_plot = "n_categories.png"
+
+#     sweep_dir = opts["results"]
+
+#     # LOAD RESULTS
+
+#     # Collect the results into a single dataframe
+#     df = collect_results!(sweep_dir)
+#     # df = collect_results(sweep_dir)
+
+#     sort!(df, [:travel])
+
+#     attrs = [
+#         "p1",
+#         "p2",
+#         "p12",
+#     ]
+
+#     # Plot the average trendlines
+#     p1 = CFAR.plot_2d_attrs(
+#         df,
+#         attrs,
+#         avg=true,
+#         n=100,
+#         title="Peformances",
+#     )
+#     CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
+
+#     # Plot the StatsPlots error lines
+#     p2 = CFAR.plot_2d_errlines(
+#         df,
+#         attrs,
+#         n=100,
+#         title="Performances with Error Bars",
+#     )
+#     CFAR.save_plot(p2, err_plot, exp_top, exp_name)
+
+#     # Plot the number of categories
+#     p3= CFAR.plot_2d_attrs(
+#         df,
+#         ["nc1", "nc2"],
+#         avg=true,
+#         n=200,
+#         title="Number of Categories",
+#     )
+#     CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
+
+#     @info "Done plotting for $(exp_name)"
+# end
 
 """
 Runs a distributed experiment.
 
 # Arguments
-- `name::AbstractString`: The name of the experiment.
+- `config_file::OptionString`: The configuration file to load.
 """
 function run_exp(
     ;
@@ -288,16 +326,6 @@ function run_exp(
         # Pkg.activate(".")
         @eval using Revise
         @eval using CFAR
-
-        # Point to the sweep results
-        # @eval local_opts = $sim_params
-        # sweep_results_dir(args...) = CFAR.results_dir(
-        #     local_opts["results"]...,
-        #     args...
-        # )
-        # # Make the path
-        # @info "Sweep results directory: $(sweep_results_dir())"
-        # mkpath(sweep_results_dir())
     end
 
     # Log the simulation scale
