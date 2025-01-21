@@ -38,8 +38,9 @@ n_cats_plot = "n_categories.png"
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
-    "2_art",
-    "linear_sweep"
+    # "2_art",
+    "art",
+    # "linear_sweep"
 )
 
 # -----------------------------------------------------------------------------
@@ -90,7 +91,8 @@ CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 p3= CFAR.plot_2d_attrs(
     df,
     ["nc1", "nc2"],
-    # n=200,
+    avg=true,
+    n=200,
     title="Number of Categories",
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)

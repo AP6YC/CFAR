@@ -38,6 +38,7 @@ using
     ColorSchemes,
     CondaPkg,
     CSV,
+    ClusterValidityIndices,
     DataFrames,
     DataStructures,
     DelimitedFiles,
