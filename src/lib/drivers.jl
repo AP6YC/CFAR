@@ -95,6 +95,7 @@ function cvi_exp(opts::AbstractDict)
 
     # @info results_dir()
     @info opts["results"]
+    # @info sweep_results_dir()
 
     # sweep_results_dir = results_dir(opts["results"][1])
     # @info "Sweep results directory: $(sweep_results_dir)"
@@ -152,13 +153,21 @@ function run_exp(
         # mkpath(sweep_results_dir())
     end
 
-
+    # Extract the results before creating the dict_list and add it after
+    sweep_results_dir = CFAR.results_dir(
+        pop!(sim_params, "results")...
+    )
 
     # Log the simulation scale
     @info "CFAR: $(dict_list_count(sim_params)) simulations across $(nprocs()) processes."
 
     # Turn the dictionary of lists into a list of dictionaries
     dicts = dict_list(sim_params)
+
+    # Add the results directory back to the dictionaries
+    for dict in dicts
+        dict["results"] = sweep_results_dir
+    end
 
     # Parallel map the sims
     pmap(cvi_exp, dicts)

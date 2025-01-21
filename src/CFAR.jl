@@ -123,6 +123,6 @@ export
 # -----------------------------------------------------------------------------
 
 # Precompile any concrete-type function signatures
-@precompile_signatures(CFAR)
+# @precompile_signatures(CFAR)
 
 end
