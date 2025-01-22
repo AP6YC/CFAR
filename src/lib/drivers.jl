@@ -95,30 +95,9 @@ function load_opts(
     return opts
 end
 
-"""
-Runs a single CVI experiment, for use in a distributed simulation.
-"""
-function cvi_exp(opts::AbstractDict)
-    # @eval local_opts = $sim_params
-    # sweep_results_dir(args...) = CFAR.results_dir(
-    #     opts["results"]...,
-    #     args...
-    # )
-    # # Make the path
-    # @info "Sweep results directory: $(sweep_results_dir())"
-    # mkpath(sweep_results_dir())
-
-    # @info results_dir()
-    @info opts["results"]
-    config = get_gaussian_config("gaussians.yml")
-    ms = gen_gaussians(config)
-    # @info sweep_results_dir()
-
-    # sweep_results_dir = results_dir(opts["results"][1])
-    # @info "Sweep results directory: $(sweep_results_dir)"
-end
-
-function art_exp(opts::AbstractDict)
+function get_mover_data(
+    opts::AbstractDict
+)
     # Load the config dict
     config = CFAR.get_gaussian_config("gaussians.yml")
     ms = CFAR.gen_gaussians(config)
@@ -129,6 +108,25 @@ function art_exp(opts::AbstractDict)
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, opts["travel"])
 
+    return local_ms
+end
+
+"""
+Runs a single CVI experiment, for use in a distributed simulation.
+"""
+function cvi_exp(opts::AbstractDict)
+    @info opts["results"]
+    # config = get_gaussian_config("gaussians.yml")
+    # ms = gen_gaussians(config)
+    local_ms = get_mover_data(opts)
+    csil = ClusterValidityIndices.cSIL()
+    get_cvi!(csil, local_ms.mover.test.x)
+end
+
+function art_exp(opts::AbstractDict)
+    # Load the data according to the options
+    local_ms = get_mover_data(opts)
+
     # Init the SFAM module
     art = SFAM(
         rho = opts["opts_SFAM"]["rho"]
@@ -138,7 +136,7 @@ function art_exp(opts::AbstractDict)
         opts["feature_bounds"]["max"],
     )
 
-    n_epochs = 1
+    n_epochs = opts["n_epochs"]
 
     # Task 1: static gaussians
     for _ = 1:n_epochs
@@ -317,15 +315,15 @@ function run_exp(
     if sim_params["procs"] > 1
         @info "Starting distributed processes"
         addprocs(sim_params["procs"] - 1, exeflags="--project=.")
-    end
 
-    # Load definitions on every process
-    @info "Setting up processes experiment"
-    @everywhere begin
-        # @eval import Pkg
-        # Pkg.activate(".")
-        @eval using Revise
-        @eval using CFAR
+        # Load definitions on every process
+        @info "Setting up processes dependencies"
+        @everywhere begin
+            # @eval import Pkg
+            # Pkg.activate(".")
+            @eval using Revise
+            @eval using CFAR
+        end
     end
 
     # Log the simulation scale

@@ -1,6 +1,10 @@
 name: "art-dist"
 exp: "art_exp"
 rng_seed: 1
+n_epochs: 1
+
+# Number of processes to run in parallel
+procs: 10
 
 feature_bounds:
   min: [
@@ -17,15 +21,11 @@ results:
   - 1_gaussian
   - art
 
-# Parsed options
-procs: 10
-
 varying:
   travel:
     lb: 0
     ub: 10
     n_points: 1000
-
 
 opts_SFAM:
   rho: 0.7
