@@ -10,6 +10,7 @@ This file loads common utilities and aggregates all other unit tests files.
 # PREAMBLE
 # -----------------------------------------------------------------------------
 
+using Revise
 using CFAR
 
 # -----------------------------------------------------------------------------
@@ -39,4 +40,8 @@ using
     @info CFAR.data_dir(test_dir)
     @info CFAR.config_dir(test_dir)
     @info CFAR.paper_results_dir(test_dir)
+end
+
+@testset "Experiments" begin
+    # CFAR.run_exp(config_file="art-dist.yml")
 end
