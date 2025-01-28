@@ -1,5 +1,6 @@
 name: "art-dist"
-exp: "art_exp"
+# exp: "art_exp"
+exp: "art_dist_exp"
 rng_seed: 1
 n_epochs: 1
 
@@ -8,23 +9,24 @@ procs: 10
 
 feature_bounds:
   min: [
-    0.0,
+    -20.0,
     0.0
   ]
   max: [
     10.0,
-    10.0
+    20.0
   ]
 
 # Results destination directory
 results:
   - 1_gaussian
-  - art
+  - art_dist
 
 varying:
   travel:
     lb: 0
-    ub: 10
+    ub: 30
+    # ub: 10
     n_points: 1000
 
 opts_SFAM:

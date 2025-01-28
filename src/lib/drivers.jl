@@ -249,6 +249,67 @@ function art_exp(opts::AbstractDict)
 
 end
 
+
+function art_dist_exp(opts::AbstractDict)
+    # Load the data according to the options
+    # local_ms = get_mover_data(opts)
+    local_ms = get_mover_data(opts, config_file="sct-gaussians.yml")
+    # local_ds = DataSplitCombined(local_ms)
+
+    # Init the SFAM module
+    art = SFAM(
+        rho = opts["opts_SFAM"]["rho"]
+    )
+    art.config = AdaptiveResonance.DataConfig(
+        opts["feature_bounds"]["min"],
+        opts["feature_bounds"]["max"],
+    )
+
+    n_epochs = opts["n_epochs"]
+
+    # Copy the input sim dictionary
+    fulld = deepcopy(opts)
+
+    # Task 1: static gaussians
+    n_tasks = length(local_ms.data)
+    for ix in 1:n_tasks
+        for _ = 1:n_epochs
+            train!(
+                art,
+                local_ms.data[ix].train.x,
+                local_ms.data[ix].train.y,
+            )
+        end
+
+        # Task 1: classify
+        y_hat = classify(
+            art,
+            local_ms.data[ix].test.x,
+            get_bmu=true,
+        )
+
+        # Task 1: performance
+        perf = performance(
+            y_hat,
+            local_ms.data[ix].test.y
+        )
+        n_cats = art.n_categories
+
+        fulld["p$(ix)"] = perf
+        fulld["nc$(ix)"] = n_cats
+    end
+
+    # Save the results
+    dir_func(args...) = joinpath(opts["results"], args...)
+    savename_opts = deepcopy(opts)
+    delete!(savename_opts, "results")
+    delete!(savename_opts, "name")
+    delete!(savename_opts, "procs")
+
+    # @info savename_opts
+    save_sim(dir_func, savename_opts, fulld)
+end
+
 # function analyze_arg_exp(opts::AbstractDict)
 
 #     # This experiment name

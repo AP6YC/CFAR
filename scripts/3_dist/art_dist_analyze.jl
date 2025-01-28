@@ -29,6 +29,7 @@ using Plots
 
 # This experiment name
 exp_top = "1_gaussian"
+# exp_name = "art_dist_analyze"
 exp_name = "art_analyze"
 
 perf_plot = "perf.png"
@@ -39,7 +40,7 @@ n_cats_plot = "n_categories.png"
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
     # "2_art",
-    "art",
+    "art_dist",
     # "linear_sweep"
 )
 
@@ -62,10 +63,15 @@ df = collect_results!(sweep_dir)
 
 sort!(df, [:travel])
 
+# attrs = [
+#     "p1",
+#     "p2",
+#     "p12",
+# ]
 attrs = [
     "p1",
     "p2",
-    "p12",
+    "p3",
 ]
 
 # Plot the average trendlines
@@ -90,7 +96,7 @@ CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 # Plot the number of categories
 p3= CFAR.plot_2d_attrs(
     df,
-    ["nc1", "nc2"],
+    ["nc1", "nc2", "nc3"],
     avg=true,
     n=200,
     title="Number of Categories",
@@ -100,11 +106,19 @@ CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
 # Plot the StatsPlots error lines
 p4 = CFAR.plot_2d_errlines(
     df,
-    ["nc1", "nc2"],
+    ["nc1", "nc2", "nc3"],
     n=100,
-    title="Performances with Error Bars",
+    title="Number of Categories with 1-Sigma Bars",
 )
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
+
+# -----------------------------------------------------------------------------
+# CATEGORIES SLICES
+# -----------------------------------------------------------------------------
+
+p5 = plot(
+
+)
 
 # -----------------------------------------------------------------------------
 # CLEANUP

@@ -133,7 +133,6 @@ function gen_gaussians(config::ConfigDict)
             dist_gens[ix],
             config["n_points_per"],
         )
-        # @info data_x |> maximum
 
         # Create a set of labels for this dataset
         data_y = ones(Int, config["n_points_per"]) * ix
@@ -154,14 +153,11 @@ function gen_gaussians(config::ConfigDict)
             )
         end
     end
-    # @info X |> maximum
 
     static = LabeledDataset(X, y, ["1", "2"])
     mover = LabeledDataset(mx, my, ["mover"])
 
     ms = MoverSplit(static, mover, config)
-    # @info mover.x |> maximum
-    # @info ms.mover.train.x |> maximum
 
     return ms
 end
