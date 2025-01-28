@@ -8,8 +8,6 @@ using CFAR
 
 # sim_params = CFAR.config_to_params(opts, pargs)
 
+CFAR.run_exp(config_file="cvi.yml")
 
-# CFAR.run_exp(config_file="cvi.yml")
-
-
-CFAR.run_exp(config_file="art-dist.yml")
+# CFAR.run_exp(config_file="art-dist.yml")

@@ -96,11 +96,17 @@ function load_opts(
 end
 
 function get_mover_data(
-    opts::AbstractDict
+    opts::AbstractDict;
+    config_file::AbstractString="gaussians.yml"
 )
     # Load the config dict
-    config = CFAR.get_gaussian_config("sct-gaussians.yml")
-    ms = CFAR.gen_sct_gaussians(config)
+    config = CFAR.get_gaussian_config(config_file)
+
+    ms = if config_file == "gaussians.yml"
+        ms = CFAR.gen_gaussians(config)
+    else
+        CFAR.gen_sct_gaussians(config)
+    end
 
     # Initialize the random seed at the beginning of the experiment
     Random.seed!(opts["rng_seed"])
@@ -115,13 +121,30 @@ end
 Runs a single CVI experiment, for use in a distributed simulation.
 """
 function cvi_exp(opts::AbstractDict)
-    @info opts["results"]
-    # config = get_gaussian_config("gaussians.yml")
-    # ms = gen_gaussians(config)
-    local_ms = get_mover_data(opts)
+    # @info opts["results"]
+    local_ms = get_mover_data(opts, config_file="sct-gaussians.yml")
+    local_ds = DataSplitCombined(local_ms)
     csil = ClusterValidityIndices.cSIL()
-    # get_cvi!(csil, local_ms.mover.test.x)
-    # get_cvi!(csil, local_ms)
+    cvi = get_cvi!(csil, local_ds.train.x, local_ds.train.y)
+    @info cvi
+
+    # Copy the input sim dictionary
+    fulld = deepcopy(opts)
+
+    # Add entries for the results
+    # fulld["nc2"] = n_cats_2
+    # # fulld["rho"] = opts["rho"]
+    fulld["cvi"] = cvi
+
+    # Save the results
+    dir_func(args...) = joinpath(opts["results"], args...)
+    savename_opts = deepcopy(opts)
+    delete!(savename_opts, "results")
+    delete!(savename_opts, "name")
+    delete!(savename_opts, "procs")
+
+    @info savename_opts
+    save_sim(dir_func, savename_opts, fulld)
 end
 
 function art_exp(opts::AbstractDict)

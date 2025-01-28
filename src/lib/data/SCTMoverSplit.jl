@@ -61,3 +61,35 @@ end
 # -----------------------------------------------------------------------------
 # FUNCTIONS
 # -----------------------------------------------------------------------------
+
+function DataSplitCombined(data::SCTMoverSplit)
+    # return data.data
+    train = LabeledDataset(
+        hcat([d.train.x for d in data.data]...),
+        vcat([d.train.y for d in data.data]...),
+        # data.data[1].train.labels,
+        vcat([d.train.labels for d in data.data]...),
+    )
+    test = LabeledDataset(
+        hcat([d.test.x for d in data.data]...),
+        vcat([d.test.y for d in data.data]...),
+        # data.data[1].test.labels,
+        vcat([d.test.labels for d in data.data]...),
+    )
+    return DataSplitCombined(
+        train,
+        test,
+    )
+end
+
+# function SCTMoverSplit(
+#     data::Vector{DataSplitCombined},
+#     config::ConfigDict
+# )
+#     return SCTMoverSplit(
+#         data,
+#         config,
+#     )
+# end
+
+# """

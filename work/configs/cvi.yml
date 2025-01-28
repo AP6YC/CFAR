@@ -11,10 +11,10 @@ results:
   - cvi
 
 # Parsed options
-procs: 1
+procs: 10
 
 varying:
   travel:
     lb: 0
     ub: 10
-    n_points: 10
+    n_points: 1000
