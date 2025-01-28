@@ -137,6 +137,51 @@ function plot_mover(
     return p
 end
 
+
+"""
+Plots the mover line plot with scattered data points, covariance lines, and mover line.
+
+# Arguments
+- `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset.
+"""
+function plot_mover(
+    ms::SCTMoverSplit,
+)
+    # Get the mover line for visualization
+    ml = CFAR.get_mover_line(ms.config)
+
+    # Init a plot object
+    p = plot()
+
+    # Plot the original Gaussians samples
+    for ix in eachindex(ms.data)
+        CFAR.scatter_gaussian!(p, ms.data[ix])
+        @info ix
+    end
+
+    # CFAR.scatter_gaussian!(p, ms.data[2])
+
+    # Plot the covariance ellipses
+    CFAR.plot_covellipses(p, ms.config)
+
+    # Plot the mover's line
+    plot!(
+        p,
+        ml[1, :],
+        ml[2, :],
+        linewidth = 3,
+        color_palette = COLORSCHEME,
+        dpi=DPI,
+    )
+
+    # Finally display the plot
+    isinteractive() && display(p)
+
+    # Return the plot handle
+    return p
+end
+
+
 # """
 # Computes the sliding window average of a vector with window size `n`.
 

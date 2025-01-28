@@ -217,22 +217,8 @@ function gen_sct_gaussians(config::ConfigDict)
         # Create a set of labels for this dataset
         data_y = ones(Int, config["n_points_per"]) * ix
 
-        # If we are at the mover index, output separately
-        # if ix == config["mover"]
-        #     mx = data_x
-        #     my = data_y
-        # Otherwise, concatenate to the output data
-        # else
-        X = hcat(
-            X,
-            data_x,
-        )
-        y = vcat(
-            y,
-            data_y,
-        )
-        local_data = LabeledDataset(X, y, [string(ix)])
-        # end
+        local_data = LabeledDataset(data_x, data_y, [string(ix)])
+
         push!(data, local_data)
     end
     # @info X |> maximum
