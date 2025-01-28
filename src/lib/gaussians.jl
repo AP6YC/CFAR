@@ -180,6 +180,91 @@ function gen_gaussians(config_file::AbstractString)
     return gen_gaussians(config)
 end
 
+
+
+"""
+Generates Single-Class-Task Gaussian distributed samples from the provided configuration dictionary.
+
+# Arguments
+$ARG_CONFIG_DICT
+"""
+function gen_sct_gaussians(config::ConfigDict)
+    # Get the random generators from the config file
+    dist_gens = get_dists(config)
+
+    # Init the destination data
+    X = Matrix{Float}(undef, config["dim"], 0)
+    y = Vector{Int}()
+
+    # Init the random number generator
+    rng = MersenneTwister(config["rng_seed"])
+    Random.seed!(rng)
+
+    # Iterate over all generators
+    n_dist = length(dist_gens)
+    # mx = []
+    # my = []
+    data = Vector{LabeledDataset}()
+    for ix = 1:n_dist
+    # for ix in eachindex(dist_gens)
+        # Create a new set of data from the generator
+        data_x = rand(
+            dist_gens[ix],
+            config["n_points_per"],
+        )
+        # @info data_x |> maximum
+
+        # Create a set of labels for this dataset
+        data_y = ones(Int, config["n_points_per"]) * ix
+
+        # If we are at the mover index, output separately
+        # if ix == config["mover"]
+        #     mx = data_x
+        #     my = data_y
+        # Otherwise, concatenate to the output data
+        # else
+        X = hcat(
+            X,
+            data_x,
+        )
+        y = vcat(
+            y,
+            data_y,
+        )
+        local_data = LabeledDataset(X, y, [string(ix)])
+        # end
+        push!(data, local_data)
+    end
+    # @info X |> maximum
+
+    # static = LabeledDataset(X, y, ["1", "2"])
+    # mover = LabeledDataset(mx, my, ["mover"])
+
+    # ms = MoverSplit(static, mover, config)
+    ms = SCTMoverSplit(data, config)
+    # @info mover.x |> maximum
+    # @info ms.mover.train.x |> maximum
+
+    return ms
+end
+
+"""
+Generate the Single-Class-Task Gaussian dataset from the parameters specified in the provided file.
+
+# Arguments
+$ARG_CONFIG_FILE
+"""
+function gen_sct_gaussians(config_file::AbstractString)
+    # Load and sanitize the Gaussian config
+    config = get_gaussian_config(config_file)
+
+    # Return the generated gaussians
+    return gen_sct_gaussians(config)
+end
+
+
+
+
 """
 Generates a vector representing the direction of the mover's line.
 
@@ -281,6 +366,78 @@ function shift_mover(
     # Return the newly constructed dataset
     return new_ms
 end
+
+
+"""
+Moves the mover component of a [`SCTMoverSplit`](@ref) a distance of `s`.
+
+# Arguments
+- `ms::SCTMoverSplit`: the datset containing a mover to shift.
+$ARG_CONFIG_DICT
+- `s::Float`: the distance to travel along the line
+"""
+function shift_mover(
+    ms::SCTMoverSplit,
+    # config::ConfigDict,
+    s::Float
+)
+    # Get the amount to shift by from the configuration and provided s
+    shift = get_shift(ms.config, s)
+
+    # Shift the training and testing datasets
+    id_shift = ms.config["mover"]
+    new_train_x = ms.data[id_shift].train.x .+ shift
+    new_test_x = ms.data[id_shift].test.x .+ shift
+    new_mover = DataSplitCombined(
+        LabeledDataset(
+            new_train_x,
+            ms.data[id_shift].train.y,
+            ms.data[id_shift].train.labels,
+        ),
+        LabeledDataset(
+            new_test_x,
+            ms.data[id_shift].test.y,
+            ms.data[id_shift].test.labels,
+        )
+    )
+
+    ms.data[id_shift] = new_mover
+    # ms.data[id_shift].train.x = new_train_x
+    # ms.data[id_shift].test.x = new_test_x
+    ms.config["dists"][id_shift]["mu"] += shift
+
+
+    # Copy and shift the config
+    new_config = deepcopy(ms.config)
+    mover_ind = new_config["mover"]
+    new_config["dists"][mover_ind]["mu"] += shift
+    # new_config["mover_dist"]["mu"] += shift
+
+    # # Create a new mover dataset from the shifted samples
+    # new_mover = DataSplitCombined(
+    #     LabeledDataset(
+    #         new_train_x,
+    #         ms.mover.train.y,
+    #         ms.mover.train.labels,
+    #     ),
+    #     LabeledDataset(
+    #         new_test_x,
+    #         ms.mover.test.y,
+    #         ms.mover.test.labels,
+    #     )
+    # )
+
+    # # Create a new MoverSplit
+    # new_ms = MoverSplit(
+    #     ms.static,
+    #     new_mover,
+    #     new_config,
+    # )
+
+    # Return the newly constructed dataset
+    return ms
+end
+
 
 """
 Constant name for the JLD2/H5 group that data is saved to and loaded from.

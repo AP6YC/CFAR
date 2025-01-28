@@ -22,4 +22,6 @@ include("DSIC.jl")
 
 include("MoverSplit.jl")
 
+include("SCTMoverSplit.jl")
+
 include("load.jl")

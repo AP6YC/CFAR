@@ -99,8 +99,8 @@ function get_mover_data(
     opts::AbstractDict
 )
     # Load the config dict
-    config = CFAR.get_gaussian_config("gaussians.yml")
-    ms = CFAR.gen_gaussians(config)
+    config = CFAR.get_gaussian_config("sct-gaussians.yml")
+    ms = CFAR.gen_sct_gaussians(config)
 
     # Initialize the random seed at the beginning of the experiment
     Random.seed!(opts["rng_seed"])
@@ -120,7 +120,8 @@ function cvi_exp(opts::AbstractDict)
     # ms = gen_gaussians(config)
     local_ms = get_mover_data(opts)
     csil = ClusterValidityIndices.cSIL()
-    get_cvi!(csil, local_ms.mover.test.x)
+    # get_cvi!(csil, local_ms.mover.test.x)
+    # get_cvi!(csil, local_ms)
 end
 
 function art_exp(opts::AbstractDict)
