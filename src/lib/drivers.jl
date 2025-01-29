@@ -102,14 +102,14 @@ function get_mover_data(
     # Load the config dict
     config = CFAR.get_gaussian_config(config_file)
 
+    # Initialize the random seed at the beginning of the experiment
+    Random.seed!(Int(opts["rng_seed"]))
+
     ms = if config_file == "gaussians.yml"
         ms = CFAR.gen_gaussians(config)
     else
         CFAR.gen_sct_gaussians(config)
     end
-
-    # Initialize the random seed at the beginning of the experiment
-    Random.seed!(opts["rng_seed"])
 
     # Shift the local dataset by the prescribed amount
     local_ms = CFAR.shift_mover(ms, opts["travel"])

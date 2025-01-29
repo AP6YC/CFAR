@@ -116,9 +116,36 @@ CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
 # CATEGORIES SLICES
 # -----------------------------------------------------------------------------
 
-p5 = plot(
+if run_slices
 
-)
+    slices = [5.0, 10.0, 20.0]
+    for slice in slices
+        # slice = 20.0
+        eta = 0.03
+        local_df = df[abs.(df.travel .- slice) .< eta, :]
+        # local_df = df[abs.(df.travel .- 10.0) .< 0.03, :]
+
+        p5 = plot()
+        for ix = 1:3
+            histogram!(
+                p5,
+                local_df[!, "nc$(ix)"],
+                label="nc$(ix)",
+                title="Number of Categories",
+                xlabel="Travel",
+                ylabel="Number of Categories",
+                legend=:topleft,
+                # color=:blue,
+                # lw=2,
+                # xticks=0:0.1:1.0,
+                # yticks=0:1:10,
+                # size=(800, 600),
+            )
+        end
+        display(p5)
+        CFAR.save_plot(p5, "slice-$(Int(slice))", exp_top, exp_name)
+    end
+end
 
 # -----------------------------------------------------------------------------
 # CLEANUP

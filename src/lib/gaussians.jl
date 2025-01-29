@@ -193,7 +193,7 @@ function gen_sct_gaussians(config::ConfigDict)
     y = Vector{Int}()
 
     # Init the random number generator
-    rng = MersenneTwister(config["rng_seed"])
+    rng = MersenneTwister(Int(config["rng_seed"]))
     Random.seed!(rng)
 
     # Iterate over all generators
