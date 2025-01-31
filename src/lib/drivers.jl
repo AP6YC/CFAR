@@ -95,6 +95,9 @@ function load_opts(
     return opts
 end
 
+"""
+Load the mover dataset.
+"""
 function get_mover_data(
     opts::AbstractDict;
     config_file::AbstractString="gaussians.yml"
@@ -106,7 +109,7 @@ function get_mover_data(
     Random.seed!(Int(opts["rng_seed"]))
 
     ms = if config_file == "gaussians.yml"
-        ms = CFAR.gen_gaussians(config)
+        CFAR.gen_gaussians(config)
     else
         CFAR.gen_sct_gaussians(config)
     end
