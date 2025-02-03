@@ -55,7 +55,8 @@ config = CFAR.get_gaussian_config("sct-gaussians.yml")
 ms = CFAR.gen_sct_gaussians(config)
 
 # Visualize the data
-CFAR.plot_mover(ms)
+p = CFAR.plot_mover(ms)
+CFAR.save_plot(p, "mover_fig", exp_top, exp_name)
 
 # # Create an animation, saving the frames in between
 # anim = @animate for ix = n_start:n_step:n_finish

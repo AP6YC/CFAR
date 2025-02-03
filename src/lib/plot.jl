@@ -111,14 +111,17 @@ function plot_mover(
     # Init a plot object
     p = plot()
 
+    # Plot the covariance ellipses
+    CFAR.plot_covellipses(p, ms.config)
+
     # Plot the original Gaussians samples
     CFAR.scatter_gaussian!(p, ms.static)
 
     # Plot the samples from the mover
     CFAR.scatter_gaussian!(p, ms.mover)
 
-    # Plot the covariance ellipses
-    CFAR.plot_covellipses(p, ms.config)
+    # # Plot the covariance ellipses
+    # CFAR.plot_covellipses(p, ms.config)
 
     # Plot the mover's line
     plot!(
@@ -153,16 +156,19 @@ function plot_mover(
     # Init a plot object
     p = plot()
 
+    # Plot the covariance ellipses
+    CFAR.plot_covellipses(p, ms.config)
+
     # Plot the original Gaussians samples
     for ix in eachindex(ms.data)
         CFAR.scatter_gaussian!(p, ms.data[ix])
-        @info ix
+        # @info ix
     end
 
     # CFAR.scatter_gaussian!(p, ms.data[2])
 
-    # Plot the covariance ellipses
-    CFAR.plot_covellipses(p, ms.config)
+    # # Plot the covariance ellipses
+    # CFAR.plot_covellipses(p, ms.config)
 
     # Plot the mover's line
     plot!(
