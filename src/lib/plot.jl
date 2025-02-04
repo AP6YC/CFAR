@@ -49,7 +49,7 @@ function plot_covellipses(
     config::ConfigDict
 )
     # Iterate over every distribution
-    for (ix, dist) in config["dists"]
+    for (_, dist) in config["dists"]
         # Create the covariance ellipse (from StatsPlots.jl)
         covellipse!(
             p,
@@ -57,7 +57,8 @@ function plot_covellipses(
             dist["var"],
             n_std = 3,
             aspect_ratio = 1,
-            label = string(ix),
+            # label = string(ix),
+            label = nothing,
             color_palette=COLORSCHEME,
             dpi=DPI,
         )
@@ -157,11 +158,11 @@ function plot_mover(
     p = plot()
 
     # Plot the covariance ellipses
-    CFAR.plot_covellipses(p, ms.config)
+    plot_covellipses(p, ms.config)
 
     # Plot the original Gaussians samples
     for ix in eachindex(ms.data)
-        CFAR.scatter_gaussian!(p, ms.data[ix])
+        scatter_gaussian!(p, ms.data[ix])
         # @info ix
     end
 
@@ -177,6 +178,7 @@ function plot_mover(
         ml[2, :],
         linewidth = 3,
         color_palette = COLORSCHEME,
+        label=nothing,
         dpi=DPI,
     )
 
