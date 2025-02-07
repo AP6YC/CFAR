@@ -30,7 +30,7 @@ varying:
     n_points: 2
   travel:
     lb: 0
-    ub: 24
+    ub: 20
     # ub: 10
     n_points: 100
 
