@@ -63,15 +63,11 @@ df = collect_results!(sweep_dir)
 
 sort!(df, [:travel])
 
-# attrs = [
-#     "p1",
-#     "p2",
-#     "p12",
-# ]
 attrs = [
     "p1",
     "p2",
     "p3",
+#     "p12",
 ]
 
 # Plot the average trendlines
@@ -80,7 +76,7 @@ p1 = CFAR.plot_2d_attrs(
     attrs,
     avg=true,
     n=100,
-    title="Peformances",
+    # title="Peformances",
 )
 CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
@@ -89,7 +85,7 @@ p2 = CFAR.plot_2d_errlines(
     df,
     attrs,
     n=100,
-    title="Performances with Error Bars",
+    # title="Performances with Error Bars",
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 
@@ -99,7 +95,7 @@ p3= CFAR.plot_2d_attrs(
     ["nc1", "nc2", "nc3"],
     avg=true,
     n=200,
-    title="Number of Categories",
+    # title="Number of Categories",
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
 
@@ -108,7 +104,7 @@ p4 = CFAR.plot_2d_errlines(
     df,
     ["nc1", "nc2", "nc3"],
     n=100,
-    title="Number of Categories with 1-Sigma Bars",
+    # title="Number of Categories with 1-Sigma Bars",
 )
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
 
@@ -131,7 +127,7 @@ if run_slices
                 p5,
                 local_df[!, "nc$(ix)"],
                 label="nc$(ix)",
-                title="Number of Categories",
+                # title="Number of Categories",
                 xlabel="Travel",
                 ylabel="Number of Categories",
                 legend=:topleft,

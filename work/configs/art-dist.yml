@@ -1,11 +1,12 @@
 name: "art-dist"
 # exp: "art_exp"
 exp: "art_dist_exp"
-rng_seed: 1
+# rng_seed: 1
 n_epochs: 1
 
 # Number of processes to run in parallel
-procs: 10
+# procs: 10
+procs: 32
 
 feature_bounds:
   min: [
@@ -23,15 +24,15 @@ results:
   - art_dist
 
 varying:
-  # rng_seed:
-  #   lb: 1
-  #   ub: 100
-  #   n_points: 10
+  rng_seed:
+    lb: 1
+    ub: 10
+    n_points: 2
   travel:
     lb: 0
-    ub: 30
+    ub: 24
     # ub: 10
-    n_points: 1000
+    n_points: 100
 
 opts_SFAM:
   rho: 0.7

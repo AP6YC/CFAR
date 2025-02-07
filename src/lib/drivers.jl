@@ -103,19 +103,19 @@ function get_mover_data(
     config_file::AbstractString="gaussians.yml"
 )
     # Load the config dict
-    config = CFAR.get_gaussian_config(config_file)
+    config = get_gaussian_config(config_file)
 
     # Initialize the random seed at the beginning of the experiment
     Random.seed!(Int(opts["rng_seed"]))
 
     ms = if config_file == "gaussians.yml"
-        CFAR.gen_gaussians(config)
+        gen_gaussians(config)
     else
-        CFAR.gen_sct_gaussians(config)
+        gen_sct_gaussians(config)
     end
 
     # Shift the local dataset by the prescribed amount
-    local_ms = CFAR.shift_mover(ms, opts["travel"])
+    local_ms = shift_mover(ms, opts["travel"])
 
     return local_ms
 end
@@ -138,6 +138,7 @@ function cvi_exp(opts::AbstractDict)
     # fulld["nc2"] = n_cats_2
     # # fulld["rho"] = opts["rho"]
     fulld["cvi"] = cvi
+    delete!(fulld, "reuslts")
 
     # Save the results
     dir_func(args...) = joinpath(opts["results"], args...)
@@ -232,12 +233,16 @@ function art_exp(opts::AbstractDict)
     # Copy the input sim dictionary
     fulld = deepcopy(opts)
 
+    # fulld = Dict{String, Any}()
+
     # Add entries for the results
     fulld["p1"] = p1
     fulld["p2"] = p2
     fulld["p12"] = p12
     fulld["nc1"] = n_cats_1
     fulld["nc2"] = n_cats_2
+
+    # fulld["exp"]
     # fulld["rho"] = opts["rho"]
 
     # Save the results
@@ -249,7 +254,6 @@ function art_exp(opts::AbstractDict)
 
     # @info savename_opts
     save_sim(dir_func, savename_opts, fulld)
-
 end
 
 
@@ -271,7 +275,8 @@ function art_dist_exp(opts::AbstractDict)
     n_epochs = opts["n_epochs"]
 
     # Copy the input sim dictionary
-    fulld = deepcopy(opts)
+    # fulld = deepcopy(opts)
+    fulld = Dict{String, Any}()
 
     # Task 1: static gaussians
     n_tasks = length(local_ms.data)
@@ -283,6 +288,13 @@ function art_dist_exp(opts::AbstractDict)
                 local_ms.data[ix].train.y,
             )
         end
+
+        # if ix > 1
+        #     # previous_weighst=
+        # else
+
+        # end
+
 
         # Task 1: classify
         y_hat = classify(
@@ -302,12 +314,28 @@ function art_dist_exp(opts::AbstractDict)
         fulld["nc$(ix)"] = n_cats
     end
 
+    # More results
+    copy_els = [
+        "travel",
+        "rng_seed",
+        "opts_SFAM",
+        "n_epochs",
+    ]
+    for el in copy_els
+        fulld[el] = opts[el]
+    end
+
     # Save the results
     dir_func(args...) = joinpath(opts["results"], args...)
     savename_opts = deepcopy(opts)
-    delete!(savename_opts, "results")
-    delete!(savename_opts, "name")
-    delete!(savename_opts, "procs")
+    delete_els = [
+        "results",
+        "name",
+        "procs",
+    ]
+    for el in delete_els
+        delete!(savename_opts, el)
+    end
 
     # @info savename_opts
     save_sim(dir_func, savename_opts, fulld)
@@ -393,7 +421,7 @@ function run_exp(
     @info "Setting simulation parameters"
     sim_params, varying = config_to_params(opts, pargs)
 
-    sweep_results_dir = CFAR.results_dir(
+    sweep_results_dir = results_dir(
         sim_params["results"]...
     )
     mkpath(sweep_results_dir)

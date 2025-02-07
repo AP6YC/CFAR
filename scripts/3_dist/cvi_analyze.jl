@@ -62,7 +62,7 @@ p1 = CFAR.plot_2d_attrs(
     attrs,
     avg=true,
     n=100,
-    title="Silhouette CVI",
+    # title="Silhouette CVI",
 )
 CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
@@ -72,6 +72,6 @@ p2 = CFAR.plot_2d_errlines(
     df,
     attrs,
     n=100,
-    title="Silhouette CVI with 1-\\sigma Bars",
+    # title="Silhouette CVI with 1-\\sigma Bars",
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
