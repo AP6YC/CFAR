@@ -278,6 +278,9 @@ function art_dist_exp(opts::AbstractDict)
     # fulld = deepcopy(opts)
     fulld = Dict{String, Any}()
 
+    weights = Vector{typeof(art.W)}()
+    weight_vecs = []
+
     # Task 1: static gaussians
     n_tasks = length(local_ms.data)
     for ix in 1:n_tasks
@@ -289,12 +292,19 @@ function art_dist_exp(opts::AbstractDict)
             )
         end
 
-        # if ix > 1
-        #     # previous_weighst=
-        # else
-
-        # end
-
+        local_weight_agg = []
+        for jx = 1:ix
+            local_weights = copy(art.W)
+            local_weights = art.W[:, findall(jx, art.labels)]
+            push!(local_weight_agg, local_weights)
+            # push!(weights, copy(art.W))
+            # if ix > 1
+                # push!(weight_norms, sum(weights[ix] .- weights[ix-1]))
+            # end
+            #     # push!(weights, copy(art.W))
+            # else
+        end
+        push!(weight_vecs, local_weight_agg)
 
         # Task 1: classify
         y_hat = classify(
