@@ -295,7 +295,7 @@ function art_dist_exp(opts::AbstractDict)
         local_weight_agg = []
         for jx = 1:ix
             local_weights = copy(art.W)
-            local_weights = art.W[:, findall(jx, art.labels)]
+            local_weights = art.W[:, findall(x -> x == jx, art.labels)]
             push!(local_weight_agg, local_weights)
             # push!(weights, copy(art.W))
             # if ix > 1

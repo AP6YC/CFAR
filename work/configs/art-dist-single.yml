@@ -1,0 +1,47 @@
+name: "art-dist"
+# exp: "art_exp"
+exp: "art_dist_exp"
+# rng_seed: 1
+n_epochs: 1
+
+# Number of processes to run in parallel
+# procs: 10
+procs: 1
+
+feature_bounds:
+  min: [
+    -20.0,
+    0.0
+  ]
+  max: [
+    10.0,
+    20.0
+  ]
+
+# Results destination directory
+results:
+  - 1_gaussian
+  - art_dist
+
+varying:
+  rng_seed:
+    lb: 1
+    ub: 10
+    n_points: 2
+  travel:
+    lb: 0
+    ub: 20
+    # ub: 10
+    n_points: 2
+
+opts_SFAM:
+  rho: 0.7
+
+# opts_DDVFA:
+#   rho_lb: 0.4
+#   rho_ub: 0.75
+#   similarity: "single"
+
+# opts_DVFA:
+#   rho_lb: 0.4aaaw
+#   rho_ub: 0.75

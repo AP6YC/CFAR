@@ -176,8 +176,6 @@ function gen_gaussians(config_file::AbstractString)
     return gen_gaussians(config)
 end
 
-
-
 """
 Generates Single-Class-Task Gaussian distributed samples from the provided configuration dictionary.
 

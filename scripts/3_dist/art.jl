@@ -1,7 +1,11 @@
 using Revise
 using CFAR
 
-CFAR.run_exp(config_file="art-dist.yml")
+# Full experiment
+# CFAR.run_exp(config_file="art-dist.yml")
+
+# Debug config
+CFAR.run_exp(config_file="art-dist-single.yml")
 
 # CFAR.run_exp(config_file="cvi-dist.yml")
 
