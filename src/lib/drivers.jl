@@ -265,7 +265,8 @@ function art_dist_exp(opts::AbstractDict)
 
     # Init the SFAM module
     art = SFAM(
-        rho = opts["opts_SFAM"]["rho"]
+        # rho = opts["opts_SFAM"]["rho"]
+        rho = opts["rho"]
     )
     art.config = AdaptiveResonance.DataConfig(
         opts["feature_bounds"]["min"],
@@ -278,8 +279,10 @@ function art_dist_exp(opts::AbstractDict)
     # fulld = deepcopy(opts)
     fulld = Dict{String, Any}()
 
-    weights = Vector{typeof(art.W)}()
-    weight_vecs = []
+    WEIGHT_CALC = false
+    if WEIGHT_CALC
+        weight_vecs = []
+    end
 
     # Task 1: static gaussians
     n_tasks = length(local_ms.data)
@@ -292,19 +295,15 @@ function art_dist_exp(opts::AbstractDict)
             )
         end
 
-        local_weight_agg = []
-        for jx = 1:ix
-            local_weights = copy(art.W)
-            local_weights = art.W[:, findall(x -> x == jx, art.labels)]
-            push!(local_weight_agg, local_weights)
-            # push!(weights, copy(art.W))
-            # if ix > 1
-                # push!(weight_norms, sum(weights[ix] .- weights[ix-1]))
-            # end
-            #     # push!(weights, copy(art.W))
-            # else
+        if WEIGHT_CALC
+            local_weight_agg = []
+            for jx = 1:ix
+                local_weights = copy(art.W)
+                local_weights = art.W[:, findall(x -> x == jx, art.labels)]
+                push!(local_weight_agg, local_weights)
+            end
+            push!(weight_vecs, local_weight_agg)
         end
-        push!(weight_vecs, local_weight_agg)
 
         # Task 1: classify
         y_hat = classify(
@@ -324,11 +323,25 @@ function art_dist_exp(opts::AbstractDict)
         fulld["nc$(ix)"] = n_cats
     end
 
+    if WEIGHT_CALC
+        weight_diffs = []
+        for ix = 1:n_tasks
+            local_agg = []
+            for jx = 1:ix
+                local_diff = sum(weight_vecs[ix][jx] - weight_vecs[jx][jx])
+                push!(local_agg, local_diff)
+            end
+            push!(weight_diffs, local_agg)
+        end
+        # @info weight_diffs
+    end
+
     # More results
     copy_els = [
         "travel",
         "rng_seed",
-        "opts_SFAM",
+        # "opts_SFAM",
+        "rho",
         "n_epochs",
     ]
     for el in copy_els

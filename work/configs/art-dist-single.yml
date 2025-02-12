@@ -18,6 +18,8 @@ feature_bounds:
     20.0
   ]
 
+rho: 0.7
+
 # Results destination directory
 results:
   - 1_gaussian
@@ -34,8 +36,8 @@ varying:
     # ub: 10
     n_points: 2
 
-opts_SFAM:
-  rho: 0.7
+# opts_SFAM:
+#   rho: 0.7
 
 # opts_DDVFA:
 #   rho_lb: 0.4
