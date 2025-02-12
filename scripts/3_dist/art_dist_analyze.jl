@@ -22,6 +22,7 @@ using CFAR
 using DrWatson      # collect_results!
 using DataFrames
 using Plots
+using StatsBase
 
 # -----------------------------------------------------------------------------
 # OPTIONS
@@ -35,6 +36,7 @@ exp_name = "art_analyze"
 perf_plot = "perf.png"
 err_plot = "err.png"
 n_cats_plot = "n_categories.png"
+surf_plot = "surf.png"
 
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -70,9 +72,45 @@ attrs = [
 #     "p12",
 ]
 
+# Average for each
+dfs = groupby(df, [:travel, :rho])
+vcs = [:p1, :p2, :p3, :nc1, :nc2, :nc3]
+dfss = combine(dfs, vcs .=> mean)
+# dfss = combine(dfs) do df
+#     (m = mean(df.PetalLength), s² = var(df.PetalLength))
+# end
+attrs = [
+    "p1_mean",
+    "p2_mean",
+    "p3_mean",
+#     "p12",
+]
+
+p_surf = surface(
+    dfss[!, :rho],
+    dfss[!, :travel],
+    dfss[!, :p3_mean],
+    camera=(60, 30),
+    colorscheme=:okabe_ito
+)
+
+# p_surf = surface(
+#     dfss[!, :rho],
+#     dfss[!, :travel],
+#     dfss[!, :p1_mean]
+# )
+
+CFAR.save_plot(p_surf, surf_plot, exp_top, exp_name)
+
+dfss_rho = combine(groupby(dfss, :rho)[7], :)
+
+# dfss_rho = combine(groupby(df, :rho)[7], :)
+
 # Plot the average trendlines
 p1 = CFAR.plot_2d_attrs(
-    df,
+    # df,
+    # dfss,
+    dfss_rho,
     attrs,
     avg=true,
     n=100,
@@ -82,27 +120,39 @@ CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
 # Plot the StatsPlots error lines
 p2 = CFAR.plot_2d_errlines(
-    df,
+    # df,
+    # dfss,
+    dfss_rho,
     attrs,
     n=100,
     # title="Performances with Error Bars",
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 
+c_attrs = [
+    "nc1_mean",
+    "nc2_mean",
+    "nc3_mean",
+#     "p12",
+]
 # Plot the number of categories
 p3= CFAR.plot_2d_attrs(
-    df,
-    ["nc1", "nc2", "nc3"],
+    # df,
+    # dfss,
+    dfss_rho,
+    c_attrs,
     avg=true,
-    n=200,
+    n=100,
     # title="Number of Categories",
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
 
 # Plot the StatsPlots error lines
 p4 = CFAR.plot_2d_errlines(
-    df,
-    ["nc1", "nc2", "nc3"],
+    # df,
+    # dfss,
+    dfss_rho,
+    c_attrs,
     n=100,
     # title="Number of Categories with 1-Sigma Bars",
 )

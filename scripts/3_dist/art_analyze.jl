@@ -40,6 +40,7 @@ sweep_dir = CFAR.results_dir(
     "1_gaussian",
     # "2_art",
     "art",
+    # "art_dist"
     # "linear_sweep"
 )
 
