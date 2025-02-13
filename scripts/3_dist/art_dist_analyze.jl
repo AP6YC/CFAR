@@ -38,6 +38,7 @@ err_plot = "err.png"
 n_cats_plot = "n_categories.png"
 surf_plot = "surf.png"
 
+run_slices = false
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
@@ -79,7 +80,7 @@ dfss = combine(dfs, vcs .=> mean)
 # dfss = combine(dfs) do df
 #     (m = mean(df.PetalLength), s² = var(df.PetalLength))
 # end
-attrs = [
+m_attrs = [
     "p1_mean",
     "p2_mean",
     "p3_mean",
@@ -91,19 +92,19 @@ p_surf = surface(
     dfss[!, :travel],
     dfss[!, :p3_mean],
     camera=(60, 30),
-    colorscheme=:okabe_ito
+    colorscheme=:okabe_ito,
+    xlabel="rho",
+    ylabel="travel",
+    zlabel="p3 mean",
 )
-
-# p_surf = surface(
-#     dfss[!, :rho],
-#     dfss[!, :travel],
-#     dfss[!, :p1_mean]
-# )
 
 CFAR.save_plot(p_surf, surf_plot, exp_top, exp_name)
 
-dfss_rho = combine(groupby(dfss, :rho)[7], :)
-
+# dfss_rho = combine(groupby(dfss, :rho)[7], :)
+dfss_rho = combine(groupby(df, :rho)[7], :)
+for ix in eachindex(attrs)
+    rename!(dfss_rho, Symbol(m_attrs[ix]) => Symbol(attrs[ix]))
+end
 # dfss_rho = combine(groupby(df, :rho)[7], :)
 
 # Plot the average trendlines
@@ -124,23 +125,29 @@ p2 = CFAR.plot_2d_errlines(
     # dfss,
     dfss_rho,
     attrs,
+    # avg=true,
     n=100,
     # title="Performances with Error Bars",
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
 
 c_attrs = [
-    "nc1_mean",
-    "nc2_mean",
-    "nc3_mean",
+    # "nc1_mean",
+    # "nc2_mean",
+    # "nc3_mean",
+    "nc1",
+    "nc2",
+    "nc3",
 #     "p12",
 ]
+
 # Plot the number of categories
 p3= CFAR.plot_2d_attrs(
     # df,
     # dfss,
     dfss_rho,
     c_attrs,
+    # attrs,
     avg=true,
     n=100,
     # title="Number of Categories",
@@ -153,6 +160,7 @@ p4 = CFAR.plot_2d_errlines(
     # dfss,
     dfss_rho,
     c_attrs,
+    # attrs,
     n=100,
     # title="Number of Categories with 1-Sigma Bars",
 )
@@ -163,7 +171,6 @@ CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
 # -----------------------------------------------------------------------------
 
 if run_slices
-
     slices = [5.0, 10.0, 20.0]
     for slice in slices
         # slice = 20.0
