@@ -10,11 +10,13 @@ results:
   - 1_gaussian
   - cvi
 
-# Parsed options
-procs: 10
+# Number of processes to run in parallel
+# procs: 10
+# procs: 32     # PC 3950X
+procs: 16       # Mac M4 Max
 
 varying:
   travel:
     lb: 0
-    ub: 30
+    ub: 20
     n_points: 1000
