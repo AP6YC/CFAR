@@ -46,7 +46,8 @@ run_slices = false
 sweep_dir = CFAR.results_dir(
     "1_gaussian",
     # "2_art",
-    "art_dist",
+    # "art_dist",
+    "art_dist_2",
     # "linear_sweep"
 )
 

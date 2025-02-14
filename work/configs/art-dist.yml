@@ -29,7 +29,7 @@ varying:
   rng_seed:
     lb: 1
     ub: 100
-    n_points: 10
+    n_points: 100
   travel:
     lb: 0
     ub: 20
