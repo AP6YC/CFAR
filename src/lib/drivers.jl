@@ -304,23 +304,46 @@ function art_dist_exp(opts::AbstractDict)
             end
             push!(weight_vecs, local_weight_agg)
         end
+        if !opts["post"]
+            # Task 1: classify
+            y_hat = classify(
+                art,
+                local_ms.data[ix].test.x,
+                get_bmu=true,
+            )
 
-        # Task 1: classify
-        y_hat = classify(
-            art,
-            local_ms.data[ix].test.x,
-            get_bmu=true,
-        )
+            # Task 1: performance
+            perf = performance(
+                y_hat,
+                local_ms.data[ix].test.y
+            )
+            n_cats = art.n_categories
 
-        # Task 1: performance
-        perf = performance(
-            y_hat,
-            local_ms.data[ix].test.y
-        )
-        n_cats = art.n_categories
+            fulld["p$(ix)"] = perf
+            fulld["nc$(ix)"] = n_cats
+        end
+    end
 
-        fulld["p$(ix)"] = perf
-        fulld["nc$(ix)"] = n_cats
+    if opts["post"]
+        for ix = 1:n_tasks
+            # Task 1: classify
+            y_hat = classify(
+                art,
+                local_ms.data[ix].test.x,
+                get_bmu=true,
+            )
+
+            # Task 1: performance
+            perf = performance(
+                y_hat,
+                local_ms.data[ix].test.y
+            )
+            # n_cats = art.n_categories
+            n_cats = length(findall(x -> x == ix, art.labels))
+
+            fulld["p$(ix)"] = perf
+            fulld["nc$(ix)"] = n_cats
+        end
     end
 
     if WEIGHT_CALC

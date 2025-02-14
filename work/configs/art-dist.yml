@@ -3,6 +3,7 @@ name: "art-dist"
 exp: "art_dist_exp"
 # rng_seed: 1
 n_epochs: 1
+post: true
 
 # Number of processes to run in parallel
 # procs: 10
@@ -22,13 +23,13 @@ feature_bounds:
 # Results destination directory
 results:
   - 1_gaussian
-  - art_dist
+  - art_dist_2
 
 varying:
   rng_seed:
     lb: 1
     ub: 100
-    n_points: 100
+    n_points: 10
   travel:
     lb: 0
     ub: 20
@@ -37,7 +38,7 @@ varying:
   rho:
     lb: 0.1
     ub: 1.0
-    n_points: 100
+    n_points: 10
 
 # opts_SFAM:
 #   rho: 0.7

@@ -90,20 +90,49 @@ m_attrs = [
 #     "p12",
 ]
 
+
+# P3
 p_surf = surface(
     dfss[!, :rho],
     dfss[!, :travel],
     dfss[!, :p3_mean],
+    # dfss[!, :p2_mean],
     camera=(60, 30),
     # color=:okabe_ito,
     # color=:tol_light,
     # color=:turbo,
-    xlabel="\$\\rho\$",
-    ylabel="\$c\$",
-    zlabel="\$p(T_3)\$",
+    # xlabel="\$\\rho\$",
+    # ylabel="\$c\$",
+    # zlabel="\$p(T_3)\$",
+    xlabel="Vigilance \$\\rho\$",
+    ylabel="Distance \$c\$",
+    zlabel="\$T_3\$ Accuracy",
+    # zlabel="\$p(T_3)\$",
 )
 
 CFAR.save_plot(p_surf, surf_plot, exp_top, exp_name)
+
+# P2
+p_surf2 = surface(
+    dfss[!, :rho],
+    dfss[!, :travel],
+    dfss[!, :p2_mean],
+    # dfss[!, :p2_mean],
+    camera=(60, 30),
+    # color=:okabe_ito,
+    # color=:tol_light,
+    # color=:turbo,
+    # xlabel="\$\\rho\$",
+    # ylabel="\$c\$",
+    # zlabel="\$p(T_3)\$",
+    xlabel="Vigilance \$\\rho\$",
+    ylabel="Distance \$c\$",
+    zlabel="\$T_2\$ Accuracy",
+    # zlabel="\$p(T_3)\$",
+    zlims=[0.0, 1.0],
+)
+
+CFAR.save_plot(p_surf2, "p2_surf.png", exp_top, exp_name)
 
 # dfss_rho = combine(groupby(dfss, :rho)[7], :)
 dfss_rho = combine(groupby(df, :rho)[7], :)
@@ -121,6 +150,8 @@ p1 = CFAR.plot_2d_attrs(
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     avg=true,
     n=100,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Accuracy",
     # title="Peformances",
 )
 CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
@@ -134,6 +165,8 @@ p2 = CFAR.plot_2d_errlines(
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     # avg=true,
     n=100,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Accuracy",
     # title="Performances with Error Bars",
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
@@ -158,6 +191,8 @@ p3= CFAR.plot_2d_attrs(
     # attrs,
     avg=true,
     n=100,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Category Count",
     # title="Number of Categories",
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
@@ -175,7 +210,9 @@ p4 = CFAR.plot_2d_errlines(
     scalefonts=30,
     n=100,
     # title="Number of Categories with 1-Sigma Bars",
-    fontsize=35,
+    # fontsize=35,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Category Count",
 )
 Plots.scalefontsizes(0.5)
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)

@@ -306,7 +306,7 @@ function plot_2d_attrs(
             label=label,
             linewidth = 4.0,
             color_palette=COLORSCHEME,
-            dpi=DPI,
+            dpi=DPI;
             kwargs...
         )
     end
@@ -387,7 +387,7 @@ function plot_2d_errlines(
             label = label,
             color_palette=COLORSCHEME,
             errorstyle=:ribbon,
-            dpi=DPI,
+            dpi=DPI;
             kwargs...
         )
 
