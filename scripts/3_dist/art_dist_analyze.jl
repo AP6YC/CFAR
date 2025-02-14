@@ -38,6 +38,9 @@ err_plot = "err.png"
 n_cats_plot = "n_categories.png"
 surf_plot = "surf.png"
 
+scaler = 1.5
+Plots.scalefontsizes(scaler)
+
 run_slices = false
 # Point to the sweep results
 sweep_dir = CFAR.results_dir(
@@ -92,10 +95,12 @@ p_surf = surface(
     dfss[!, :travel],
     dfss[!, :p3_mean],
     camera=(60, 30),
-    colorscheme=:okabe_ito,
-    xlabel="rho",
-    ylabel="travel",
-    zlabel="p3 mean",
+    # color=:okabe_ito,
+    # color=:tol_light,
+    # color=:turbo,
+    xlabel="\$\\rho\$",
+    ylabel="\$c\$",
+    zlabel="\$p(T_3)\$",
 )
 
 CFAR.save_plot(p_surf, surf_plot, exp_top, exp_name)
@@ -113,6 +118,7 @@ p1 = CFAR.plot_2d_attrs(
     # dfss,
     dfss_rho,
     attrs,
+    labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     avg=true,
     n=100,
     # title="Peformances",
@@ -125,6 +131,7 @@ p2 = CFAR.plot_2d_errlines(
     # dfss,
     dfss_rho,
     attrs,
+    labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     # avg=true,
     n=100,
     # title="Performances with Error Bars",
@@ -147,6 +154,7 @@ p3= CFAR.plot_2d_attrs(
     # dfss,
     dfss_rho,
     c_attrs,
+    labels=["\$n_1\$", "\$n_2\$", "\$n_3\$"],
     # attrs,
     avg=true,
     n=100,
@@ -160,10 +168,16 @@ p4 = CFAR.plot_2d_errlines(
     # dfss,
     dfss_rho,
     c_attrs,
+    labels=["\$n_1\$", "\$n_2\$", "\$n_3\$"],
     # attrs,
+    # labelfontsize=30,
+    # legendfontsize=30,
+    scalefonts=30,
     n=100,
     # title="Number of Categories with 1-Sigma Bars",
+    fontsize=35,
 )
+Plots.scalefontsizes(0.5)
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
 
 # -----------------------------------------------------------------------------
@@ -204,4 +218,5 @@ end
 # CLEANUP
 # -----------------------------------------------------------------------------
 
+Plots.scalefontsizes()
 @info "Done plotting for $(exp_name)"

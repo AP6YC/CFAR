@@ -6,8 +6,8 @@ n_epochs: 1
 
 # Number of processes to run in parallel
 # procs: 10
-# procs: 32     # PC 3950X
-procs: 16       # Mac M4 Max
+procs: 32     # PC 3950X
+# procs: 16       # Mac M4 Max
 
 feature_bounds:
   min: [
@@ -28,7 +28,7 @@ varying:
   rng_seed:
     lb: 1
     ub: 10
-    n_points: 10
+    n_points: 100
   travel:
     lb: 0
     ub: 20
@@ -37,7 +37,7 @@ varying:
   rho:
     lb: 0.1
     ub: 1.0
-    n_points: 10
+    n_points: 100
 
 # opts_SFAM:
 #   rho: 0.7

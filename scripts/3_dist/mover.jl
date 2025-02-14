@@ -36,6 +36,9 @@ exp_top = "1_gaussian"
 exp_name = "1_gen_mg"
 fps = 2
 
+scaler = 1.5
+Plots.scalefontsizes(scaler)
+
 # -----------------------------------------------------------------------------
 # DEPENDENT SETUP
 # -----------------------------------------------------------------------------
@@ -55,8 +58,10 @@ config = CFAR.get_gaussian_config("sct-gaussians.yml")
 ms = CFAR.gen_sct_gaussians(config)
 
 # Visualize the data
-p = CFAR.plot_mover(ms)
+p = CFAR.plot_mover(ms, length=6.0)
 CFAR.save_plot(p, "mover_fig", exp_top, exp_name)
+
+Plots.scalefontsizes()
 
 # # Create an animation, saving the frames in between
 # anim = @animate for ix = n_start:n_step:n_finish

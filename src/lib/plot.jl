@@ -149,10 +149,12 @@ Plots the mover line plot with scattered data points, covariance lines, and move
 - `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset.
 """
 function plot_mover(
-    ms::SCTMoverSplit,
+    ms::SCTMoverSplit;
+    length::Float=10.0,
 )
     # Get the mover line for visualization
-    ml = CFAR.get_mover_line(ms.config)
+    # ms.config["n_points"] = 50
+    ml = get_mover_line(ms.config, length=length)
 
     # Init a plot object
     p = plot()
@@ -177,7 +179,10 @@ function plot_mover(
         ml[1, :],
         ml[2, :],
         linewidth = 3,
-        color_palette = COLORSCHEME,
+        arrow=true,
+        # color_palette = COLORSCHEME,
+        color=:black,
+        linestyle=:dash,
         label=nothing,
         dpi=DPI,
     )
@@ -262,6 +267,8 @@ function plot_2d_attrs(
     avg::Bool=false,
     n::Integer=10,
     title="",
+    labels::Union{Vector{T}, Nothing}=nothing,
+    kwargs...
 ) where T <: AbstractString
 
     # Instantiate the plot object
@@ -271,7 +278,9 @@ function plot_2d_attrs(
     local_df = dropmissing(df)
 
     # Iteratively add each attribute line
-    for attr in attrs
+    # for attr in attrs
+    for ix in eachindex(attrs)
+        attr = attrs[ix]
         # Point to the the x and y of the plot
         local_x = local_df.travel
         local_y = local_df[:, attr]
@@ -282,15 +291,23 @@ function plot_2d_attrs(
             local_x = local_x[1:end-n+1]
         end
 
+        label = if isnothing(labels)
+            label = attr
+        else
+            labels[ix]
+        end
+
         # Add the local line to the plot
         plot!(
             p,
             local_x,
             local_y,
-            label = attr,
+            # label = attr,
+            label=label,
             linewidth = 4.0,
             color_palette=COLORSCHEME,
             dpi=DPI,
+            kwargs...
         )
     end
 
@@ -338,6 +355,8 @@ function plot_2d_errlines(
     attrs::Vector{T};
     n::Integer=10,
     title="",
+    labels::Union{Vector{T}, Nothing}=nothing,
+    kwargs...
 ) where T <: AbstractString
     # Instantiate the plot object
     p = plot()
@@ -346,20 +365,30 @@ function plot_2d_errlines(
     local_df = dropmissing(df)
 
     # Iteratively add each attribute line
-    for attr in attrs
+    # for attr in attrs
+    for ix in eachindex(attrs)
+        attr = attrs[ix]
         # Point to the the x and y of the plot
         local_x = local_df.travel[1:end - n + 1]
         local_err = transpose(get_windows(local_df[:, attr], n))
+
+        label = if isnothing(labels)
+            label = attr
+        else
+            labels[ix]
+        end
 
         # Add the errorline to the plot
         errorline!(p,
             local_x,
             local_err,
             linewidth = 4.0,
-            label = attr,
+            # label = attr,
+            label = label,
             color_palette=COLORSCHEME,
             errorstyle=:ribbon,
             dpi=DPI,
+            kwargs...
         )
 
     end
