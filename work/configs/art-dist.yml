@@ -28,7 +28,7 @@ results:
 varying:
   rng_seed:
     lb: 1
-    ub: 100
+    ub: 50
     n_points: 50
   travel:
     lb: 0
