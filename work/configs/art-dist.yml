@@ -29,7 +29,7 @@ varying:
   rng_seed:
     lb: 1
     ub: 100
-    n_points: 100
+    n_points: 50
   travel:
     lb: 0
     ub: 20
@@ -38,7 +38,7 @@ varying:
   rho:
     lb: 0.1
     ub: 1.0
-    n_points: 10
+    n_points: 50
 
 # opts_SFAM:
 #   rho: 0.7
