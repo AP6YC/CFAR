@@ -137,10 +137,11 @@ CFAR.save_plot(p_surf2, "p2_surf.png", exp_top, exp_name)
 
 # dfss_rho = combine(groupby(dfss, :rho)[7], :)
 dfss_rho = combine(groupby(df, :rho)[7], :)
-for ix in eachindex(attrs)
-    rename!(dfss_rho, Symbol(m_attrs[ix]) => Symbol(attrs[ix]))
-end
 # dfss_rho = combine(groupby(df, :rho)[7], :)
+# OLD
+# for ix in eachindex(attrs)
+#     rename!(dfss_rho, Symbol(m_attrs[ix]) => Symbol(attrs[ix]))
+# end
 
 # Plot the average trendlines
 p1 = CFAR.plot_2d_attrs(
