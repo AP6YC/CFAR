@@ -23,7 +23,7 @@ feature_bounds:
 # Results destination directory
 results:
   - 1_gaussian
-  - art_dist_2
+  - art_dist_3
 
 varying:
   rng_seed:
@@ -36,7 +36,7 @@ varying:
     # ub: 10
     n_points: 100
   rho:
-    lb: 0.1
+    lb: 0.8
     ub: 1.0
     n_points: 50
 

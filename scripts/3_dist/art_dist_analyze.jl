@@ -130,6 +130,7 @@ p_surf2 = surface(
     ylabel="Distance \$c\$",
     zlabel="\$T_2\$ Accuracy",
     # zlabel="\$p(T_3)\$",
+    xlims=[0.8, 1.0],
     zlims=[0.0, 1.0],
 )
 
@@ -216,7 +217,7 @@ p4 = CFAR.plot_2d_errlines(
     xlabel="Distance \$c\$",
     ylabel="Single-Task Category Count",
 )
-Plots.scalefontsizes(0.5)
+# Plots.scalefontsizes(0.5)
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
 
 # -----------------------------------------------------------------------------
