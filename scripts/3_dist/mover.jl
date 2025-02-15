@@ -58,7 +58,11 @@ config = CFAR.get_gaussian_config("sct-gaussians.yml")
 ms = CFAR.gen_sct_gaussians(config)
 
 # Visualize the data
-p = CFAR.plot_mover(ms, length=6.0)
+p = CFAR.plot_mover(
+    ms,
+    length=6.0,
+    xlims=[-5, 15]
+)
 CFAR.save_plot(p, "mover_fig", exp_top, exp_name)
 
 Plots.scalefontsizes()

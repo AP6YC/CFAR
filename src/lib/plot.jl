@@ -104,7 +104,7 @@ Plots the mover line plot with scattered data points, covariance lines, and move
 - `ms::MoverSplit`: the [`MoverSplit`](@ref) dataset.
 """
 function plot_mover(
-    ms::MoverSplit,
+    ms::MoverSplit
 )
     # Get the mover line for visualization
     ml = CFAR.get_mover_line(ms.config)
@@ -151,6 +151,7 @@ Plots the mover line plot with scattered data points, covariance lines, and move
 function plot_mover(
     ms::SCTMoverSplit;
     length::Float=10.0,
+    kwargs...
 )
     # Get the mover line for visualization
     # ms.config["n_points"] = 50
@@ -184,7 +185,8 @@ function plot_mover(
         color=:black,
         linestyle=:dash,
         label=nothing,
-        dpi=DPI,
+        dpi=DPI;
+        kwargs...
     )
 
     # Finally display the plot

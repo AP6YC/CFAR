@@ -48,6 +48,7 @@ sweep_dir = CFAR.results_dir(
     # "2_art",
     # "art_dist",
     "art_dist_2",
+    # "art_dist_3",
     # "linear_sweep"
 )
 
@@ -130,14 +131,27 @@ p_surf2 = surface(
     ylabel="Distance \$c\$",
     zlabel="\$T_2\$ Accuracy",
     # zlabel="\$p(T_3)\$",
-    xlims=[0.8, 1.0],
+    xlims=[0.81, 1.0],
     zlims=[0.0, 1.0],
+    ylims=[0.01, 20],
 )
 
 CFAR.save_plot(p_surf2, "p2_surf.png", exp_top, exp_name)
 
 # dfss_rho = combine(groupby(dfss, :rho)[7], :)
-dfss_rho = combine(groupby(df, :rho)[7], :)
+# dfss_rho = combine(groupby(df, :rho)[7], :)
+
+# seven = false
+seven = true
+if seven
+    dfss_rho = combine(groupby(df, :rho)[50], :)
+else
+    dfss_group = groupby(df, :rho)
+    dfss_keys = keys(dfss_group)
+    dfss_rho = combine(dfss_group[dfss_keys[end]], :)
+end
+
+
 # dfss_rho = combine(groupby(df, :rho)[7], :)
 # OLD
 # for ix in eachindex(attrs)
