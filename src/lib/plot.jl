@@ -169,6 +169,8 @@ function plot_mover(
         # @info ix
     end
 
+    # contour(x, y, f; levels = collect(linspace(0,1,5)))
+
     # CFAR.scatter_gaussian!(p, ms.data[2])
 
     # # Plot the covariance ellipses
@@ -196,6 +198,73 @@ function plot_mover(
     return p
 end
 
+function plot_contour(
+    ms::SCTMoverSplit;
+    length::Float=10.0,
+    kwargs...
+)
+   # Get the mover line for visualization
+    # ms.config["n_points"] = 50
+    ml = get_mover_line(ms.config, length=length)
+
+    # Init a plot object
+    # p = plot()
+
+    # Plot the covariance ellipses
+    # plot_covellipses(p, ms.config)
+
+    # Plot the original Gaussians samples
+    # for ix in eachindex(ms.data)
+    #     scatter_gaussian!(p, ms.data[ix])
+    #     # @info ix
+    # end
+
+
+    pc = plot()
+    X = range(-5, 15, length=100)
+    Y = range(-4, 14, length=100)
+    # ps = []
+    pss1(x, y) = pdf(MvNormal(ms.config["dists"][1]["mu"], ms.config["dists"][1]["var"]), [x, y])
+    pss2(x, y) = pdf(MvNormal(ms.config["dists"][2]["mu"], ms.config["dists"][2]["var"]), [x, y])
+    pss3(x, y) = pdf(MvNormal(ms.config["dists"][3]["mu"], ms.config["dists"][3]["var"]), [x, y])
+    ps(x, y) = pss1(x, y) + pss2(x, y) + pss3(x, y)
+    # for ix = 1:3
+    #     p2 = MvNormal(ms.config["dists"][ix]["mu"], ms.config["dists"][ix]["var"])
+    #     # push!(ps, p2)
+    #     f(x,y) = pdf(p2, [x,y])
+    # end
+
+    contourf!(pc, X, Y, ps, color=:viridis)
+    display(pc)
+
+    # contour(x, y, f; levels = collect(linspace(0,1,5)))
+
+    # CFAR.scatter_gaussian!(p, ms.data[2])
+
+    # # Plot the covariance ellipses
+    # CFAR.plot_covellipses(p, ms.config)
+
+    # Plot the mover's line
+    plot!(
+        pc,
+        ml[1, :],
+        ml[2, :],
+        linewidth = 3,
+        arrow=true,
+        # color_palette = COLORSCHEME,
+        color=:black,
+        linestyle=:dash,
+        label=nothing,
+        dpi=DPI;
+        kwargs...
+    )
+
+    # Finally display the plot
+    isinteractive() && display(pc)
+
+    # Return the plot handle
+    return pc
+end
 
 # """
 # Computes the sliding window average of a vector with window size `n`.
@@ -394,6 +463,283 @@ function plot_2d_errlines(
         )
 
     end
+
+    !isempty(title) && title!(p, title)
+
+    # Display the plot
+    isinteractive() && display(p)
+
+    # Return the plot handle
+    return p
+end
+
+"""
+Plots the 2D performances trends.
+
+# Arguments
+- `df::DataFrame`: the collected simulation results.
+- `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+"""
+function plot_2d_errlines_double(
+    df::DataFrame,
+    df2::DataFrame,
+    attrs::Vector{T},
+    attrs2::Vector{T};
+    n::Integer=10,
+    title="",
+    labels::Union{Vector{T}, Nothing}=nothing,
+    labels2::Union{Vector{T}, Nothing}=nothing,
+    kwargs...
+) where T <: AbstractString
+    # Instantiate the plot object
+    p = plot()
+
+    ylim = [0.35, 3.2]
+
+    # Clean the dataframe of missing entries
+    local_df = dropmissing(df)
+    local_df2 = dropmissing(df2)
+
+    # Iteratively add each attribute line
+    # for attr in attrs
+    for ix in eachindex(attrs)
+        attr = attrs[ix]
+        # Point to the the x and y of the plot
+        local_x = local_df.travel[1:end - n + 1]
+        local_err = transpose(get_windows(local_df[:, attr], n))
+        # local_err = local_df[:, attr]
+
+        label = if isnothing(labels)
+            label = attr
+        else
+            labels[ix]
+        end
+
+        @info size(local_x)
+        @info size(local_err)
+
+        # Add the errorline to the plot
+        # px = twinx(p)
+        errorline!(
+            p,
+            # px,
+            local_x,
+            local_err,
+            linewidth = 4.0,
+            # label = attr,
+            label = label,
+            color_palette=COLORSCHEME,
+            errorstyle=:ribbon,
+            # legend_position=:left,
+            legend_position=:topleft,
+            # legend_position=:outerright,
+            # legend_font_pointsize=8.0,
+            # legend_position=:outertopright,
+            ylims=ylim,
+            dpi=DPI;
+            kwargs...
+        )
+
+    end
+
+    p2 = twinx(p)
+    @info p2
+
+    for ix in eachindex(attrs2)
+        attr = attrs2[ix]
+        # Point to the the x and y of the plot
+        local_x = local_df2.travel[1:end - n + 1]
+        # local_err = transpose(get_windows(local_df2[:, attr], n))
+        local_err = local_df2[:, attr]
+
+        label = if isnothing(labels2)
+            label = attr
+        else
+            labels2[ix]
+        end
+
+        local_err = sliding_avg(local_err, n)
+
+        @info "ix is $ix"
+        @info size(local_x)
+        @info size(local_err)
+
+        # Add the errorline to the plot
+        # p2 = twinx(p)
+        # errorline!(
+        # p2 =errorline(
+        plot!(
+            p2,
+            # twinx(),
+            local_x,
+            local_err,
+            linewidth = 4.0,
+            # # label = attr,
+            label = label,
+            # colorscheme=:okabe_ito,
+            # color=:red,
+            # color_palette=ColorSchemes.okabe_ito[4],
+            color=ColorSchemes.okabe_ito[5],
+            linestyle=:dash,
+            # legend_position=:right,
+            legend_position=:topright,
+            # legend_font_pointsize=8.0,
+            legendlinewidth=1.0,
+            ylims=ylim,
+            # legend_position=(10, 10000),
+            # legend_position=find_best_legend_position(p2),
+            # legend_position=(45, 1.5),
+            ylabel="Cluster Validity Index",
+            # legend_position=:outerright,
+            # color_palette=COLORSCHEME,
+            # # errorstyle=:ribbon,
+            # dpi=DPI,
+            # # axis=:right;
+            # # guide_position=:right;
+            # kwargs...
+        )
+
+    end
+
+    # isinteractive() && display(p2)
+
+    !isempty(title) && title!(p, title)
+
+    # Display the plot
+    isinteractive() && display(p)
+
+    # Return the plot handle
+    return p
+end
+
+
+
+"""
+Plots the 2D performances trends.
+
+# Arguments
+- `df::DataFrame`: the collected simulation results.
+- `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+"""
+function plot_2d_errlines_overlay(
+    df::DataFrame,
+    df2::DataFrame,
+    attrs::Vector{T},
+    attrs2::Vector{T};
+    n::Integer=10,
+    title="",
+    labels::Union{Vector{T}, Nothing}=nothing,
+    labels2::Union{Vector{T}, Nothing}=nothing,
+    kwargs...
+) where T <: AbstractString
+    # Instantiate the plot object
+    p = plot()
+
+    # Clean the dataframe of missing entries
+    local_df = dropmissing(df)
+    local_df2 = dropmissing(df2)
+
+    # Iteratively add each attribute line
+    # for attr in attrs
+    for ix in eachindex(attrs)
+        attr = attrs[ix]
+        # Point to the the x and y of the plot
+        local_x = local_df.travel[1:end - n + 1]
+        local_err = transpose(get_windows(local_df[:, attr], n))
+        # local_err = local_df[:, attr]
+
+        label = if isnothing(labels)
+            label = attr
+        else
+            labels[ix]
+        end
+
+        @info size(local_x)
+        @info size(local_err)
+
+        # Add the errorline to the plot
+        # px = twinx(p)
+        errorline!(
+            p,
+            # px,
+            local_x,
+            local_err,
+            linewidth = 4.0,
+            # label = attr,
+            label = label,
+            color_palette=COLORSCHEME,
+            errorstyle=:ribbon,
+            # legend_position=:left,
+            # legend_position=:topleft,
+            # legend_position=:outerright,
+            # legend_font_pointsize=8.0,
+            # legend_position=:outertopright,
+            dpi=DPI;
+            kwargs...
+        )
+
+    end
+
+    # p2 = twinx(p)
+    # @info p2
+
+    for ix in eachindex(attrs2)
+        attr = attrs2[ix]
+        # Point to the the x and y of the plot
+        local_x = local_df2.travel[1:end - n + 1]
+        # local_err = transpose(get_windows(local_df2[:, attr], n))
+        local_err = local_df2[:, attr]
+
+        label = if isnothing(labels2)
+            label = attr
+        else
+            labels2[ix]
+        end
+
+        local_err = sliding_avg(local_err, n)
+
+        @info "ix is $ix"
+        @info size(local_x)
+        @info size(local_err)
+
+        # Add the errorline to the plot
+        # p2 = twinx(p)
+        errorline!(
+        # p2 =errorline(
+        # plot!(
+            # p2,
+            p,
+            # twinx(),
+            local_x,
+            local_err,
+            linewidth = 4.0,
+            # # label = attr,
+            label = label,
+            # colorscheme=:okabe_ito,
+            # color=:red,
+            # color_palette=COLORSCHEME,
+            errorstyle=:ribbon,
+            color=ColorSchemes.okabe_ito[5],
+            linestyle=:dash,
+            # legend_position=:right,
+            # legend_font_pointsize=8.0,
+            # legendlinewidth=1.0,
+            # legend_position=(10, 10000),
+            # legend_position=find_best_legend_position(p2),
+            # legend_position=(45, 1.5),
+            # ylabel="Cluster Validity Index",
+            # legend_position=:outerright,
+            # color_palette=COLORSCHEME,
+            # # errorstyle=:ribbon,
+            # dpi=DPI,
+            axis=:right,
+            # # guide_position=:right;
+            # kwargs...
+        )
+
+    end
+
+    # isinteractive() && display(p2)
 
     !isempty(title) && title!(p, title)
 

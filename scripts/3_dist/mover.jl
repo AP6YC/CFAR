@@ -65,6 +65,35 @@ p = CFAR.plot_mover(
 )
 CFAR.save_plot(p, "mover_fig", exp_top, exp_name)
 
+
+p = CFAR.plot_contour(
+    ms,
+    length=6.0,
+    xlims=[-5, 15]
+)
+CFAR.save_plot(p, "mover_contour", exp_top, exp_name)
+
+# using Distributions
+
+# pc = plot()
+# X = range(-5, 15, length=100)
+# Y = range(-4, 14, length=100)
+# # ps = []
+# pss1(x, y) = pdf(MvNormal(ms.config["dists"][1]["mu"], ms.config["dists"][1]["var"]), [x, y])
+# pss2(x, y) = pdf(MvNormal(ms.config["dists"][2]["mu"], ms.config["dists"][2]["var"]), [x, y])
+# pss3(x, y) = pdf(MvNormal(ms.config["dists"][3]["mu"], ms.config["dists"][3]["var"]), [x, y])
+# ps(x, y) = pss1(x, y) + pss2(x, y) + pss3(x, y)
+# # for ix = 1:3
+# #     p2 = MvNormal(ms.config["dists"][ix]["mu"], ms.config["dists"][ix]["var"])
+# #     # push!(ps, p2)
+# #     f(x,y) = pdf(p2, [x,y])
+# # end
+
+# contourf!(pc, X, Y, ps, color=:viridis)
+# display(pc)
+
+
+
 Plots.scalefontsizes()
 
 # # Create an animation, saving the frames in between

@@ -142,21 +142,13 @@ CFAR.save_plot(p_surf2, "p2_surf.png", exp_top, exp_name)
 # dfss_rho = combine(groupby(df, :rho)[7], :)
 
 # seven = false
-seven = true
-if seven
-    dfss_rho = combine(groupby(df, :rho)[50], :)
-else
-    dfss_group = groupby(df, :rho)
-    dfss_keys = keys(dfss_group)
-    dfss_rho = combine(dfss_group[dfss_keys[end]], :)
-end
+# seven = true
+# if seven
+
+# rho=0.7
+dfss_rho = combine(groupby(df, :rho)[7], :)
 
 
-# dfss_rho = combine(groupby(df, :rho)[7], :)
-# OLD
-# for ix in eachindex(attrs)
-#     rename!(dfss_rho, Symbol(m_attrs[ix]) => Symbol(attrs[ix]))
-# end
 
 # Plot the average trendlines
 p1 = CFAR.plot_2d_attrs(
@@ -170,6 +162,7 @@ p1 = CFAR.plot_2d_attrs(
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Peformances",
+    ylims=[0.0, 1.0],
 )
 CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
@@ -185,8 +178,123 @@ p2 = CFAR.plot_2d_errlines(
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Performances with Error Bars",
+    ylims=[0.0, 1.0],
 )
 CFAR.save_plot(p2, err_plot, exp_top, exp_name)
+
+
+# rho=1.0
+# else
+dfss_group = groupby(df, :rho)
+dfss_keys = keys(dfss_group)
+dfss_rho = combine(dfss_group[dfss_keys[end]], :)
+
+
+# Plot the average trendlines
+p1 = CFAR.plot_2d_attrs(
+    # df,
+    # dfss,
+    dfss_rho,
+    attrs,
+    labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
+    avg=true,
+    n=100,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Accuracy",
+    # title="Peformances",
+    ylims=[0.0, 1.0],
+)
+CFAR.save_plot(p1, "perf-10.png", exp_top, exp_name)
+
+# Plot the StatsPlots error lines
+p2 = CFAR.plot_2d_errlines(
+    # df,
+    # dfss,
+    dfss_rho,
+    attrs,
+    labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
+    # avg=true,
+    n=100,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Accuracy",
+    # title="Performances with Error Bars",
+    ylims=[0.0, 1.0],
+)
+CFAR.save_plot(p2, "err-10.png", exp_top, exp_name)
+
+# end
+
+
+
+
+
+
+
+# dfss_rho = combine(groupby(df, :rho)[7], :)
+# OLD
+# for ix in eachindex(attrs)
+#     rename!(dfss_rho, Symbol(m_attrs[ix]) => Symbol(attrs[ix]))
+# end
+
+# Plot the average trendlines
+# p1 = CFAR.plot_2d_attrs(
+#     # df,
+#     # dfss,
+#     dfss_rho,
+#     attrs,
+#     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
+#     avg=true,
+#     n=100,
+#     xlabel="Distance \$c\$",
+#     ylabel="Single-Task Accuracy",
+#     # title="Peformances",
+# )
+# CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
+
+# # Plot the StatsPlots error lines
+# p2 = CFAR.plot_2d_errlines(
+#     # df,
+#     # dfss,
+#     dfss_rho,
+#     attrs,
+#     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
+#     # avg=true,
+#     n=100,
+#     xlabel="Distance \$c\$",
+#     ylabel="Single-Task Accuracy",
+#     # title="Performances with Error Bars",
+# )
+# CFAR.save_plot(p2, err_plot, exp_top, exp_name)
+
+
+
+
+# -----------------------------------------------------------------------------
+# CLUSTERS
+# -----------------------------------------------------------------------------
+
+
+# Point to the sweep results
+sweep_dir2 = CFAR.results_dir(
+    "1_gaussian",
+    "cvi",
+)
+
+# Collect the results into a single dataframe
+df2 = collect_results!(sweep_dir2)
+# df = collect_results(sweep_dir)
+
+sort!(df2, [:travel])
+
+
+attrs2 = [
+    "cvi",
+]
+
+
+# rho=0.7
+dfss_rho = combine(groupby(df, :rho)[7], :)
+
 
 c_attrs = [
     # "nc1_mean",
@@ -211,6 +319,7 @@ p3= CFAR.plot_2d_attrs(
     xlabel="Distance \$c\$",
     ylabel="Single-Task Category Count",
     # title="Number of Categories",
+    # ylims=[0.0, 2.3]
 )
 CFAR.save_plot(p3, n_cats_plot, exp_top, exp_name)
 
@@ -233,6 +342,51 @@ p4 = CFAR.plot_2d_errlines(
 )
 # Plots.scalefontsizes(0.5)
 CFAR.save_plot(p4, "nc_err", exp_top, exp_name)
+
+
+
+p4 = CFAR.plot_2d_errlines_double(
+    # df,
+    # dfss,
+    dfss_rho,
+    df2,
+    c_attrs,
+    attrs2,
+    labels=["\$n_1\$", "\$n_2\$", "\$n_3\$"],
+    labels2=["Silhouette"],
+    # attrs,
+    # labelfontsize=30,
+    # legendfontsize=30,
+    scalefonts=30,
+    n=100,
+    # title="Number of Categories with 1-Sigma Bars",
+    # fontsize=35,
+    xlabel="Distance \$c\$",
+    ylabel="Single-Task Category Count",
+)
+
+CFAR.save_plot(p4, "nc-sil.png", exp_top, exp_name)
+
+p4 = CFAR.plot_2d_errlines_overlay(
+    # df,
+    # dfss,
+    dfss_rho,
+    df2,
+    c_attrs,
+    attrs2,
+    labels=["\$nc_1\$", "\$nc_2\$", "\$nc_3\$"],
+    labels2=["Silhouette CVI"],
+    # attrs,
+    # labelfontsize=30,
+    # legendfontsize=30,
+    scalefonts=30,
+    n=100,
+    # title="Number of Categories with 1-Sigma Bars",
+    # fontsize=35,
+    xlabel="Distance \$c\$",
+    # ylabel="Single-Task Category Count",
+)
+CFAR.save_plot(p4, "nc-sil2.png", exp_top, exp_name)
 
 # -----------------------------------------------------------------------------
 # CATEGORIES SLICES
