@@ -223,18 +223,58 @@ function plot_contour(
     pc = plot()
     X = range(-5, 15, length=100)
     Y = range(-4, 14, length=100)
-    # ps = []
-    pss1(x, y) = pdf(MvNormal(ms.config["dists"][1]["mu"], ms.config["dists"][1]["var"]), [x, y])
-    pss2(x, y) = pdf(MvNormal(ms.config["dists"][2]["mu"], ms.config["dists"][2]["var"]), [x, y])
-    pss3(x, y) = pdf(MvNormal(ms.config["dists"][3]["mu"], ms.config["dists"][3]["var"]), [x, y])
-    ps(x, y) = pss1(x, y) + pss2(x, y) + pss3(x, y)
-    # for ix = 1:3
-    #     p2 = MvNormal(ms.config["dists"][ix]["mu"], ms.config["dists"][ix]["var"])
-    #     # push!(ps, p2)
-    #     f(x,y) = pdf(p2, [x,y])
-    # end
 
-    contourf!(pc, X, Y, ps, color=:viridis)
+    # V1
+    # pss1(x, y) = pdf(MvNormal(ms.config["dists"][1]["mu"], ms.config["dists"][1]["var"]), [x, y])
+    # pss2(x, y) = pdf(MvNormal(ms.config["dists"][2]["mu"], ms.config["dists"][2]["var"]), [x, y])
+    # pss3(x, y) = pdf(MvNormal(ms.config["dists"][3]["mu"], ms.config["dists"][3]["var"]), [x, y])
+    # ps(x, y) = pss1(x, y) + pss2(x, y) + pss3(x, y)
+    # contourf!(pc, X, Y, ps, color=:viridis)
+
+    xlim=[-4, 12]
+    ylim=[-3, 12]
+    # V2
+    # colors=[:turbo, :okabe_ito, :viridis]
+    colors=[
+        ColorSchemes.okabe_ito[1],
+        ColorSchemes.okabe_ito[2],
+        ColorSchemes.okabe_ito[3],
+    ]
+    for ix = 1:3
+        p2 = MvNormal(ms.config["dists"][ix]["mu"], ms.config["dists"][ix]["var"])
+        f(x,y) = pdf(p2, [x,y])
+        z = @. f(X', Y)
+        # contourf!(
+        contour!(
+            pc,
+            X,
+            Y,
+            # f,
+            z,
+            # color=:turbo,
+            # colorscheme=COLORSCHEME,
+            color=colors[ix],
+            label="$(ix)",
+            cbar=false,
+            fill=false,
+            levels=10,
+            linewidth=2.0,
+            xlims=xlim,
+            ylims=ylim,
+        )
+        plot!(
+            pc,
+            [100],
+            [100],
+            color=colors[ix],
+            label="\$T_$(ix)\$",
+            linewidth=4.0,
+            xlims=xlim,
+            ylims=ylim,
+            legend_position=:topright,
+        )
+    end
+
     display(pc)
 
     # contour(x, y, f; levels = collect(linspace(0,1,5)))
@@ -255,6 +295,8 @@ function plot_contour(
         color=:black,
         linestyle=:dash,
         label=nothing,
+        xlims=xlim,
+        ylims=ylim,
         dpi=DPI;
         kwargs...
     )

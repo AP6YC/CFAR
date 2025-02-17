@@ -69,7 +69,7 @@ CFAR.save_plot(p, "mover_fig", exp_top, exp_name)
 p = CFAR.plot_contour(
     ms,
     length=6.0,
-    xlims=[-5, 15]
+    # xlims=[-5, 15]
 )
 CFAR.save_plot(p, "mover_contour", exp_top, exp_name)
 
