@@ -51,6 +51,7 @@ using
     JSON,
     JLD2,
     # LazyModules,
+    NearestNeighbors,
     NumericalTypeAliases,
     Pkg,
     Plots,

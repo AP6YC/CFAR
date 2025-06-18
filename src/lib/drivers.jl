@@ -445,6 +445,166 @@ end
 #     @info "Done plotting for $(exp_name)"
 # end
 
+
+
+function train_kd(local_ds::CFAR.DataSplitCombined)
+    kdtree = KDTree(local_ds.train.x)
+# idxs, dists = knn(kdtree, local_ds.test.x, k, true)
+    return kdtree
+end
+
+# using StatsBase
+
+# function classify_kd(local_ds::CFAR.DataSplitCombined, kdtree::T) where {T <: KDTree}
+function classify_kd(local_ds::CFAR.DataSplitCombined, kdtree::KDTree)
+    idxs, dists = knn(kdtree, local_ds.test.x, k, true)
+    # y_vecs = [local_ds.train.y[idx] for idx in idxs]
+    y_hats = zeros(Int, length(idxs))
+    for ix in eachindex(idxs)
+        y_hats[ix] = Int(mode(local_ds.train.y[idxs[ix]]))
+    end
+    return y_hats
+end
+
+
+function knn_dist_exp(opts::AbstractDict)
+    # Load the data according to the options
+    # local_ms = get_mover_data(opts)
+    local_ms = get_mover_data(opts, config_file="sct-gaussians.yml")
+    local_ds = DataSplitCombined(local_ms)
+
+    # Init the SFAM module
+    # art = SFAM(
+    #     # rho = opts["opts_SFAM"]["rho"]
+    #     rho = opts["rho"]
+    # )
+    # art.config = AdaptiveResonance.DataConfig(
+    #     opts["feature_bounds"]["min"],
+    #     opts["feature_bounds"]["max"],
+    # )
+    # kdtree = KDTree()
+
+    # n_epochs = opts["n_epochs"]
+
+    # Copy the input sim dictionary
+    # fulld = deepcopy(opts)
+    fulld = Dict{String, Any}()
+
+    # # Task 1: static gaussians
+    # n_tasks = length(local_ms.data)
+    # for ix in 1:n_tasks
+    #     for _ = 1:n_epochs
+    #         train!(
+    #             art,
+    #             local_ms.data[ix].train.x,
+    #             local_ms.data[ix].train.y,
+    #         )
+    #     end
+
+    #     if WEIGHT_CALC
+    #         local_weight_agg = []
+    #         for jx = 1:ix
+    #             local_weights = copy(art.W)
+    #             local_weights = art.W[:, findall(x -> x == jx, art.labels)]
+    #             push!(local_weight_agg, local_weights)
+    #         end
+    #         push!(weight_vecs, local_weight_agg)
+    #     end
+    #     if !opts["post"]
+    #         # Task 1: classify
+    #         y_hat = classify(
+    #             art,
+    #             local_ms.data[ix].test.x,
+    #             get_bmu=true,
+    #         )
+
+    #         # Task 1: performance
+    #         perf = performance(
+    #             y_hat,
+    #             local_ms.data[ix].test.y
+    #         )
+    #         n_cats = art.n_categories
+
+    #         fulld["p$(ix)"] = perf
+    #         fulld["nc$(ix)"] = n_cats
+    #     end
+    # end
+
+    kdtree = train_kd(local_ds)
+    y_hat = classify_kd(local_ds, kdtree)
+
+    perf = performance(
+        y_hat,
+        local_ms.data[ix].test.y
+    )
+    fulld["p$(ix)"] = perf
+
+    # if opts["post"]
+    #     for ix = 1:n_tasks
+    #         # Task 1: classify
+    #         y_hat = classify(
+    #             art,
+    #             local_ms.data[ix].test.x,
+    #             get_bmu=true,
+    #         )
+
+    #         # Task 1: performance
+    #         perf = performance(
+    #             y_hat,
+    #             local_ms.data[ix].test.y
+    #         )
+    #         # n_cats = art.n_categories
+    #         n_cats = length(findall(x -> x == ix, art.labels))
+
+    #         fulld["p$(ix)"] = perf
+    #         fulld["nc$(ix)"] = n_cats
+    #     end
+    # end
+
+    # if WEIGHT_CALC
+    #     weight_diffs = []
+    #     for ix = 1:n_tasks
+    #         local_agg = []
+    #         for jx = 1:ix
+    #             local_diff = sum(weight_vecs[ix][jx] - weight_vecs[jx][jx])
+    #             push!(local_agg, local_diff)
+    #         end
+    #         push!(weight_diffs, local_agg)
+    #     end
+    #     # @info weight_diffs
+    # end
+
+    # # More results
+    # copy_els = [
+    #     "travel",
+    #     "rng_seed",
+    #     # "opts_SFAM",
+    #     "rho",
+    #     "n_epochs",
+    # ]
+    # for el in copy_els
+    #     fulld[el] = opts[el]
+    # end
+
+    # # Save the results
+    # dir_func(args...) = joinpath(opts["results"], args...)
+    # savename_opts = deepcopy(opts)
+    # delete_els = [
+    #     "results",
+    #     "name",
+    #     "procs",
+    # ]
+    # for el in delete_els
+    #     delete!(savename_opts, el)
+    # end
+
+    # # @info savename_opts
+    # save_sim(dir_func, savename_opts, fulld)
+end
+
+
+
+
 """
 Runs a distributed experiment.
 
