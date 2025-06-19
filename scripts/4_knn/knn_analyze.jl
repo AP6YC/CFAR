@@ -155,7 +155,7 @@ CFAR.save_plot(p_surf2, "p2_surf.png", exp_top, exp_name)
 
 # rho=0.7
 # dfss_rho = combine(groupby(df, :rho)[7], :)
-dfss_rho = combine(groupby(df, :k)[3], :)
+dfss_rho = combine(groupby(df, :k)[1], :)
 
 
 # Plot the average trendlines

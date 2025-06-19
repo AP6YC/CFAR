@@ -54,6 +54,12 @@ pip install -e '.[dev]'
 
 TODO
 
+tar results:
+
+```shell
+tar -czvf knn.tar.gz knn/
+```
+
 ## Notes
 
 TODO:
