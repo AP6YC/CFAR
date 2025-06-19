@@ -7,8 +7,8 @@ post: true
 # Number of processes to run in parallel
 # procs: 10
 # procs: 32     # PC 3950X
-# procs: 16       # Mac M4 Max
-procs: 1
+procs: 16       # Mac M4 Max
+# procs: 1
 
 
 # Results destination directory
