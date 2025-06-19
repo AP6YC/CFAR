@@ -69,10 +69,10 @@ n_window = 1000
 # -----------------------------------------------------------------------------
 
 # Collect the results into a single dataframe
-if !isdefined(:df)
+# if !isdefined(:df)
     df = collect_results!(sweep_dir)
     # df = collect_results(sweep_dir)
-end
+# end
 
 sort!(df, [:travel])
 
@@ -108,7 +108,8 @@ p_surf = surface(
     dfss[!, :travel],
     dfss[!, :p3_mean],
     # dfss[!, :p2_mean],
-    camera=(60, 30),
+    # camera=(60, 30),
+    camera=(45, 10),
     # color=:okabe_ito,
     # color=:tol_light,
     # color=:turbo,
@@ -144,7 +145,7 @@ p_surf2 = surface(
     zlabel="\$T_2\$ Accuracy",
     # zlabel="\$p(T_3)\$",
     xlims=[0.81, 1.0],
-    zlims=[0.0, 1.0],
+    zlims=[0.0, 1.1],
     ylims=[0.01, 20],
 )
 
