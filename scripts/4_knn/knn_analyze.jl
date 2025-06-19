@@ -38,7 +38,9 @@ err_plot = "err.png"
 n_cats_plot = "n_categories.png"
 surf_plot = "surf.png"
 
-scaler = 1.5
+# scaler = 1.5
+scaler = 1.72
+Plots.scalefontsizes()
 Plots.scalefontsizes(scaler)
 
 run_slices = false
@@ -102,6 +104,10 @@ m_attrs = [
 
 
 # P3
+using Measures
+Plots.scalefontsizes()
+scaler = 1.5
+Plots.scalefontsizes(scaler)
 p_surf = surface(
     # dfss[!, :rho],
     dfss[!, :k],
@@ -112,18 +118,68 @@ p_surf = surface(
     camera=(45, 10),
     # color=:okabe_ito,
     # color=:tol_light,
-    # color=:turbo,
+    color=:turbo,
+    # color=:gist_stern,
     # xlabel="\$\\rho\$",
     # ylabel="\$c\$",
     # zlabel="\$p(T_3)\$",
     # xlabel="Vigilance \$\\rho\$",
+    xticks=0:25:100,
     xlabel="k",
     ylabel="Distance \$c\$",
     zlabel="\$T_3\$ Accuracy",
     # zlabel="\$p(T_3)\$",
+    bottom_margin=[-10mm 0mm],
+    # top_margin=-5mm,
+    left_margin=-10mm,
+    # right_margin=-5mm,
 )
 
+# # P3
+# dfss_surf = dropmissing(dfss)
+# # dfss_surf = dfss_surf[(dfss_surf.travel .< 4)] .& dfss_surf[(dfss_surf.travel .> 13), :]
+# dfss_surf = filter(row -> (row.travel >= 6 && row.travel <= 11), dfss_surf)
+# df_pivot = unstack(dfss_surf, :k, :travel, :p3_mean)
+# xvals = unique(dfss_surf.k)
+# yvals = unique(dfss_surf.travel)
+# # heatmap(xvals, yvals, mat)
+# # The resulting DataFrame has :k as rows, :travel as columns, and :p3_mean as values.
+# # To get the matrix (excluding the first column which is :k):
+# # mat = Matrix(df_pivot[:, Not(:travel)])
+
+# mat = Matrix(df_pivot[:, Not(:k)])
+# # mat = log.(10, mat)
+# # mat = exp.(mat)
+# # p_surf = contour(
+# p_surf = heatmap(
+#     # dfss[!, :rho],
+#     # dfss_surf[!, :k],
+#     # dfss_surf[!, :travel],
+#     # dfss_surf[!, :p3_mean],
+#     sort(yvals),
+#     sort(xvals),
+#     mat,
+#     # dfss[!, :p2_mean],
+#     # camera=(60, 30),
+#     # camera=(45, 10),
+#     # color=:okabe_ito,
+#     # color=:tol_light,
+#     # color=:turbo,
+#     color=:gist_stern,
+#     # xlabel="\$\\rho\$",
+#     # ylabel="\$c\$",
+#     # zlabel="\$p(T_3)\$",
+#     # xlabel="Vigilance \$\\rho\$",
+#     ylabel="k",
+#     xlabel="Distance \$c\$",
+#     # zlabel="\$T_3\$ Accuracy",
+#     # zlabel="\$p(T_3)\$",
+# )
+
 CFAR.save_plot(p_surf, surf_plot, exp_top, exp_name)
+Plots.scalefontsizes()
+scaler = 1.72
+Plots.scalefontsizes(scaler)
 
 # P2
 p_surf2 = surface(
@@ -135,7 +191,7 @@ p_surf2 = surface(
     camera=(60, 30),
     # color=:okabe_ito,
     # color=:tol_light,
-    # color=:turbo,
+    color=:turbo,
     # xlabel="\$\\rho\$",
     # ylabel="\$c\$",
     # zlabel="\$p(T_3)\$",
@@ -145,6 +201,7 @@ p_surf2 = surface(
     zlabel="\$T_2\$ Accuracy",
     # zlabel="\$p(T_3)\$",
     xlims=[0.81, 1.0],
+    # yticks=0:25:100,
     zlims=[0.0, 1.1],
     ylims=[0.01, 20],
 )
