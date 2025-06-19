@@ -24,9 +24,9 @@ varying:
     # n_points: 5
   travel:
     lb: 0
-    ub: 20
+    ub: 15
     # ub: 10
-    n_points: 101
+    n_points: 301
     # n_points: 20
   k:
     lb: 1

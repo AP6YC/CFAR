@@ -62,13 +62,17 @@ pargs = CFAR.exp_parse(
     "$(exp_top)/$(exp_name): analyze ART results."
 )
 
+n_window = 1000
+
 # -----------------------------------------------------------------------------
 # LOAD RESULTS
 # -----------------------------------------------------------------------------
 
 # Collect the results into a single dataframe
-df = collect_results!(sweep_dir)
-# df = collect_results(sweep_dir)
+if !isdefined(:df)
+    df = collect_results!(sweep_dir)
+    # df = collect_results(sweep_dir)
+end
 
 sort!(df, [:travel])
 
@@ -166,7 +170,8 @@ p1 = CFAR.plot_2d_attrs(
     attrs,
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     avg=true,
-    n=100,
+    # n=100,
+    n = n_window,
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Peformances",
@@ -176,13 +181,15 @@ CFAR.save_plot(p1, perf_plot, exp_top, exp_name)
 
 # Plot the StatsPlots error lines
 p2 = CFAR.plot_2d_errlines(
+# p2 = CFAR.plot_2d_errlines_stats(
     # df,
     # dfss,
     dfss_rho,
     attrs,
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     # avg=true,
-    n=100,
+    # n=1000,
+    n = n_window,
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Performances with Error Bars",
@@ -207,7 +214,8 @@ p1 = CFAR.plot_2d_attrs(
     attrs,
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     avg=true,
-    n=100,
+    # n=100,
+    n = n_window,
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Peformances",
@@ -223,15 +231,14 @@ p2 = CFAR.plot_2d_errlines(
     attrs,
     labels=["\$p_1\$", "\$p_2\$", "\$p_3\$"],
     # avg=true,
-    n=100,
+    # n=100,
+    n = n_window,
     xlabel="Distance \$c\$",
     ylabel="Single-Task Accuracy",
     # title="Performances with Error Bars",
     ylims=[0.0, 1.0],
 )
 CFAR.save_plot(p2, "err-10.png", exp_top, exp_name)
-
-# end
 
 
 

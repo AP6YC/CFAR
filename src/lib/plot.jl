@@ -456,6 +456,70 @@ function get_windows(vs::RealVector, n::Integer)
     return local_window
 end
 
+# """
+# Plots the 2D performances trends.
+
+# # Arguments
+# - `df::DataFrame`: the collected simulation results.
+# - `attrs::Vector{T} where T <: AbstractString`: the columns in the dataframe as a list of strings to create plotlines for.
+# """
+# function plot_2d_errlines_stats(
+#     df::DataFrame,
+#     attrs::Vector{T};
+#     n::Integer=10,
+#     title="",
+#     labels::Union{Vector{T}, Nothing}=nothing,
+#     kwargs...
+# ) where T <: AbstractString
+#     # Instantiate the plot object
+#     p = plot()
+
+#     # Clean the dataframe of missing entries
+#     local_df = dropmissing(df)
+
+#     # Iteratively add each attribute line
+#     # for attr in attrs
+#     for ix in eachindex(attrs)
+#         attr = attrs[ix]
+#         # Point to the the x and y of the plot
+#         # local_x = local_df.travel[1:end - n + 1]
+#         dfs = groupby(local_df, [:travel])
+#         # local_x = combine(dfs, attr .=> mean)[!, :p]
+
+#         # local_err = transpose(get_windows(local_df[:, attr], n))
+#         local_err = combine(dfs, attr .=> std)[!, :travel]
+
+#         label = if isnothing(labels)
+#             label = attr
+#         else
+#             labels[ix]
+#         end
+
+#         # Add the errorline to the plot
+#         errorline!(p,
+#             local_x,
+#             local_err,
+#             linewidth = 4.0,
+#             # label = attr,
+#             label = label,
+#             color_palette=COLORSCHEME,
+#             errorstyle=:ribbon,
+#             dpi=DPI;
+#             kwargs...
+#         )
+
+#     end
+
+#     !isempty(title) && title!(p, title)
+
+#     # Display the plot
+#     isinteractive() && display(p)
+
+#     # Return the plot handle
+#     return p
+# end
+
+
 """
 Plots the 2D performances trends.
 
