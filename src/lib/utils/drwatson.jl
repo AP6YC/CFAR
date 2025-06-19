@@ -81,7 +81,8 @@ function paper_results_dir(args...)
             "Dropbox",
             "Apps",
             "Overleaf",
-            "Paper-ART-Catastrophic-Forgetting",
+            # "Paper-ART-Catastrophic-Forgetting",
+            "Paper-CF-Review",
             "images",
             "results",
             args...

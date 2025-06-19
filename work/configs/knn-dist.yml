@@ -2,7 +2,7 @@ name: "knn-dist"
 exp: "knn_dist_exp"
 n_epochs: 1
 post: true
-
+# n_points: 1000
 
 # Number of processes to run in parallel
 # procs: 10
