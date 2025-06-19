@@ -26,5 +26,9 @@ varying:
     lb: 0
     ub: 20
     # ub: 10
-    n_points: 100
+    n_points: 101
     # n_points: 20
+  k:
+    lb: 1
+    ub: 11
+    n_points: 6
